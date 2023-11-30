@@ -208,6 +208,8 @@ RANDOMIZEPART:
     JMP CHECKLEFT
 
     CHECKUP:
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;CMP UPDIR, 0
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;JMP RANDOMIZEPART
     CMP UPDIR, YNOUP
     JA HANDLEUP
     JMP RANDOMIZEPART
