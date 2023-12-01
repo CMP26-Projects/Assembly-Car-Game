@@ -1,18 +1,23 @@
-.model small
-.stack 64 
-
+.model compact
+.stack 1024
 
 .data
-message db "Hello World!$"
+
+    ; Box Top left dimension & size
+    Xpos         DB            ?
+    Ypos         DB            ?
+    BOX_SIZE     EQU           15
+
+    ;Screen dimensions
+    SCREEN_WIDTH DB            320
+                 SCREEN_HEIGHT
 
 .CODE
 main proc far
-mov ax,@data
-mov ds,ax
+         mov ax,@data
+         mov ds,ax
 
-mov ah,9
-lea dx,message
-int 21h
+         mov
 
 main ENDP
 END main
