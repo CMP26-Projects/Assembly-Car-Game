@@ -1,5 +1,4 @@
-.MODEL SMALL
-.DATA
+c
 ;BACKGROUND
 BACKGROUNDIMAGE         DB      ?
 SCREENWIDTH             EQU     320
