@@ -39,11 +39,9 @@ DrawCar PROC
                        MOV  es , ax
 
                        MOV  DI , 0
-
                        MOV  cx , CAR_SIZE
-
-                       MOV  DL , BYTE PTR CarImg
-
+                       MOV  SI , OFFSET CarImg
+                       MOV  DL , 0
                        CALL CalculateBoxVertex
 
     Rows:              
@@ -51,8 +49,9 @@ DrawCar PROC
                        MOV  CX , CAR_SIZE
 
     Cols:              
+                       MOV  DL , BYTE PTR [SI]
                        MOV  BYTE PTR ES:[DI] , DL
-                       INC  DL
+                       INC  SI
                        INC  DI
                        LOOP Cols
 
