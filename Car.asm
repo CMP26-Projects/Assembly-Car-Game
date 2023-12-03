@@ -110,7 +110,6 @@ MAIN PROC FAR
         INT 10H
 
     ; set initial pos of car in the game
-
     MOV PosX , (SCREEN_WIDTH-CAR_SIZE)/2
     MOV PosY , (SCREEN_HEIGHT-CAR_SIZE)/2
 
