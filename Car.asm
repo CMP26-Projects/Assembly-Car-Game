@@ -2,10 +2,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    DATA    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 .Model compact
-.STACK  1024
+.STACK  64
+
 
 .data
 
+    
     ;CarImage
     CarImg        DB  142, 142, 142, 142, 0, 0, 0, 0, 142, 142, 142, 142, 142, 142, 142, 142, 0, 0, 0, 0, 142, 142, 142, 142, 142, 142, 46, 46, 46, 46, 46, 46, 46, 46, 142, 142, 142, 142, 46, 46
                   DB  46, 46, 46, 46, 46, 46, 142, 142, 0, 0, 46, 46, 16, 16, 112, 112, 46, 46, 0, 0, 0, 0, 46, 46, 16, 16, 112, 112, 46, 46, 0, 0, 0, 0, 46, 46, 112, 112, 16, 16
@@ -22,28 +24,37 @@
     SCREEN_SIZE   EQU SCREEN_WIDTH*SCREEN_HEIGHT
 
 
+;     ;Reserving a block for buffer
+; section .bss
+;         BackBufferCar1 resb    CAR_SIZE*CAR_SIZE
 
 .CODE
 
 CalculateBoxVertex PROC
                        MOV  AH , 0
-                       MOV  Al , BYTE PTR PosY
+                       MOV  Al , PosY
                        MOV  BX , SCREEN_WIDTH
                        MUL  BX
-                       Add  AL , BYTE PTR PosX
+
+                       MOV  DH , 0
+                       MOV  DL , PosX
+                       Add  AX , DX
                        MOV  DI , AX
                        RET
 CalculateBoxVertex ENDP
 
+    ;Drawing in back buffer to avoid flickering
+DrawInBackBuffer PROC
+    ;Taking segment 0881H as our Back Buffer
 
-DrawCar PROC
                        MOV  ax , 0A000H
-                       MOV  es , ax
+                       MOV  es , ax 
 
                        CALL CalculateBoxVertex
                        MOV  cx , CAR_SIZE
                        MOV  SI , OFFSET CarImg
                        MOV  DL , 0
+                       MOV  BX , 0                                 ;counter for back buffer
 
     Rows:              
                        PUSH CX
@@ -59,8 +70,24 @@ DrawCar PROC
                        POP  CX
                        ADD  DI, SCREEN_WIDTH-CAR_SIZE
                        LOOP Rows
+                      ; CALL MoveBackToFront
                        RET
-DrawCar ENDP
+DrawInBackBuffer ENDP
+
+
+    ;This procedure moves back buffer into front buffer
+MoveBackToFront Proc
+                       
+                    ;    PUSH DS
+                    ;    XOR  SI , SI                                ;CLEARING SI
+                    ;    XOR
+                    ;    MOV  DS , ES
+                    ;    POP  DS
+
+
+    ;This procedure moves back buffer into front buffer
+MoveBackToFront ENDP
+
 
 
 MAIN PROC FAR
@@ -75,10 +102,10 @@ MAIN PROC FAR
                        INT  10H
 
     ; set initial pos of car in the game
-                       MOV  PosX , (SCREEN_WIDTH-CAR_SIZE)/2
-                       MOV  PosY , (SCREEN_HEIGHT-CAR_SIZE)/2
+                       MOV  PosX , (SCREEN_WIDTH - CAR_SIZE)/2
+                       MOV  PosY , (SCREEN_HEIGHT - CAR_SIZE)/2
 
-                       CALL DrawCar
+                       CALL DrawInBackBuffer
 
 MAIN ENDP
 END MAIN
