@@ -7,10 +7,12 @@
 .data
 
     ;CarImage
-    CarImg        DB  142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
-
+    CarImg        DB  142, 142, 142, 142, 0, 0, 0, 0, 142, 142, 142, 142, 142, 142, 142, 142, 0, 0, 0, 0, 142, 142, 142, 142, 142, 142, 46, 46, 46, 46, 46, 46, 46, 46, 142, 142, 142, 142, 46, 46
+                  DB  46, 46, 46, 46, 46, 46, 142, 142, 0, 0, 46, 46, 16, 16, 112, 112, 46, 46, 0, 0, 0, 0, 46, 46, 16, 16, 112, 112, 46, 46, 0, 0, 0, 0, 46, 46, 112, 112, 16, 16
+                  DB  46, 46, 0, 0, 0, 0, 46, 46, 112, 112, 16, 16, 46, 46, 0, 0, 142, 142, 46, 46, 46, 46, 46, 46, 46, 46, 142, 142, 142, 142, 46, 46, 46, 46, 46, 46, 46, 46, 142, 142
+                  DB  142, 142, 142, 142, 0, 0, 0, 0, 142, 142, 142, 142, 142, 142, 142, 142, 0, 0, 0, 0, 142, 142, 142, 142
     ;CarDimensions
-    CAR_SIZE      EQU 6
+    CAR_SIZE      EQU 12
     PosX          DB  ?
     PosY          DB  ?
 
@@ -25,10 +27,10 @@
 
 CalculateBoxVertex PROC
                        MOV  AH , 0
-                       mov  AL , PosY
-                       mov  bx , SCREEN_WIDTH
-                       mul  bx                                   ; AL = BOXY * SCREEN_WIDTH (two operand multiplication)
-                       add  AL, PosX
+                       MOV  Al , BYTE PTR PosY
+                       MOV  BX , SCREEN_WIDTH
+                       MUL  BX
+                       Add  AL , BYTE PTR PosX
                        MOV  DI , AX
                        RET
 CalculateBoxVertex ENDP
@@ -38,11 +40,10 @@ DrawCar PROC
                        MOV  ax , 0A000H
                        MOV  es , ax
 
-                       MOV  DI , 0
+                       CALL CalculateBoxVertex
                        MOV  cx , CAR_SIZE
                        MOV  SI , OFFSET CarImg
                        MOV  DL , 0
-                       CALL CalculateBoxVertex
 
     Rows:              
                        PUSH CX
@@ -68,7 +69,7 @@ MAIN PROC FAR
                        MOV  DS,AX
                        MOV  ax , 0A000H
                        MOV  es , ax
-    
+    ;video mode
                        MOV  AH , 0
                        MOV  AL , 13H
                        INT  10H
