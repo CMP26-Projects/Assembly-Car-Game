@@ -1,5 +1,5 @@
 from PIL import Image
-filename = 'Explosion.png'
+filename = 'download.png'
 im = Image.open(filename)
 width, height = im.size
 pixels = list(im.getdata())
