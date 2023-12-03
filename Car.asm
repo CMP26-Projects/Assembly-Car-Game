@@ -1,6 +1,3 @@
-; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    DATA    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 .Model compact
@@ -9,35 +6,67 @@
 .data
 
     ;CarImage
-    CarImg        DB  142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
+    CarImg        DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
 
     ;CarDimensions
-    CAR_SIZE      EQU 6
-    PosX          DW  ?
-    PosY          DW  ?
+    CAR_SIZE      EQU  6
+    PosX          DW   ?
+    PosY          DW   ?
 
 
     ;CarTodraw  info
-    CarToDrawSize DB  ?
-    CarToDraw     DB  ?
-    CarToDrawX    DB  ?
-    CarToDrawY    DB  ?
+    CarToDrawSize DW   ?
+    CarToDraw     DW   ?
+    CarToDrawX    DW   ?
+    CarToDrawY    DW   ?
 
     ; Screen Info
-    SCREEN_WIDTH  EQU 320
-    SCREEN_HEIGHT EQU 200
-    SCREEN_SIZE   EQU SCREEN_WIDTH*SCREEN_HEIGHT
+    SCREEN_WIDTH  EQU  320
+    SCREEN_HEIGHT EQU  200
+    SCREEN_SIZE   EQU  SCREEN_WIDTH*SCREEN_HEIGHT
 
 
+    ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+DRAW MACRO Img, CarSize, StartPosX, StartPosY
+                  MOV  AX, OFFSET Img
+                  MOV  CarToDraw, AX
+
+                  MOV  AX, CarSize
+                  MOV  CarToDrawSize, AX
+
+                  MOV  AX, StartPosX
+                  MOV  CarToDrawX, AX
+
+                  MOV  AX, StartPosY
+                  MOV  CarToDrawY, AX
+
+                  CALL DrawCar
+ENDM
+
+CLEAR MACRO ClearedSize, ClearedPosX, ClearedPosY
+                  MOV  AX , ClearedSize
+                  MOV  CarToDraw , ClearedSize
+
+                  MOV  AX , ClearedPosX
+                  MOV  CarToDrawX, AX
+
+                  MOV  AX , ClearedPosY
+                  MOV  CarToDrawY , AX
+                  CALL ClearCarArea
+ENDM
 
 .CODE
 
+    ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    PROC    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 CalculateBoxVertex PROC
                        MOV  DI , 0
-                       MOV  AX , PosY
+                       MOV  AX , CarToDrawY
                        MOV  BX , SCREEN_WIDTH
                        MUL  BX
-                       ADD  AX , PosX
+                       ADD  AX , CarToDrawX
                        MOV  DI , AX
                        RET
 CalculateBoxVertex ENDP
@@ -47,14 +76,15 @@ DrawCar PROC
                        MOV  ax , 0A000H
                        MOV  es , ax
                        MOV  DI , 0
-                       MOV  cx , CAR_SIZE
-                       LEA  SI ,  CarImg
+                       MOV  cx , CarToDrawSize
+                       MOV  SI ,  CarToDraw
                        MOV  DL , 0
                        CALL CalculateBoxVertex
 
     ROWS_DRAW:         
                        PUSH CX
-                       MOV  CX , CAR_SIZE
+                       PUSH DI
+                       MOV  CX , CarToDrawSize
 
     COLS_DRAW:         
                        MOV  DL , BYTE PTR [SI]
@@ -62,31 +92,34 @@ DrawCar PROC
                        INC  SI
                        INC  DI
                        LOOP COLS_DRAW
+                       POP  DI
                        POP  CX
-                       ADD  DI, SCREEN_WIDTH-CAR_SIZE
+                       ADD  DI, SCREEN_WIDTH
                        LOOP ROWS_DRAW
                        RET
 DrawCar ENDP
 
     ;clear the car's image from the screen
-CLEAR_CAR_AREA PROC
+ClearCarArea PROC
                        MOV  ax , 0A000H
                        MOV  es , ax
-                       MOV  cx , CAR_SIZE
+                       MOV  cx , CarToDrawSize
                        CALL CalculateBoxVertex
     ROWS_CLEAR:        
                        PUSH CX
-                       MOV  CX , CAR_SIZE
+                       PUSH DI
+                       MOV  CX , CarToDrawSize
     COLS_CLEAR:        
                        MOV  BYTE PTR ES:[DI] , 04H
                        INC  DI
                        LOOP COLS_CLEAR
 
+                       POP  DI
                        POP  CX
-                       ADD  DI, SCREEN_WIDTH-CAR_SIZE
+                       ADD  DI, SCREEN_WIDTH
                        LOOP ROWS_CLEAR
                        RET
-CLEAR_CAR_AREA ENDP
+ClearCarArea ENDP
 
 
 MAIN PROC FAR
@@ -104,7 +137,7 @@ MAIN PROC FAR
     ; set initial pos of car in the game
                        MOV  PosX , (SCREEN_WIDTH-CAR_SIZE)/2
                        MOV  PosY , (SCREEN_HEIGHT-CAR_SIZE)/2
-                       CALL DrawCar
+                       Draw CarImg, CAR_SIZE, PosX , PosY
 
     mainLoop:          
                        mov  DI,0H
@@ -120,33 +153,39 @@ MAIN PROC FAR
                        cmp  ah, 4dh                              ; right arrow
                        je   moveRight
                        cmp  ah, 01h                              ; escape
-                       je   exit
+                       jne  bridge
+                       jmp  exit
+    bridge:            
                        jmp  mainLoop                             ; keep looping
 
     moveUp:            
-                       CALL CLEAR_CAR_AREA
+                       CALL ClearCarArea
 
                        SUB  PosY , 1
-                       CALL DrawCar
+                       Draw CarImg, CAR_SIZE, PosX , PosY
+
                        jmp  mainLoop
     moveDown:          
-                       CALL CLEAR_CAR_AREA
+                       CALL ClearCarArea
 
                        ADD  PosY , 1
-                       CALL DrawCar
+                       Draw CarImg, CAR_SIZE, PosX , PosY
+
                        jmp  mainLoop
                      
     moveLeft:          
-                       CALL CLEAR_CAR_AREA
+                       CALL ClearCarArea
 
                        SUB  PosX , 1
-                       CALL DrawCar
+                       Draw CarImg, CAR_SIZE, PosX , PosY
+
                        jmp  mainLoop
     moveRight:         
-                       CALL CLEAR_CAR_AREA
+                       CALL ClearCarArea
 
                        ADD  PosX , 1
-                       CALL DrawCar
+                       Draw CarImg, CAR_SIZE, PosX , PosY
+
                        jmp  mainLoop
     exit:              
                        HLT

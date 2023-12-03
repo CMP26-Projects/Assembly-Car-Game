@@ -1,4 +1,4 @@
-c
+
 ;BACKGROUND
 BACKGROUNDIMAGE         DB      ?
 SCREENWIDTH             EQU     320
