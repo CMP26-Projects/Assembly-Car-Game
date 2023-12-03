@@ -1,5 +1,7 @@
-.386
-DATA SEGMENT USE16                                                                                                                                                            ; Equivalent to .data in 32-bit ; Doctor Allowed using .386
+.Model compact
+.STACK  1024
+
+.data                                                                                                                                                        
 
     ;CarImage
     CarImg        DB  142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
@@ -15,20 +17,57 @@ DATA SEGMENT USE16                                                              
     SCREEN_SIZE   EQU SCREEN_WIDTH*SCREEN_HEIGHT
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACROS  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-DATA ENDS                                                                                                                                                                     ; It must be ended unlike .data in 32-bit
+DRAWIMAGE MACRO IMG, WID, HEI, STARX, STARY
+              LOCAL ROWS, COLS
+              PUSH  CX
+    ;VIDEO MEMORY
+              MOV   AX, 0A000H
+              MOV   ES, AX
 
-CODE SEGMENT USE16                 ; Equivalent to .code in 32-bit
-         ASSUME CS:CODE,DS:DATA    ; To tell him to replace .data and .code with CODE and DATA
+              MOV   DI, STARY
+              MOV   AX, SCREEN_WIDTH
+              MUL   DI
+              MOV   DI, AX
+              ADD   DI, STARX
+    
+              MOV   CX, HEI
+              MOV   SI, OFFSET IMG
+
+    ROWS:     
+              PUSH  CX
+              PUSH  DI
+              MOV   CX, WID
+    COLS:     
+              MOV   DL, BYTE PTR [SI]
+              MOV   ES:[DI], DL
+              INC   SI
+              INC   DI
+              LOOP  COLS
+              POP   DI
+              POP   CX
+              ADD   DI, SCREEN_WIDTH
+              LOOP  ROWS
+              MOV   DI, STARY
+              MOV   AX, SCREEN_WIDTH
+              MUL   DI
+              MOV   DI, AX
+              ADD   DI, STARX
+              ADD   DI, WID
+              POP   CX
+ENDM
 
 
- CalculateBoxVertex macro 
+CalculateBoxVertex macro 
                        mov    di, PosY
                        imul   di, SCREEN_WIDTH                       ; di = BOXY * SCREEN_WIDTH (two operand multiplication)
                        add    di, PosX
 ENDM
 
+
 DrawCar MACRO  
+    LOCAL Rows , cols
 
 MOV ax , 0A000H
 MOV es , ax
@@ -37,16 +76,17 @@ MOV DI , 0
 
 MOV cx , CAR_SIZE
 MOV SI , BYTE PTR CarImg
-CALL CalculateBoxVertex
+
+CalculateBoxVertex
 
 Rows:
     PUSH CX
 
-    Col:
+    Cols:
     MOV ES:[DI] , SI
     INC SI
     INC DI
-    LOOP Col
+    LOOP Cols
 
     POP CX
     ADD DI, SCREEN_WIDTH-CAR_SIZE
@@ -55,22 +95,25 @@ Rows:
     
 ENDM
 
-Main PROC FAR
+
+.CODE
+
+MAIN PROC FAR
     
-         MOV    AX,DATA
+         MOV    AX,@DATA
          MOV    DS,AX
+         MOV ax , 0A000H
+         MOV es , ax
     
-            MOV ax , 0A000H
-            MOV es , ax
-    
+        MOV AH , 0
+        MOV AL , 13H
+        INT 10H
+
     ; set initial pos of car in the game
 
     MOV PosX , (SCREEN_WIDTH-CAR_SIZE)/2
     MOV PosY , (SCREEN_HEIGHT-CAR_SIZE)/2
 
-    CALL DrawCar 
 
-
-CODE ENDS
-Main ENDP
-END Main
+MAIN ENDP
+END MAIN
