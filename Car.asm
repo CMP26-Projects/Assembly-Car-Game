@@ -297,6 +297,16 @@ UpdateArrowFlags PROC FAR
 UpdateArrowFlags ENDP
 
 
+;description
+CheckArrowKeys PROC
+    
+                        SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
+                        SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
+                        CALL InputButtonSwitchCase
+                        CALL UpdateArrowFlags
+                        RET
+CheckArrowKeys ENDP
+
 INT09H PROC FAR
                             IN     AL, 60H
  ; escape
@@ -304,12 +314,8 @@ INT09H PROC FAR
                           JNE      cont                                                      ;made as a bridge to avoid far jumps
                           JMP      exit
    cont:
-                            
-                        SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
-                        SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
-                        CALL InputButtonSwitchCase
-                        CALL UpdateArrowFlags
-
+                             CALL   CheckArrowKeys
+                        
                                                
                             MOV AL , 20H
                             OUT 20H, AL
