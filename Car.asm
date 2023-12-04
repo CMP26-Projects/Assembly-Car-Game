@@ -5,20 +5,23 @@
 
 .data
 
-    ;CarImage
-    CarImg         DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
+        ;CarImage
+        CarImg1                 DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
+        CarImg2                 DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
 
-    ;CarDimensions
-    CAR_SIZE       EQU  6
-    PosX           DW   ?
-    PosY           DW   ?
-    CarSpeed       EQU  3
+        ;CarDimensions
+        CAR_SIZE                EQU  6
+        PosXfirst               DW   ?
+        PosYfirst               DW   ?
+        PosXsecond              DW   ?
+        PosYsecond              DW   ?
 
-    ;CarTodraw  info
-    CarToDrawSize  DW   ?
-    CarToDraw      DW   ?
-    CarToDrawX     DW   ?
-    CarToDrawY     DW   ?
+
+        ;CarTodraw  info
+        CarToDrawSize           DW   ?
+        CarToDraw               DW   ?
+        CarToDrawX              DW   ?
+        CarToDrawY              DW   ?
 
     ; Screen Info
     SCREEN_WIDTH   EQU  320
@@ -56,7 +59,7 @@
     RightKeyCode   DB   ?
 
 
-    ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 DRAW MACRO Img, CarSize, StartPosX, StartPosY
           MOV  AX, OFFSET Img
@@ -124,7 +127,7 @@ ENDM
 
 .CODE
 
-    ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    PROC    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    PROC    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 CalculateBoxVertex PROC
@@ -136,36 +139,32 @@ CalculateBoxVertex PROC
                        MOV   DI , AX
                        RET
 CalculateBoxVertex ENDP
-
-
-DrawCar PROC
-                       MOV   ax , 0A000H
-                       MOV   es , ax
-                       MOV   DI , 0
-                       MOV   cx , CarToDrawSize
-                       MOV   SI ,  CarToDraw
-                       MOV   DL , 0
-                       CALL  CalculateBoxVertex
-
-    ROWS_DRAW:         
-                       PUSH  CX
-                       PUSH  DI
-                       MOV   CX , CarToDrawSize
-
-    COLS_DRAW:         
-                       MOV   DL , BYTE PTR [SI]
-                       MOV   BYTE PTR ES:[DI] , DL
-                       INC   SI
-                       INC   DI
-                       LOOP  COLS_DRAW
-                       POP   DI
-                       POP   CX
-                       ADD   DI, SCREEN_WIDTH
-                       LOOP  ROWS_DRAW
-                       RET
+DrawCar PROC    
+                MOV  ax , 0A000H
+                MOV  es , ax
+                MOV  DI , 0
+                MOV  cx , CarToDrawSize
+                MOV  SI ,  CarToDraw
+                MOV  DL , 0
+                CALL CalculateBoxVertex
+ROWS_DRAW:        
+                PUSH CX
+                PUSH DI
+                MOV  CX , CarToDrawSize
+COLS_DRAW:         
+                MOV  DL , BYTE PTR [SI]
+                MOV  BYTE PTR ES:[DI] , DL
+                INC  SI
+                INC  DI
+                LOOP COLS_DRAW
+                POP  DI
+                POP  CX
+                ADD  DI, SCREEN_WIDTH
+                LOOP ROWS_DRAW
+                RET
 DrawCar ENDP
 
-    ;clear the car's image from the screen
+                ;clear the car's image from the screen
 ClearCarArea PROC
                        MOV   ax , 0A000H
                        MOV   es , ax
@@ -329,12 +328,18 @@ MAIN PROC FAR
                        MOV   AL , 13H
                        INT   10H
 
-    ; set initial pos of car in the game
-                       MOV   PosX , (SCREEN_WIDTH-CAR_SIZE)/2
-                       MOV   PosY , (SCREEN_HEIGHT-CAR_SIZE)/2
-                       Draw  CarImg, CAR_SIZE, PosX , PosY
+     ; set initial pos of first car in the game
+                MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
+                MOV  PosYfirst , (SCREEN_HEIGHT-CAR_SIZE)/2
+                Draw CarImg1, CAR_SIZE, PosXfirst , PosYfirst
 
-    mainLoop:          
+                ; set initial pos of second car in the game
+                MOV  PosXsecond , (SCREEN_WIDTH-CAR_SIZE)/3
+                MOV  PosYsecond , (SCREEN_HEIGHT-CAR_SIZE)/3
+                Draw CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+
+
+     mainLoop:          
      ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
                           CLI
@@ -366,6 +371,35 @@ MAIN PROC FAR
 
                        jmp   mainLoop                             ; keep looping
 
+    moveUp:            
+                       CALL ClearCarArea
+
+                       SUB  PosY , 1
+                       Draw CarImg, CAR_SIZE, PosX , PosY
+
+                       jmp  mainLoop
+    moveDown:          
+                       CALL ClearCarArea
+
+                       ADD  PosY , 1
+                       Draw CarImg, CAR_SIZE, PosX , PosY
+
+                       jmp  mainLoop
+                     
+    moveLeft:          
+                       CALL ClearCarArea
+
+                       SUB  PosX , 1
+                       Draw CarImg, CAR_SIZE, PosX , PosY
+
+                       jmp  mainLoop
+    moveRight:         
+                       CALL ClearCarArea
+
+                       ADD  PosX , 1
+                       Draw CarImg, CAR_SIZE, PosX , PosY
+
+                       jmp  mainLoop
     exit:              
                        HLT
 MAIN ENDP
