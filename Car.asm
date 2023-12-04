@@ -25,35 +25,36 @@
     SCREEN_HEIGHT EQU  200
     SCREEN_SIZE   EQU  SCREEN_WIDTH*SCREEN_HEIGHT
 
+    ;Time handling
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 DRAW MACRO Img, CarSize, StartPosX, StartPosY
-                  MOV  AX, OFFSET Img
-                  MOV  CarToDraw, AX
+         MOV  AX, OFFSET Img
+         MOV  CarToDraw, AX
 
-                  MOV  AX, CarSize
-                  MOV  CarToDrawSize, AX
+         MOV  AX, CarSize
+         MOV  CarToDrawSize, AX
 
-                  MOV  AX, StartPosX
-                  MOV  CarToDrawX, AX
+         MOV  AX, StartPosX
+         MOV  CarToDrawX, AX
 
-                  MOV  AX, StartPosY
-                  MOV  CarToDrawY, AX
+         MOV  AX, StartPosY
+         MOV  CarToDrawY, AX
 
-                  CALL DrawCar
+         CALL DrawCar
 ENDM
 
 CLEAR MACRO ClearedSize, ClearedPosX, ClearedPosY
-                  MOV  AX , ClearedSize
-                  MOV  CarToDraw , ClearedSize
+          MOV  AX , ClearedSize
+          MOV  CarToDraw , ClearedSize
 
-                  MOV  AX , ClearedPosX
-                  MOV  CarToDrawX, AX
+          MOV  AX , ClearedPosX
+          MOV  CarToDrawX, AX
 
-                  MOV  AX , ClearedPosY
-                  MOV  CarToDrawY , AX
-                  CALL ClearCarArea
+          MOV  AX , ClearedPosY
+          MOV  CarToDrawY , AX
+          CALL ClearCarArea
 ENDM
 
 .CODE
@@ -62,131 +63,159 @@ ENDM
 
 
 CalculateBoxVertex PROC
-                       MOV  DI , 0
-                       MOV  AX , CarToDrawY
-                       MOV  BX , SCREEN_WIDTH
-                       MUL  BX
-                       ADD  AX , CarToDrawX
-                       MOV  DI , AX
+                       MOV   DI , 0
+                       MOV   AX , CarToDrawY
+                       MOV   BX , SCREEN_WIDTH
+                       MUL   BX
+                       ADD   AX , CarToDrawX
+                       MOV   DI , AX
                        RET
 CalculateBoxVertex ENDP
 
 
 DrawCar PROC
-                       MOV  ax , 0A000H
-                       MOV  es , ax
-                       MOV  DI , 0
-                       MOV  cx , CarToDrawSize
-                       MOV  SI ,  CarToDraw
-                       MOV  DL , 0
-                       CALL CalculateBoxVertex
+                       MOV   ax , 0A000H
+                       MOV   es , ax
+                       MOV   DI , 0
+                       MOV   cx , CarToDrawSize
+                       MOV   SI ,  CarToDraw
+                       MOV   DL , 0
+                       CALL  CalculateBoxVertex
 
     ROWS_DRAW:         
-                       PUSH CX
-                       PUSH DI
-                       MOV  CX , CarToDrawSize
+                       PUSH  CX
+                       PUSH  DI
+                       MOV   CX , CarToDrawSize
 
     COLS_DRAW:         
-                       MOV  DL , BYTE PTR [SI]
-                       MOV  BYTE PTR ES:[DI] , DL
-                       INC  SI
-                       INC  DI
-                       LOOP COLS_DRAW
-                       POP  DI
-                       POP  CX
-                       ADD  DI, SCREEN_WIDTH
-                       LOOP ROWS_DRAW
+                       MOV   DL , BYTE PTR [SI]
+                       MOV   BYTE PTR ES:[DI] , DL
+                       INC   SI
+                       INC   DI
+                       LOOP  COLS_DRAW
+                       POP   DI
+                       POP   CX
+                       ADD   DI, SCREEN_WIDTH
+                       LOOP  ROWS_DRAW
                        RET
 DrawCar ENDP
 
     ;clear the car's image from the screen
 ClearCarArea PROC
-                       MOV  ax , 0A000H
-                       MOV  es , ax
-                       MOV  cx , CarToDrawSize
-                       CALL CalculateBoxVertex
+                       MOV   ax , 0A000H
+                       MOV   es , ax
+                       MOV   cx , CarToDrawSize
+                       CALL  CalculateBoxVertex
     ROWS_CLEAR:        
-                       PUSH CX
-                       PUSH DI
-                       MOV  CX , CarToDrawSize
+                       PUSH  CX
+                       PUSH  DI
+                       MOV   CX , CarToDrawSize
     COLS_CLEAR:        
-                       MOV  BYTE PTR ES:[DI] , 04H
-                       INC  DI
-                       LOOP COLS_CLEAR
+                       MOV   BYTE PTR ES:[DI] , 04H
+                       INC   DI
+                       LOOP  COLS_CLEAR
 
-                       POP  DI
-                       POP  CX
-                       ADD  DI, SCREEN_WIDTH
-                       LOOP ROWS_CLEAR
+                       POP   DI
+                       POP   CX
+                       ADD   DI, SCREEN_WIDTH
+                       LOOP  ROWS_CLEAR
                        RET
 ClearCarArea ENDP
 
 
 MAIN PROC FAR
-    
-                       MOV  AX,@DATA
-                       MOV  DS,AX
-                       MOV  ax , 0A000H
+
+                       MOV   AX,@DATA
+                       MOV   DS,AX
+                       MOV   ax , 0A000H
               
     ;video mode
-                       MOV  es , ax
-                       MOV  AH , 0
-                       MOV  AL , 13H
-                       INT  10H
+                       MOV   es , ax
+                       MOV   AH , 0
+                       MOV   AL , 13H
+                       INT   10H
 
     ; set initial pos of car in the game
-                       MOV  PosX , (SCREEN_WIDTH-CAR_SIZE)/2
-                       MOV  PosY , (SCREEN_HEIGHT-CAR_SIZE)/2
-                       Draw CarImg, CAR_SIZE, PosX , PosY
+                       MOV   PosX , (SCREEN_WIDTH-CAR_SIZE)/2
+                       MOV   PosY , (SCREEN_HEIGHT-CAR_SIZE)/2
+                       Draw  CarImg, CAR_SIZE, PosX , PosY
 
     mainLoop:          
-                       mov  DI,0H
-                       mov  ah, 00h
-                       int  16h                                  ; wait for key press - store key in ah
+    ; wait for key press - store key in ah
+                       in    al , 60h
+
     ; Handle arrow keys (ah stores the scan code of the key not the ASCII code)
-                       cmp  ah, 48h                              ; up arrow
-                       je   moveUp
-                       cmp  ah, 50h                              ; down arrow
-                       je   moveDown
-                       cmp  ah, 4bh                              ; left arrow
-                       je   moveLeft
-                       cmp  ah, 4dh                              ; right arrow
-                       je   moveRight
-                       cmp  ah, 01h                              ; escape
-                       jne  bridge
-                       jmp  exit
+    ; up arrow
+                       cmp   al, 48h
+                       jne   checkDown
+    ;Up logic
+                       CLEAR CAR_SIZE, PosX, PosY
+                       SUB   PosY , 1
+                       Draw  CarImg, CAR_SIZE, PosX , PosY
+
+    checkDown:         
+    ; down arrow
+                       cmp   al, 50h
+                       jne   checkLeft
+    ;Down logic
+                       CALL  ClearCarArea
+                       ADD   PosY , 1
+                       Draw  CarImg, CAR_SIZE, PosX , PosY
+                       
+    checkLeft:         
+    ; left arrow
+                       cmp   al, 4bh
+                       jne   checkRight
+    ;Left logic
+                       CALL  ClearCarArea
+                       SUB   PosX , 1
+                       Draw  CarImg, CAR_SIZE, PosX , PosY
+    checkRight:        
+    ; right arrow
+                       cmp   al, 4dh
+                       jne   checkEsc
+    ;Right logic
+                       CALL  ClearCarArea
+                       SUB   PosX , 1
+                       Draw  CarImg, CAR_SIZE, PosX , PosY
+    checkEsc:          
+    ; escape
+                       cmp   al, 01h
+                       jne   bridge
+    ;esc logic
+                       jmp   exit
     bridge:            
-                       jmp  mainLoop                             ; keep looping
+                       jmp   mainLoop                             ; keep looping
 
-    moveUp:            
-                       CALL ClearCarArea
+    ; moveUp:
+    ;                    CALL ClearCarArea
 
-                       SUB  PosY , 1
-                       Draw CarImg, CAR_SIZE, PosX , PosY
+    ;                    SUB  PosY , 1
+    ;                    Draw CarImg, CAR_SIZE, PosX , PosY
 
-                       jmp  mainLoop
-    moveDown:          
-                       CALL ClearCarArea
+    ;                    jmp  mainLoop
+    ; moveDown:
+    ;                    CALL ClearCarArea
 
-                       ADD  PosY , 1
-                       Draw CarImg, CAR_SIZE, PosX , PosY
+    ;                    ADD  PosY , 1
+    ;                    Draw CarImg, CAR_SIZE, PosX , PosY
 
-                       jmp  mainLoop
+    ;                    jmp  mainLoop
                      
-    moveLeft:          
-                       CALL ClearCarArea
+    ; moveLeft:
+    ;                    CALL ClearCarArea
 
-                       SUB  PosX , 1
-                       Draw CarImg, CAR_SIZE, PosX , PosY
+    ;                    SUB  PosX , 1
+    ;                    Draw CarImg, CAR_SIZE, PosX , PosY
 
-                       jmp  mainLoop
-    moveRight:         
-                       CALL ClearCarArea
+    ;                    jmp  mainLoop
+    ; moveRight:
+    ;                    CALL ClearCarArea
 
-                       ADD  PosX , 1
-                       Draw CarImg, CAR_SIZE, PosX , PosY
+    ;                    ADD  PosX , 1
+    ;                    Draw CarImg, CAR_SIZE, PosX , PosY
 
-                       jmp  mainLoop
+    ;                    jmp  mainLoop
     exit:              
                        HLT
 MAIN ENDP
