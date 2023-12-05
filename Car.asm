@@ -148,6 +148,12 @@ SetPosition  MACRO X , Y
     MOV PosY, DX
 ENDM
 
+Update1 MACRO
+                        CLEAR CAR_SIZE, PosXfirst, PosYfirst
+                        CALL UpdateCar1Pos
+                        CALL UpdateArrowFlags
+                        Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
+ENDM
 
 
 .CODE
@@ -356,6 +362,7 @@ UpdateWASDFlags PROC
      RET
 UpdateWASDFlags ENDP
 
+;description
 
 ;procedure calls all arrow keys functions
 CheckArrowKeys PROC
@@ -363,13 +370,8 @@ CheckArrowKeys PROC
                         SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
                         SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
                         CALL InputButtonSwitchCase
-
-                        CLEAR CAR_SIZE, PosXfirst, PosYfirst
                         CALL CheckFlags
-                        CALL UpdateCar1Pos
-                        CALL UpdateArrowFlags
-                        Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-
+                        
                         RET
                         ;CALL UpdateArrowFlags
 CheckArrowKeys ENDP
@@ -381,7 +383,7 @@ CheckWASDKeys PROC
                         SetFlags WFlag, SFlag, AFlag, DFlag
                         CALL InputButtonSwitchCase
 
-                         CLEAR CAR_SIZE, PosXsecond, PosYsecond
+                        CLEAR CAR_SIZE, PosXsecond, PosYsecond
                         CALL CheckFlags
                         CALL UpdateCar2Pos
                         CALL UpdateWASDFlags
@@ -400,7 +402,7 @@ INT09H PROC FAR
 ;    cont:
                             
                             CALL CheckArrowKeys
-                            CALL CheckWASDKeys
+                            ;CALL CheckWASDKeys
 
                                                
                             MOV AL , 20H
@@ -431,7 +433,11 @@ MAIN PROC FAR
                 MOV  PosYsecond , (SCREEN_HEIGHT-CAR_SIZE)/3
                 Draw CarImg2, CAR_SIZE, PosXsecond , PosYsecond
 
+                MOV DX , PosXfirst
+                MOV PosX, DX
 
+                MOV DX , PosYfirst
+                MOV PosY, DX
      mainLoop:          
      ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
@@ -450,8 +456,18 @@ MAIN PROC FAR
     ;re-enabling interrupts
                           POP DS
                           STI
-    
-                         MOV   CX , 15000
+
+                        MOV DX , PosXfirst
+                        CMP PosX, DX
+                        JE bridge1
+                        Update1
+    bridge1:
+                        MOV DX , PosYfirst
+                        CMP POSY , DX
+                        JE bridge2
+                        Update1
+    bridge2:
+                         MOV   CX , 10000
      WasteTime:         
                         LOOP  WasteTime
 
