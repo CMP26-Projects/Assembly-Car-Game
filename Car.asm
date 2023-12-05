@@ -283,20 +283,20 @@ CheckFlags PROC FAR
 	
                           CMP      UpFlag , 1
                           JNE      CmpLeft
-                          SUB      PosYfirst , 1
+                          SUB      PosY , 1
     CmpLeft:              
                           CMP      LeftFlag , 1
                           JNE      CmpDown
-                          SUB      PosXfirst, 1
+                          SUB      PosX, 1
     CmpDown:              
                           CMP      DownFlag , 1
                           JNE      CmpRight
-                          ADD      PosYfirst , 1
+                          ADD      PosY, 1
 
     CmpRight:             
-                          CMP      RightFlag , 1
+                          CMP      RightFlag, 1
                           JNE      CmpFinish
-                          ADD      PosXfirst , 1
+                          ADD      PosX , 1
 
     CmpFinish:            
                          RET
@@ -304,10 +304,10 @@ CheckFlags ENDP
 
 
 ;Update Flags after each game loop 
-UpdateArrowFlags PROC FAR
+ UpdateArrowFlags PROC FAR
    
-    MOV BL , UpFlag
-    MOV ArrowUpFlag, BL
+     MOV BL , UpFlag
+     MOV ArrowUpFlag, BL
 
     MOV BL , DownFlag
     MOV ArrowDownFlag ,  BL
@@ -317,8 +317,8 @@ UpdateArrowFlags PROC FAR
 
     MOV BL , RightFlag
     MOV ArrowRightFlag , BL
-    RET
-UpdateArrowFlags ENDP
+     RET
+ UpdateArrowFlags ENDP
 
 ;description
 UpdateCar1Pos PROC
@@ -326,17 +326,51 @@ UpdateCar1Pos PROC
     MOV PosXfirst, DX
 
     MOV DX, PosY
-    MOV PosYsecond, DX
+    MOV PosYfirst, DX
+    RET
 UpdateCar1Pos ENDP
+
+;description
+UpdateCar2Pos PROC
+    MOV DX , PosX
+    MOV PosXsecond, DX
+
+    MOV DX, PosY
+    MOV PosYsecond, DX
+    RET
+UpdateCar2Pos ENDP
+
+;description
+UpdateWASDFlags PROC
+    MOV BL , UpFlag
+     MOV WFlag, BL
+
+    MOV BL , DownFlag
+    MOV SFlag ,  BL
+
+    MOV BL , LeftFlag
+    MOV AFlag, BL
+
+    MOV BL , RightFlag
+    MOV DFlag , BL
+     RET
+UpdateWASDFlags ENDP
+
 
 ;procedure calls all arrow keys functions
 CheckArrowKeys PROC
-                        ;SetPosition PosXfirst, PosYfirst
+                        SetPosition PosXfirst, PosYfirst
                         SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
                         SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
                         CALL InputButtonSwitchCase
+
+                        CLEAR CAR_SIZE, PosXfirst, PosYfirst
+                        CALL CheckFlags
+                        CALL UpdateCar1Pos
                         CALL UpdateArrowFlags
-                        
+                        Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
+
+                        RET
                         ;CALL UpdateArrowFlags
 CheckArrowKeys ENDP
 
@@ -347,19 +381,26 @@ CheckWASDKeys PROC
                         SetFlags WFlag, SFlag, AFlag, DFlag
                         CALL InputButtonSwitchCase
 
-                      ;  CALL UpdateArrowFlags
+                         CLEAR CAR_SIZE, PosXsecond, PosYsecond
+                        CALL CheckFlags
+                        CALL UpdateCar2Pos
+                        CALL UpdateWASDFlags
+                        Draw  CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+                 
+                        RET
+                        ;CALL UpdateArrowFlags
 CheckWASDKeys ENDP
 
 INT09H PROC FAR
                             IN     AL, 60H
  ; escape
-                          cmp      AL, 01h
-                          JNE      cont                                                      ;made as a bridge to avoid far jumps
-                          JMP      exit
-   cont:
+;                           cmp      AL, 01h
+;                           JNE      cont                                                      ;made as a bridge to avoid far jumps
+;                           JMP      exit
+;    cont:
                             
                             CALL CheckArrowKeys
-                            ;CALL CheckWASDKeys
+                            CALL CheckWASDKeys
 
                                                
                             MOV AL , 20H
@@ -392,98 +433,97 @@ MAIN PROC FAR
 
 
      mainLoop:          
-    ;  ;--------------    Overriding INT 9H   ---------------
-    ; ;Disable interrrupts
-    ;                       CLI
+     ;--------------    Overriding INT 9H   ---------------
+    ;Disable interrrupts
+                          CLI
                        
-    ; ;Saving DS it will be the base of the addressing mode inside the interrupt
-    ;                       PUSH     DS
-    ;                       MOV      AX , CS
-    ;                       MOV      DS , AX
+    ;Saving DS it will be the base of the addressing mode inside the interrupt
+                          PUSH     DS
+                          MOV      AX , CS
+                          MOV      DS , AX
 
-    ; ;changing interrup vector
-    ;                       MOV AX , 2509H
-    ;                       LEA DX , INT09H
-    ;                       INT 21H
+    ;changing interrup vector
+                          MOV AX , 2509H
+                          LEA DX , INT09H
+                          INT 21H
                             
-    ; ;re-enabling interrupts
-    ;                       POP DS
-    ;                       STI
+    ;re-enabling interrupts
+                          POP DS
+                          STI
+    
+                         MOV   CX , 15000
+     WasteTime:         
+                        LOOP  WasteTime
 
-                            in al, 60h                            
-                            ;copying scan codes          
-                            MOV   DL , ArrowUp
-                            MOV   UpKeyCode , DL
+                       JMP  mainLoop                             ; keep looping
+    exit:              
+                       HLT
+MAIN ENDP
+END MAIN
+            ;                 in al, 60h                            
+            ;                 ;copying scan codes          
+            ;                 MOV   DL , ArrowUp
+            ;                 MOV   UpKeyCode , DL
 
-                            MOV   DL , ArrowLeft
-                            MOV   LeftKeyCode , DL
-
-
-                            MOV   DL , ArrowUpFlag
-                            MOV   UpFlag , DL
-
-                            MOV   DL , ArrowLeftFlag
-                            MOV   LeftFlag , DL
+            ;                 MOV   DL , ArrowLeft
+            ;                 MOV   LeftKeyCode , DL
 
 
-                            cmp   al, 01h
-                            jne   b
-            ;esc logic
-                            jmp   exit
-            b:            
+            ;                 MOV   DL , ArrowUpFlag
+            ;                 MOV   UpFlag , DL
 
-            ; up arrow
-                            cmp   al, UpKeyCode
-                            JNE   N
-                            MOV   UpFlag , 1
-                            JMP   D
-            N:  
-                            MOV   BL , UpKeyCode
-                            ADD   BL, 80H
-                            CMP   AL ,  BL
-                            JNE   la
-                            MOV   UpFlag , 0
-                            JMP   D
+            ;                 MOV   DL , ArrowLeftFlag
+            ;                 MOV   LeftFlag , DL
+
+
+            ;                 cmp   al, 01h
+            ;                 jne   b
+            ; ;esc logic
+            ;                 jmp   exit
+            ; b:            
+
+            ; ; up arrow
+            ;                 cmp   al, UpKeyCode
+            ;                 JNE   N
+            ;                 MOV   UpFlag , 1
+            ;                 JMP   D
+            ; N:  
+            ;                 MOV   BL , UpKeyCode
+            ;                 ADD   BL, 80H
+            ;                 CMP   AL ,  BL
+            ;                 JNE   la
+            ;                 MOV   UpFlag , 0
+            ;                 JMP   D
             
-            la:
-            ; left arrow
-                       CMP   AL, LeftKeyCode
-                       JNE   N2
-                       MOV   LeftFlag , 1
-                       JMP   D
-             N2:       
-                       MOV   BL , LeftKeyCode
-                       ADD   BL, 80H
-                       CMP   AL , BL
-                       JNE   D
-                       MOV   LeftFlag , 0
+            ; la:
+            ; ; left arrow
+            ;            CMP   AL, LeftKeyCode
+            ;            JNE   N2
+            ;            MOV   LeftFlag , 1
+            ;            JMP   D
+            ;  N2:       
+            ;            MOV   BL , LeftKeyCode
+            ;            ADD   BL, 80H
+            ;            CMP   AL , BL
+            ;            JNE   D
+            ;            MOV   LeftFlag , 0
 
-            D:   
+            ; D:   
 
 
                     
-                        MOV BL , UpFlag
-                        MOV ArrowUpFlag, BL
+            ;             MOV BL , UpFlag
+            ;             MOV ArrowUpFlag, BL
                         
-                        CLEAR CAR_SIZE, PosXfirst, PosYfirst
-                        CALL CheckFlags
-                        Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
+
 
 
                         ; CLEAR CAR_SIZE, PosXsecond, PosYsecond
                         ; CALL CheckFlags
                         ; Draw  CarImg2, CAR_SIZE, PosXsecond , PosYsecond
                  
-                   
-                        MOV   CX , 15000
-     WasteTime:         
-                        LOOP  WasteTime
-
-                       jmp   mainLoop                             ; keep looping
-    exit:              
-                       HLT
-MAIN ENDP
-END MAIN
+                ;    
+                       
 
     ; moveUp:            
     ;                    CALL ClearCarArea
