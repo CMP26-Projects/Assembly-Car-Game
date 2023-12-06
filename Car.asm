@@ -19,6 +19,11 @@
         PosX    DW  ?
         PosY    DW  ?
         
+        ;previous postions to check for updates
+        PrevPosXfirst               DW   ?
+        PrevPosYfirst               DW   ?
+        PrevPosXsecond              DW   ?
+        PrevPosYsecond              DW   ?
 
         ;CarTodraw  info
         CarToDrawSize           DW   ?
@@ -146,13 +151,6 @@ SetPosition  MACRO X , Y
 
     MOV DX , Y
     MOV PosY, DX
-ENDM
-
-Update1 MACRO
-                        CLEAR CAR_SIZE, PosXfirst, PosYfirst
-                        CALL UpdateCar1Pos
-                        CALL UpdateArrowFlags
-                        Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
 ENDM
 
 
@@ -283,30 +281,55 @@ InputButtonSwitchCase PROC  FAR
                         RET
 InputButtonSwitchCase ENDP
 
-CheckFlags PROC FAR
+CheckArrowFlags PROC FAR
 
     ;------- checking Flags -------
 	
-                          CMP      UpFlag , 1
+                          CMP      ArrowUpFlag , 1
                           JNE      CmpLeft
-                          SUB      PosY , 1
+                          SUB      PosYfirst , 1
     CmpLeft:              
-                          CMP      LeftFlag , 1
+                          CMP      ArrowLeftFlag , 1
                           JNE      CmpDown
-                          SUB      PosX, 1
+                          SUB      PosXfirst, 1
     CmpDown:              
-                          CMP      DownFlag , 1
+                          CMP      ArrowDownFlag , 1
                           JNE      CmpRight
-                          ADD      PosY, 1
+                          ADD      PosYfirst, 1
 
     CmpRight:             
-                          CMP      RightFlag, 1
+                          CMP      ArrowRightFlag, 1
                           JNE      CmpFinish
-                          ADD      PosX , 1
+                          ADD      PosXfirst , 1
 
     CmpFinish:            
                          RET
-CheckFlags ENDP
+CheckArrowFlags ENDP
+
+CheckWASDFlags PROC FAR
+
+    ;------- checking Flags -------
+	
+                          CMP      WFlag , 1
+                          JNE      CmpLeft2
+                          SUB     PosYsecond , 1
+    CmpLeft2:              
+                          CMP      AFlag , 1
+                          JNE      CmpDown2
+                          SUB      PosXsecond, 1
+    CmpDown2:              
+                          CMP      SFlag , 1
+                          JNE      CmpRight2
+                          ADD     PosYsecond, 1
+
+    CmpRight2:             
+                          CMP      DFlag, 1
+                          JNE      CmpFinish2
+                          ADD      PosXsecond , 1
+
+    CmpFinish2:            
+                         RET
+CheckWASDFlags ENDP
 
 
 ;Update Flags after each game loop 
@@ -370,10 +393,9 @@ CheckArrowKeys PROC
                         SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
                         SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
                         CALL InputButtonSwitchCase
-                        CALL CheckFlags
-                        
+                        CALL UpdateArrowFlags
+                        CALL UpdateCar1Pos
                         RET
-                        ;CALL UpdateArrowFlags
 CheckArrowKeys ENDP
 
 ;procedure calls all WASD keys functions
@@ -382,16 +404,23 @@ CheckWASDKeys PROC
                         SETKEYS WKey, SKey, AKey, DKey
                         SetFlags WFlag, SFlag, AFlag, DFlag
                         CALL InputButtonSwitchCase
-
-                        CLEAR CAR_SIZE, PosXsecond, PosYsecond
-                        CALL CheckFlags
-                        CALL UpdateCar2Pos
                         CALL UpdateWASDFlags
-                        Draw  CarImg2, CAR_SIZE, PosXsecond , PosYsecond
-                 
+                        CALL UpdateCar2Pos
                         RET
-                        ;CALL UpdateArrowFlags
 CheckWASDKeys ENDP
+
+Update1 PROC FAR
+                        CLEAR CAR_SIZE, PrevPosXfirst, PrevPosYfirst
+                        Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
+                        RET
+Update1 ENDP
+
+
+Update2 PROC FAR
+                        CLEAR CAR_SIZE, PrevPosXsecond, PrevPosYsecond
+                        Draw  CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+                        RET
+Update2 ENDP
 
 INT09H PROC FAR
                             IN     AL, 60H
@@ -402,7 +431,7 @@ INT09H PROC FAR
 ;    cont:
                             
                             CALL CheckArrowKeys
-                            ;CALL CheckWASDKeys
+                            CALL CheckWASDKeys
 
                                                
                             MOV AL , 20H
@@ -439,6 +468,20 @@ MAIN PROC FAR
                 MOV DX , PosYfirst
                 MOV PosY, DX
      mainLoop:          
+
+     MOV DX , PosXfirst
+     MOV PrevPosXfirst, DX
+
+     MOV DX, PosYfirst
+     MOV PrevPosYfirst, DX
+
+     MOV DX , PosXsecond
+     MOV PrevPosXsecond, DX
+
+     MOV DX , PosYsecond
+     MOV PrevPosYsecond ,DX
+
+
      ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
                           CLI
@@ -456,18 +499,35 @@ MAIN PROC FAR
     ;re-enabling interrupts
                           POP DS
                           STI
-
+                        
+                        
+                        CALL CheckArrowFlags
+                        CALL CheckWASDFlags
+                        
                         MOV DX , PosXfirst
-                        CMP PosX, DX
+                        CMP PrevPosXfirst, DX
                         JE bridge1
-                        Update1
+                        CALL Update1
+                        JMP Car2Check
     bridge1:
                         MOV DX , PosYfirst
-                        CMP POSY , DX
+                        CMP PrevPosYfirst , DX
+                        JE Car2Check
+                        CALL Update1
+    Car2Check:  
+                        MOV DX , PosXsecond
+                        CMP PrevPosXsecond, DX
                         JE bridge2
-                        Update1
+                        CALL Update2
+                        JMP ContinueLooping
     bridge2:
-                         MOV   CX , 10000
+                        MOV DX , PosYsecond
+                        CMP PrevPosYsecond , DX
+                        JE ContinueLooping
+                        CALL Update2
+    ContinueLooping:
+
+                         MOV   CX , 60000
      WasteTime:         
                         LOOP  WasteTime
 
@@ -476,156 +536,3 @@ MAIN PROC FAR
                        HLT
 MAIN ENDP
 END MAIN
-            ;                 in al, 60h                            
-            ;                 ;copying scan codes          
-            ;                 MOV   DL , ArrowUp
-            ;                 MOV   UpKeyCode , DL
-
-            ;                 MOV   DL , ArrowLeft
-            ;                 MOV   LeftKeyCode , DL
-
-
-            ;                 MOV   DL , ArrowUpFlag
-            ;                 MOV   UpFlag , DL
-
-            ;                 MOV   DL , ArrowLeftFlag
-            ;                 MOV   LeftFlag , DL
-
-
-            ;                 cmp   al, 01h
-            ;                 jne   b
-            ; ;esc logic
-            ;                 jmp   exit
-            ; b:            
-
-            ; ; up arrow
-            ;                 cmp   al, UpKeyCode
-            ;                 JNE   N
-            ;                 MOV   UpFlag , 1
-            ;                 JMP   D
-            ; N:  
-            ;                 MOV   BL , UpKeyCode
-            ;                 ADD   BL, 80H
-            ;                 CMP   AL ,  BL
-            ;                 JNE   la
-            ;                 MOV   UpFlag , 0
-            ;                 JMP   D
-            
-            ; la:
-            ; ; left arrow
-            ;            CMP   AL, LeftKeyCode
-            ;            JNE   N2
-            ;            MOV   LeftFlag , 1
-            ;            JMP   D
-            ;  N2:       
-            ;            MOV   BL , LeftKeyCode
-            ;            ADD   BL, 80H
-            ;            CMP   AL , BL
-            ;            JNE   D
-            ;            MOV   LeftFlag , 0
-
-            ; D:   
-
-
-                    
-            ;             MOV BL , UpFlag
-            ;             MOV ArrowUpFlag, BL
-                        
-
-
-
-                        ; CLEAR CAR_SIZE, PosXsecond, PosYsecond
-                        ; CALL CheckFlags
-                        ; Draw  CarImg2, CAR_SIZE, PosXsecond , PosYsecond
-                 
-                ;    
-                       
-
-    ; moveUp:            
-    ;                    CALL ClearCarArea
-
-    ;                    SUB  PosYfirst , 1
-    ;                    Draw CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-
-    ;                    jmp  mainLoop
-    ; moveDown:          
-    ;                    CALL ClearCarArea
-
-    ;                    ADD  PosYfirst , 1
-    ;                    Draw CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-
-    ;                    jmp  mainLoop
-                     
-    ; moveLeft:          
-    ;                    CALL ClearCarArea
-
-    ;                    SUB  Posxfirst , 1
-    ;                    Draw CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-
-    ;                    jmp  mainLoop
-    ; moveRight:         
-    ;                    CALL ClearCarArea
-
-    ;                    ADD  Posxfirst , 1
-    ;                    Draw CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-
-    ;                    jmp  mainLoop
-
-;-----------------------------  Previous Work   -----------------------------------------                   
-    
-    ; checkLeft:
-    ; ; left arrow
-    ;                    cmp   al, 4bh
-    ;                    jne   checkRight
-    ; ;Left logic
-    ;                    CALL  ClearCarArea
-    ;                    SUB   Posxfirst , 1
-    ;                    Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-    ; checkDown:
-    ; ; down arrow
-    ;                    cmp   al, 50h
-    ;                    jne   checkLeft
-    ; ;Down logic
-    ;                    CALL  ClearCarArea
-    ;                    ADD   PosYfirst , 1
-    ;                    Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-                       
-    ; checkRight:
-    ; ; right arrow
-    ;                    cmp   al, 4dh
-    ;                    jne   checkEsc
-    ; ;Right logic
-    ;                    CALL  ClearCarArea
-    ;                    SUB   Posxfirst , 1
-    ;                    Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-    
-
-    ; moveUp:
-    ;                    CALL ClearCarArea
-
-    ;                    SUB  PosYfirst , 1
-    ;                    Draw CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-
-    ;                    jmp  mainLoop
-    ; moveDown:
-    ;                    CALL ClearCarArea
-
-    ;                    ADD  PosYfirst , 1
-    ;                    Draw CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-
-    ;                    jmp  mainLoop
-                     
-    ; moveLeft:
-    ;                    CALL ClearCarArea
-
-    ;                    SUB  Posxfirst , 1
-    ;                    Draw CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-
-    ;                    jmp  mainLoop
-    ; moveRight:
-    ;                    CALL ClearCarArea
-
-    ;                    ADD  Posxfirst , 1
-    ;                    Draw CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-
-    ;                    jmp  mainLoop
