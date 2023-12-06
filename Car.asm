@@ -10,6 +10,8 @@
 
     ;CarDimensions
     CAR_SIZE       EQU  6
+    PreviousPosX    DW  ?
+    PreviousPosY    DW  ?
     PosX           DW   ?
     PosY           DW   ?
     CarSpeed       EQU  3
@@ -298,7 +300,7 @@ UpdateArrowFlags ENDP
 
 
 ;description
-CheckArrowKeys PROC
+CheckArrowKeys PROC FAR
     
                         SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
                         SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
@@ -306,6 +308,14 @@ CheckArrowKeys PROC
                         CALL UpdateArrowFlags
                         RET
 CheckArrowKeys ENDP
+
+;description
+Update1 PROC FAR
+                    CLEAR CAR_SIZE, PreviousPosX, PreviousPosY
+                    Draw  CarImg, CAR_SIZE, PosX , PosY
+
+                    RET
+Update1 ENDP
 
 INT09H PROC FAR
                             IN     AL, 60H
@@ -341,6 +351,13 @@ MAIN PROC FAR
                        Draw  CarImg, CAR_SIZE, PosX , PosY
 
     mainLoop:          
+    
+    MOV DX , PosX
+    MOV PreviousPosX, DX
+
+    MOV DX , PosY
+    MOV PreviousPosY , DX
+
      ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
                           CLI
@@ -358,14 +375,23 @@ MAIN PROC FAR
     ;re-enabling interrupts
                           POP DS
                           STI
-                               
-                               
-                        CLEAR CAR_SIZE, PosX, PosY
 
                         CALL CheckFlags
-                        Draw  CarImg, CAR_SIZE, PosX , PosY
-                 
-                   
+
+                        MOV DX , PosX
+                        CMP PreviousPosX, DX
+                        JE CheckY
+                        CALL Update1
+                        JMP continueLooping
+    CheckY:
+                        MOV DX , PosY
+                        CMP PreviousPosY , DX
+                        JE continueLooping
+                        CALL Update1
+                        
+
+    continueLooping:
+                    
                         MOV   CX , 60000
      WasteTime:         
                         LOOP  WasteTime
