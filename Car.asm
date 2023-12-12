@@ -60,7 +60,6 @@
     SFlag   DB  0
     DFlag   DB  0
 
-
     ;Arrow Keys for movement
     ArrowUp        DB   48H
     ArrowDown      DB   50H
@@ -350,14 +349,14 @@ CheckArrowFlags PROC FAR
 	
                           CMP      ArrowUpFlag , 1
                           JNE      CmpLeft
-                          SUB      PosYfirst , 1
+                          SUB      PosYfirst , 2
 
                           ScanY PosXfirst, PosYfirst , 1 , 1
                           CALL ScanYmovement
     CmpLeft:              
                           CMP      ArrowLeftFlag , 1
                           JNE      CmpDown
-                          SUB      PosXfirst, 1
+                          SUB      PosXfirst, 2
 
                           ScanX PosXfirst, PosYfirst , 1 , 0
                           CALL ScanXmovement
@@ -365,14 +364,14 @@ CheckArrowFlags PROC FAR
     CmpDown:              
                           CMP      ArrowDownFlag , 1
                           JNE      CmpRight
-                          ADD      PosYfirst, 1
+                          ADD      PosYfirst, 2
 
                           ScanY PosXfirst, PosYfirst , 1 , 0
                           CALL ScanYmovement
     CmpRight:             
                           CMP      ArrowRightFlag, 1
                           JNE      CmpFinish
-                          ADD      PosXfirst , 1
+                          ADD      PosXfirst , 2
 
                           ScanX PosXfirst, PosYfirst , 1 ,1
                           CALL ScanXmovement
@@ -387,14 +386,14 @@ CheckWASDFlags PROC FAR
 	
                 CMP      WFlag , 1
                 JNE      CmpLeft2
-                SUB     PosYsecond , 1
+                SUB     PosYsecond , 2
 
                 ScanY PosXsecond, PosYsecond , 0 , 1
                 CALL ScanYmovement
     CmpLeft2:              
                 CMP      AFlag , 1
                 JNE      CmpDown2
-                SUB      PosXsecond, 1
+                SUB      PosXsecond, 2
 
                 ScanX PosXsecond, PosYsecond , 0 , 0
                 CALL ScanXmovement
@@ -402,14 +401,14 @@ CheckWASDFlags PROC FAR
     CmpDown2:              
                 CMP      SFlag , 1
                 JNE      CmpRight2
-                ADD     PosYsecond, 1
+                ADD     PosYsecond, 2
 
                 ScanY PosXsecond, PosYsecond , 0 , 0
                 CALL ScanYmovement
     CmpRight2:             
                 CMP      DFlag, 1
                 JNE      CmpFinish2
-                ADD      PosXsecond , 1
+                ADD      PosXsecond , 2
 
                 ScanX PosXsecond, PosYsecond , 0 ,1
                 CALL ScanYmovement
@@ -657,32 +656,7 @@ MAIN PROC FAR
                 MOV   AL , 13H
                 INT   10H
     
-    ;Testing Saving background
-
                 
-                MOV DI , 0
-                MOV CarToDrawX , 0
-                MOV CarToDrawY, 80
-                CALL CalculateBoxVertex
-
-                MOV CX , SCREEN_WIDTH
-    Coloring:
-                MOV BYTE PTR ES:[DI] , 04H
-                INC DI
-                LOOP Coloring
-              
-              MOV CX , SCREEN_WIDTH
-    Coloring1:
-                MOV BYTE PTR ES:[DI] , 05H
-                INC DI
-                LOOP Coloring1
-
-              MOV CX , SCREEN_WIDTH
-    Coloring2:
-                MOV BYTE PTR ES:[DI] , 06H
-                INC DI
-                LOOP Coloring2
-    
 
      ; set initial pos of first car in the game
                 MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
@@ -739,9 +713,11 @@ MAIN PROC FAR
                 
                 CALL checkingPositionChange               
  
-                MOV   CX , 60000
-     WasteTime:         
-                LOOP  WasteTime
+    ;Delay 
+                MOV CX , 0
+                MOV DX , 30997D
+                MOV AH , 86H
+                INT 15H
 
                 JMP  mainLoop                             ; keep looping
     exit:              
