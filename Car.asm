@@ -84,6 +84,7 @@
     CanUpdateX    DB  0
     CanUpdateY    DB  0
 
+
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 DRAW MACRO Img, CarSize, StartPosX, StartPosY
@@ -158,6 +159,21 @@ SetPosition  MACRO X , Y
 ENDM
 
 
+;Scans the path of the car to handle collisions
+;pass the left point of the row you want to scan
+;carNo -> 1 for first, 2 -> for second
+ScanY MACRO x , y , CarNo
+    MOV DX , x
+    MOV CarToDrawX , DX
+
+    MOV DX, y
+    MOV CarToDrawY , DX
+
+    MOV DL , CarNo
+
+    CALL ScanYmovement
+ENDM
+
 .CODE
 
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    PROC    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -197,33 +213,7 @@ COLS_DRAW:
                 RET
 DrawCar ENDP
 
-;Scans the path of the car to handle collisions
-ScanCarPath PROC
-                MOV  ax , 0A000H
-                MOV  es , ax
-                MOV  DI , 0
-                MOV  cx , CarToDrawSize
-                MOV  DL , 0
-                CALL CalculateBoxVertex
-ROWS_Check:        
-                PUSH CX
-                PUSH DI
-                MOV  CX , CarToDrawSize
-COLS_Check:         
-                CMP BYTE PTR ES:[DI] , 142d
-                JNE SafePath
-                MOV IsSafeToMove, 1
-                JMP CheckHasFinished
-SafePath:                
-                INC  DI
-                LOOP COLS_Check
-                POP  DI
-                POP  CX
-                ADD  DI, SCREEN_WIDTH
-                LOOP ROWS_Check
-CheckHasFinished:                
-                RET
-ScanCarPath ENDP
+
 
                 ;clear the car's image from the screen
 ClearCarArea PROC
@@ -320,6 +310,8 @@ CheckArrowFlags PROC FAR
                           CMP      ArrowUpFlag , 1
                           JNE      CmpLeft
                           SUB      PosYfirst , 1
+                          ScanY PosXfirst, PosYfirst , 1
+
     CmpLeft:              
                           CMP      ArrowLeftFlag , 1
                           JNE      CmpDown
@@ -328,7 +320,8 @@ CheckArrowFlags PROC FAR
                           CMP      ArrowDownFlag , 1
                           JNE      CmpRight
                           ADD      PosYfirst, 1
-
+                        ScanY PosXfirst, PosYfirst+CAR_SIZE , 1
+                        
     CmpRight:             
                           CMP      ArrowRightFlag, 1
                           JNE      CmpFinish
@@ -468,6 +461,42 @@ Update2 PROC FAR
                 RET
 Update2 ENDP
 
+;description
+ScanYmovement PROC
+    
+                MOV AX , 0A000H
+                MOV ES , AX
+                
+                MOV DI , 0
+                
+                CALL CalculateBoxVertex
+                MOV CX , CAR_SIZE
+
+    CheckY:
+                CMP BYTE PTR ES:[DI] , 142
+                JNE NoObstacleDetected
+  
+    ;Checking that the car that it is scanning      
+                CMP DL , 2                   
+                JE Car2
+    ;Changing car1 position to the previous position  
+                MOV DX , PrevPosYfirst    
+                MOV PosYfirst , DX
+                JMP checkYFinish
+    ;Changing car2 position to the previous position            
+    Car2:       
+                MOV DX , PrevPosYsecond
+                MOV PosYsecond , DX
+                JMP checkYFinish
+    ;No matching found, continue looping
+    NoObstacleDetected:
+                INC DI
+                LOOP checkY
+
+    checkYFinish:
+                RET
+ScanYmovement ENDP
+
 INT09H PROC FAR
                 IN     AL, 60H
                             
@@ -544,6 +573,7 @@ MAIN PROC FAR
                 
                 CALL CheckArrowFlags
                 CALL CheckWASDFlags
+                
                 
                 MOV DX , PosXfirst
                 CMP PrevPosXfirst, DX
