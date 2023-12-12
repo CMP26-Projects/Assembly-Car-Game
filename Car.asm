@@ -86,9 +86,8 @@
 
     ;boolean (up -> 1 or down -> 0)
     YMovement    DB   ?
-    ;boolean ( right -> 1 pr left -> 0 )
-    XMovement    DB   ?
-
+    ;boolean (CAR1 -> 1 or CAR2 -> 0)
+    CarToScan    DB   ?
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -167,7 +166,7 @@ ENDM
 ;Scans the path of the car to handle collisions
 ;pass the left point of the row you want to scan
 ;carNo -> 1 for first, 2 -> for second
-ScanY MACRO x , y , CarNo
+ScanY MACRO x , y , CarNo , MovemetType
     MOV DX , x
     MOV CarToDrawX , DX
 
@@ -175,6 +174,10 @@ ScanY MACRO x , y , CarNo
     MOV CarToDrawY , DX
 
     MOV DL , CarNo
+    MOV CarToScan , DL
+
+    MOV DL , MovemetType
+    MOV YMovement, DL
 
     CALL ScanYmovement
 ENDM
@@ -327,9 +330,8 @@ CheckArrowFlags PROC FAR
                           CMP      ArrowUpFlag , 1
                           JNE      CmpLeft
                           SUB      PosYfirst , 1
-                          
-                          MOV YMovement , 1
-                          ScanY PosXfirst, PosYfirst , 1
+
+                          ScanY PosXfirst, PosYfirst , 1 , 1
 
     CmpLeft:              
                           CMP      ArrowLeftFlag , 1
@@ -343,8 +345,7 @@ CheckArrowFlags PROC FAR
                           JNE      CmpRight
                           ADD      PosYfirst, 1
 
-                          MOV YMovement , 0
-                          ScanY PosXfirst, PosYfirst , 1
+                          ScanY PosXfirst, PosYfirst , 1 , 0
                         
     CmpRight:             
                           CMP      ArrowRightFlag, 1
@@ -365,6 +366,9 @@ CheckWASDFlags PROC FAR
                 CMP      WFlag , 1
                 JNE      CmpLeft2
                 SUB     PosYsecond , 1
+
+                ScanY PosXsecond, PosYsecond , 0 , 1
+
     CmpLeft2:              
                 CMP      AFlag , 1
                 JNE      CmpDown2
@@ -373,6 +377,8 @@ CheckWASDFlags PROC FAR
                 CMP      SFlag , 1
                 JNE      CmpRight2
                 ADD     PosYsecond, 1
+
+                ScanY PosXsecond, PosYsecond , 0 , 0
 
     CmpRight2:             
                 CMP      DFlag, 1
@@ -505,7 +511,7 @@ ScanYmovement PROC
                 JNE NoObstacleDetected
   
     ;Checking that the car that it is scanning      
-                CMP DL , 2                   
+                CMP CarToScan , 0                   
                 JE Car2
     ;Changing car1 position to the previous position  
                 MOV DX , PrevPosYfirst    
