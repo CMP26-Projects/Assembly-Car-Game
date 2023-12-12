@@ -90,6 +90,10 @@
     XMovement    DB   ?
     ;boolean (CAR1 -> 1 or CAR2 -> 0)
     CarToScan    DB   ?
+
+    ;Buffer to store the background to save it upon movement
+    BackgroundBuffer    DB Car_Size*Car_Size 
+
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 DRAW_CAR MACRO Img, CarSize, StartPosX, StartPosY
@@ -180,7 +184,6 @@ ScanY MACRO x , y , CarNo , MovemetType
     MOV DL , MovemetType
     MOV YMovement, DL
 
-    CALL ScanYmovement
 ENDM
 
 ScanX MACRO x , y , CarNo , MovemetType
@@ -192,11 +195,10 @@ ScanX MACRO x , y , CarNo , MovemetType
 
     MOV DL , CarNo
     MOV CarToScan , DL
-    
+
     MOV DL , MovemetType
     MOV XMovement, DL
 
-    CALL ScanXmovement
 ENDM
 
 .CODE
@@ -204,7 +206,7 @@ ENDM
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    PROC    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-CalculateBoxVertex PROC
+CalculateBoxVertex PROC FAR
                        MOV   DI , 0
                        MOV   AX , CarToDrawY
                        MOV   BX , SCREEN_WIDTH
@@ -213,7 +215,8 @@ CalculateBoxVertex PROC
                        MOV   DI , AX
                        RET
 CalculateBoxVertex ENDP
-DrawCar PROC    
+
+DrawCar PROC FAR
                 MOV  ax , 0A000H
                 MOV  es , ax
                 MOV  DI , 0
@@ -221,16 +224,25 @@ DrawCar PROC
                 MOV  SI ,  CarToDraw
                 MOV  DL , 0
                 CALL CalculateBoxVertex
+
+                MOV BX ,OFFSET BackgroundBuffer
+
 ROWS_DRAW:        
                 PUSH CX
                 PUSH DI
+
                 MOV  CX , CarToDrawSize
 COLS_DRAW:         
-                MOV  DL , BYTE PTR [SI]
-                MOV  BYTE PTR ES:[DI] , DL
+                MOV  DH , BYTE PTR ES:[DI]          ;Moving the byte of the road to DH to be stored in buffer
+                MOV  BYTE PTR DS:[BX] , DH          ;Moving DH -> the memory with offset BX
+                MOV  DL , BYTE PTR [SI]             ;Car byte to be drawn this iteration
+                MOV  BYTE PTR ES:[DI] , DL          ;Drawing the car bit
+;Updates                
                 INC  SI
                 INC  DI
+                INC  BX
                 LOOP COLS_DRAW
+
                 POP  DI
                 POP  CX
                 ADD  DI, SCREEN_WIDTH
@@ -240,19 +252,23 @@ DrawCar ENDP
 
 
 
-                ;clear the car's image from the screen
-ClearCarArea PROC
+;clear the car's image from the screen
+ClearCarArea PROC FAR
                        MOV   ax , 0A000H
                        MOV   es , ax
                        MOV   cx , CarToDrawSize
                        CALL  CalculateBoxVertex
+
+                       MOV BX ,OFFSET BackgroundBuffer
     ROWS_CLEAR:        
                        PUSH  CX
                        PUSH  DI
                        MOV   CX , CarToDrawSize
     COLS_CLEAR:        
-                       MOV   BYTE PTR ES:[DI] , 04H
+                       MOV   DL, BYTE PTR DS:[BX]        ;Moving road byte in dl
+                       MOV   BYTE PTR ES:[DI] , DL      ;Moving the road byte to be printed
                        INC   DI
+                       INC   BX
                        LOOP  COLS_CLEAR
 
                        POP   DI
@@ -327,7 +343,7 @@ InputButtonSwitchCase PROC  FAR
     
                         RET
 InputButtonSwitchCase ENDP
-
+    
 CheckArrowFlags PROC FAR
 
     ;------- checking Flags -------
@@ -337,26 +353,29 @@ CheckArrowFlags PROC FAR
                           SUB      PosYfirst , 1
 
                           ScanY PosXfirst, PosYfirst , 1 , 1
-
+                          CALL ScanYmovement
     CmpLeft:              
                           CMP      ArrowLeftFlag , 1
                           JNE      CmpDown
                           SUB      PosXfirst, 1
 
                           ScanX PosXfirst, PosYfirst , 1 , 0
+                          CALL ScanXmovement
+
     CmpDown:              
                           CMP      ArrowDownFlag , 1
                           JNE      CmpRight
                           ADD      PosYfirst, 1
 
                           ScanY PosXfirst, PosYfirst , 1 , 0
-                        
+                          CALL ScanYmovement
     CmpRight:             
                           CMP      ArrowRightFlag, 1
                           JNE      CmpFinish
                           ADD      PosXfirst , 1
 
                           ScanX PosXfirst, PosYfirst , 1 ,1
+                          CALL ScanXmovement
 
     CmpFinish:            
                          RET
@@ -371,13 +390,14 @@ CheckWASDFlags PROC FAR
                 SUB     PosYsecond , 1
 
                 ScanY PosXsecond, PosYsecond , 0 , 1
-
+                CALL ScanYmovement
     CmpLeft2:              
                 CMP      AFlag , 1
                 JNE      CmpDown2
                 SUB      PosXsecond, 1
 
                 ScanX PosXsecond, PosYsecond , 0 , 0
+                CALL ScanXmovement
 
     CmpDown2:              
                 CMP      SFlag , 1
@@ -385,13 +405,14 @@ CheckWASDFlags PROC FAR
                 ADD     PosYsecond, 1
 
                 ScanY PosXsecond, PosYsecond , 0 , 0
-
+                CALL ScanYmovement
     CmpRight2:             
                 CMP      DFlag, 1
                 JNE      CmpFinish2
                 ADD      PosXsecond , 1
 
                 ScanX PosXsecond, PosYsecond , 0 ,1
+                CALL ScanYmovement
 
     CmpFinish2:            
                 RET
@@ -438,7 +459,7 @@ CheckWASDFlags ENDP
 ; UpdateCar2Pos ENDP
 
 ;description
-UpdateWASDFlags PROC
+UpdateWASDFlags PROC FAR
                 MOV BL , UpFlag
                 MOV WFlag, BL
 
@@ -450,13 +471,13 @@ UpdateWASDFlags PROC
 
                 MOV BL , RightFlag
                 MOV DFlag , BL
-RET
+                RET
 UpdateWASDFlags ENDP
 
 ;description
 
 ;procedure calls all arrow keys functions
-CheckArrowKeys PROC
+CheckArrowKeys PROC FAR
                 SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
                 SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
                 CALL InputButtonSwitchCase
@@ -465,7 +486,7 @@ CheckArrowKeys PROC
 CheckArrowKeys ENDP
 
 ;procedure calls all WASD keys functions
-CheckWASDKeys PROC
+CheckWASDKeys PROC FAR
                 SETKEYS WKey, SKey, AKey, DKey
                 SetFlags WFlag, SFlag, AFlag, DFlag
                 CALL InputButtonSwitchCase
@@ -486,7 +507,7 @@ Update1 PROC FAR
                 ; JE CannotDraw
 
                 CLEAR CAR_SIZE, PrevPosXfirst, PrevPosYfirst
-                Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
+                DRAW  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
     CannotDraw:                
                 RET
 Update1 ENDP
@@ -494,12 +515,12 @@ Update1 ENDP
 
 Update2 PROC FAR
                 CLEAR CAR_SIZE, PrevPosXsecond, PrevPosYsecond
-                Draw  CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+                DRAW CarImg2, CAR_SIZE, PosXsecond , PosYsecond
                 RET
 Update2 ENDP
 
 ;description
-ScanYmovement PROC
+ScanYmovement PROC FAR
     
                 MOV AX , 0A000H
                 MOV ES , AX
@@ -516,8 +537,10 @@ ScanYmovement PROC
 
     CheckY:
                 CMP BYTE PTR ES:[DI] , 142
-                JNE NoObstacleDetected
+                JE ObstacleDetected
+                JMP NoObstacleDetected
   
+  ObstacleDetected:
     ;Checking that the car that it is scanning      
                 CMP CarToScan , 0                   
                 JE Car2
@@ -555,8 +578,9 @@ LeftMovement:
 
 CheckX:
         CMP BYTE PTR ES:[DI] , 142
-        JNE NoObstacleDetected2  
-
+        JE ObstacleDetected2
+        JMP NoObstacleDetected2  
+ObstacleDetected2:
     ;Checking that the car that it is scanning      
                 CMP CarToScan , 0                    
                 JE Car2_XDetection
@@ -577,6 +601,36 @@ CheckX:
     checkXFinish:
                 RET
 ScanXmovement ENDP
+
+;description
+checkingPositionChange PROC FAR
+             
+                MOV DX , PosXfirst
+                CMP PrevPosXfirst, DX
+
+                JE bridge1
+                CALL Update1
+                JMP Car2Check
+    bridge1:
+                MOV DX , PosYfirst
+                CMP PrevPosYfirst , DX
+                JE Car2Check
+                CALL Update1
+    Car2Check:  
+                MOV DX , PosXsecond
+                CMP PrevPosXsecond, DX
+                JE bridge2
+                CALL Update2
+                JMP ContinueLooping
+    bridge2:
+                MOV DX , PosYsecond
+                CMP PrevPosYsecond , DX
+                JE ContinueLooping
+                CALL Update2
+
+    ContinueLooping:
+                RET
+checkingPositionChange ENDP
 
 INT09H PROC FAR
                 IN     AL, 60H
@@ -602,16 +656,44 @@ MAIN PROC FAR
                 MOV   AH , 0
                 MOV   AL , 13H
                 INT   10H
+    
+    ;Testing Saving background
+
+                
+                MOV DI , 0
+                MOV CarToDrawX , 0
+                MOV CarToDrawY, 80
+                CALL CalculateBoxVertex
+
+                MOV CX , SCREEN_WIDTH
+    Coloring:
+                MOV BYTE PTR ES:[DI] , 04H
+                INC DI
+                LOOP Coloring
+              
+              MOV CX , SCREEN_WIDTH
+    Coloring1:
+                MOV BYTE PTR ES:[DI] , 05H
+                INC DI
+                LOOP Coloring1
+
+              MOV CX , SCREEN_WIDTH
+    Coloring2:
+                MOV BYTE PTR ES:[DI] , 06H
+                INC DI
+                LOOP Coloring2
+    
 
      ; set initial pos of first car in the game
                 MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
                 MOV  PosYfirst , (SCREEN_HEIGHT-CAR_SIZE)/2
-                DRAW_CAR CarImg1, CAR_SIZE, PosXfirst , PosYfirst
+                DRAW CarImg1, CAR_SIZE, PosXfirst , PosYfirst
 
                 ; set initial pos of second car in the game
                 MOV  PosXsecond , (SCREEN_WIDTH-CAR_SIZE)/3
                 MOV  PosYsecond , (SCREEN_HEIGHT-CAR_SIZE)/3
-                DRAW_CAR CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+                DRAW CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+
 
                 MOV DX , PosXfirst
                 MOV PosX, DX
@@ -655,31 +737,8 @@ MAIN PROC FAR
                 CALL CheckArrowFlags
                 CALL CheckWASDFlags
                 
-                
-                MOV DX , PosXfirst
-                CMP PrevPosXfirst, DX
-                JE bridge1
-                CALL Update1
-                JMP Car2Check
-    bridge1:
-                MOV DX , PosYfirst
-                CMP PrevPosYfirst , DX
-                JE Car2Check
-                CALL Update1
-    Car2Check:  
-                MOV DX , PosXsecond
-                CMP PrevPosXsecond, DX
-                JE bridge2
-                CALL Update2
-                JMP ContinueLooping
-    bridge2:
-                MOV DX , PosYsecond
-                CMP PrevPosYsecond , DX
-                JE ContinueLooping
-                CALL Update2
-
-    ContinueLooping:
-
+                CALL checkingPositionChange               
+ 
                 MOV   CX , 60000
      WasteTime:         
                 LOOP  WasteTime
