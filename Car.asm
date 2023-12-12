@@ -191,7 +191,8 @@ ScanX MACRO x , y , CarNo , MovemetType
     MOV CarToDrawY , DX
 
     MOV DL , CarNo
-
+    MOV CarToScan , DL
+    
     MOV DL , MovemetType
     MOV XMovement, DL
 
