@@ -92,7 +92,7 @@
     CarToScan    DB   ?
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-DRAW MACRO Img, CarSize, StartPosX, StartPosY
+DRAW_CAR MACRO Img, CarSize, StartPosX, StartPosY
           MOV  AX, OFFSET Img
           MOV  CarToDraw, AX
 
@@ -606,12 +606,12 @@ MAIN PROC FAR
      ; set initial pos of first car in the game
                 MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
                 MOV  PosYfirst , (SCREEN_HEIGHT-CAR_SIZE)/2
-                Draw CarImg1, CAR_SIZE, PosXfirst , PosYfirst
+                DRAW_CAR CarImg1, CAR_SIZE, PosXfirst , PosYfirst
 
                 ; set initial pos of second car in the game
                 MOV  PosXsecond , (SCREEN_WIDTH-CAR_SIZE)/3
                 MOV  PosYsecond , (SCREEN_HEIGHT-CAR_SIZE)/3
-                Draw CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+                DRAW_CAR CarImg2, CAR_SIZE, PosXsecond , PosYsecond
 
                 MOV DX , PosXfirst
                 MOV PosX, DX
