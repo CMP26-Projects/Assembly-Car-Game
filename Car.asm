@@ -91,7 +91,8 @@
     CarToScan    DB   ?
 
     ;Buffer to store the background to save it upon movement
-    BackgroundBuffer    DB Car_Size*Car_Size 
+    BackgroundBufferCar1    DB Car_Size*Car_Size DUP(?)
+    BackgroundBufferCar2    DB Car_Size*Car_Size DUP(?)
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -111,7 +112,7 @@ DRAW MACRO Img, CarSize, StartPosX, StartPosY
           CALL DrawCar
 ENDM
 
-CLEAR MACRO ClearedSize, ClearedPosX, ClearedPosY
+CLEAR MACRO CarToClear, ClearedSize, ClearedPosX, ClearedPosY
            MOV  AX , ClearedSize
            MOV  CarToDraw , ClearedSize
 
@@ -120,6 +121,10 @@ CLEAR MACRO ClearedSize, ClearedPosX, ClearedPosY
 
            MOV  AX , ClearedPosY
            MOV  CarToDrawY , AX
+
+           MOV AX ,OFFSET CarToClear
+           MOV CarToDraw , AX
+
            CALL ClearCarArea
 ENDM
 
@@ -224,7 +229,13 @@ DrawCar PROC FAR
                 MOV  DL , 0
                 CALL CalculateBoxVertex
 
-                MOV BX ,OFFSET BackgroundBuffer
+                MOV DX , OFFSET CarImg1
+                CMP CarToDraw , DX
+                JNE DrawCar2
+                MOV BX ,OFFSET BackgroundBufferCar1
+                JMP ROWS_DRAW
+    DrawCar2:
+                MOV BX , OFFSET BackgroundBufferCar2
 
 ROWS_DRAW:        
                 PUSH CX
@@ -258,7 +269,14 @@ ClearCarArea PROC FAR
                        MOV   cx , CarToDrawSize
                        CALL  CalculateBoxVertex
 
-                       MOV BX ,OFFSET BackgroundBuffer
+                    MOV DX , OFFSET CarImg1
+                    CMP CarToDraw , DX
+                    JNE DrawCar22
+                    MOV BX ,OFFSET BackgroundBufferCar1
+                    JMP ROWS_CLEAR
+    DrawCar22:
+                    MOV BX , OFFSET BackgroundBufferCar2
+
     ROWS_CLEAR:        
                        PUSH  CX
                        PUSH  DI
@@ -505,7 +523,7 @@ Update1 PROC FAR
                 ; CMP IsSafeToMove , 1
                 ; JE CannotDraw
 
-                CLEAR CAR_SIZE, PrevPosXfirst, PrevPosYfirst
+                CLEAR CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
                 DRAW  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
     CannotDraw:                
                 RET
@@ -513,7 +531,7 @@ Update1 ENDP
 
 
 Update2 PROC FAR
-                CLEAR CAR_SIZE, PrevPosXsecond, PrevPosYsecond
+                CLEAR CarImg2, CAR_SIZE, PrevPosXsecond, PrevPosYsecond
                 DRAW CarImg2, CAR_SIZE, PosXsecond , PosYsecond
                 RET
 Update2 ENDP
@@ -528,12 +546,17 @@ ScanYmovement PROC FAR
                 
                 CMP YMovement , 0  ; The car is moving down either car1 or car2
                 JNE UpMovement
-                ADD CarToDrawY , (CAR_SIZE-1)
+                ADD CarToDrawY , (CAR_SIZE-2)
 
     UpMovement:
                 CALL CalculateBoxVertex
+               
+                MOV CX , 2
+    OuterLoop:          
+                PUSH CX 
+                PUSH DI
                 MOV CX , CAR_SIZE
-
+     
     CheckY:
                 CMP BYTE PTR ES:[DI] , 142
                 JE ObstacleDetected
@@ -556,6 +579,11 @@ ScanYmovement PROC FAR
     NoObstacleDetected:
                 INC DI
                 LOOP checkY
+
+                POP DI
+                POP CX 
+                ADD DI , SCREEN_WIDTH
+                LOOP OuterLoop
 
     checkYFinish:
                 RET
@@ -602,20 +630,24 @@ ObstacleDetected2:
 ScanXmovement ENDP
 
 ;description
-checkingPositionChange PROC FAR
+checkingPositionChangeCar1 PROC FAR
              
                 MOV DX , PosXfirst
                 CMP PrevPosXfirst, DX
-
                 JE bridge1
                 CALL Update1
-                JMP Car2Check
+                JMP ContinueLooping2
     bridge1:
                 MOV DX , PosYfirst
                 CMP PrevPosYfirst , DX
-                JE Car2Check
+                JE ContinueLooping2
                 CALL Update1
-    Car2Check:  
+    ContinueLooping2:
+                RET
+checkingPositionChangeCar1 ENDP
+
+;description
+CheckingPositionChangeCar2 PROC FAR
                 MOV DX , PosXsecond
                 CMP PrevPosXsecond, DX
                 JE bridge2
@@ -629,7 +661,7 @@ checkingPositionChange PROC FAR
 
     ContinueLooping:
                 RET
-checkingPositionChange ENDP
+CheckingPositionChangeCar2 ENDP
 
 INT09H PROC FAR
                 IN     AL, 60H
@@ -656,7 +688,28 @@ MAIN PROC FAR
                 MOV   AL , 13H
                 INT   10H
     
-                
+                MOV DI , 0
+                MOV CarToDrawX , 0
+                MOV CarToDrawY ,  80
+                CALL CalculateBoxVertex     
+
+                MOV CX, SCREEN_WIDTH
+    COLOR1:
+                MOV BYTE PTR ES:[DI] , 04H
+                INC DI
+                LOOP COLOR1
+
+                MOV CX, SCREEN_WIDTH
+    COLOR2:
+                MOV BYTE PTR ES:[DI] , 05H
+                INC DI
+                LOOP COLOR2
+
+                MOV CX, SCREEN_WIDTH
+    COLOR3:
+                MOV BYTE PTR ES:[DI] , 06H
+                INC DI
+                LOOP COLOR3
 
      ; set initial pos of first car in the game
                 MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
@@ -709,10 +762,10 @@ MAIN PROC FAR
             
                 
                 CALL CheckArrowFlags
-                CALL CheckWASDFlags
+                CALL checkingPositionChangeCar1               
                 
-                CALL checkingPositionChange               
- 
+                CALL CheckWASDFlags
+                CALL CheckingPositionChangeCar2
     ;Delay 
                 MOV CX , 0
                 MOV DX , 30997D
