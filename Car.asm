@@ -251,7 +251,7 @@ InputButtonSwitchCase PROC  FAR
                        MOV   UpFlag , 1
                        JMP   Default
     NotPressed1:       
-                       MOV   BL , UpKeyCode
+                       MOV   BL , UpKeyCode 
                        ADD   BL, 80H
                        CMP   AL ,  BL
                        JNE   CheckLeft
@@ -377,24 +377,24 @@ CheckWASDFlags ENDP
  UpdateArrowFlags ENDP
 
 ;description
-UpdateCar1Pos PROC
-                MOV DX , PosX
-                MOV PosXfirst, DX
+; UpdateCar1Pos PROC
+;                 MOV DX , PosX
+;                 MOV PosXfirst, DX
 
-                MOV DX, PosY
-                MOV PosYfirst, DX
-                RET
-UpdateCar1Pos ENDP
+;                 MOV DX, PosY
+;                 MOV PosYfirst, DX
+;                 RET
+; UpdateCar1Pos ENDP
 
 ;description
-UpdateCar2Pos PROC
-                MOV DX , PosX
-                MOV PosXsecond, DX
+; UpdateCar2Pos PROC
+;                 MOV DX , PosX
+;                 MOV PosXsecond, DX
 
-                MOV DX, PosY
-                MOV PosYsecond, DX
-                RET
-UpdateCar2Pos ENDP
+;                 MOV DX, PosY
+;                 MOV PosYsecond, DX
+;                 RET
+; UpdateCar2Pos ENDP
 
 ;description
 UpdateWASDFlags PROC
@@ -416,23 +416,19 @@ UpdateWASDFlags ENDP
 
 ;procedure calls all arrow keys functions
 CheckArrowKeys PROC
-                SetPosition PosXfirst, PosYfirst
                 SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
                 SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
                 CALL InputButtonSwitchCase
                 CALL UpdateArrowFlags
-                CALL UpdateCar1Pos
                 RET
 CheckArrowKeys ENDP
 
 ;procedure calls all WASD keys functions
 CheckWASDKeys PROC
-                SetPosition PosXsecond, PosYsecond
                 SETKEYS WKey, SKey, AKey, DKey
                 SetFlags WFlag, SFlag, AFlag, DFlag
                 CALL InputButtonSwitchCase
                 CALL UpdateWASDFlags
-                CALL UpdateCar2Pos
                 RET
 CheckWASDKeys ENDP
 
