@@ -86,6 +86,8 @@
 
     ;boolean (up -> 1 or down -> 0)
     YMovement    DB   ?
+    ;boolean ( right -> 1 pr left -> 0 )
+    XMovement    DB   ?
 
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -175,6 +177,18 @@ ScanY MACRO x , y , CarNo
     MOV DL , CarNo
 
     CALL ScanYmovement
+ENDM
+
+ScanX MACRO x , y , CarNo
+    MOV DX , X
+    MOV CarToDrawX , DX
+
+    MOV DX, y
+    MOV CarToDrawY , DX
+
+    MOV DL , CarNo
+    
+    CALL ScanXmovement
 ENDM
 
 .CODE
@@ -321,6 +335,9 @@ CheckArrowFlags PROC FAR
                           CMP      ArrowLeftFlag , 1
                           JNE      CmpDown
                           SUB      PosXfirst, 1
+
+                          MOV      XMovement , 0
+                          ScanX PosXfirst, PosYfirst , 1
     CmpDown:              
                           CMP      ArrowDownFlag , 1
                           JNE      CmpRight
@@ -333,6 +350,9 @@ CheckArrowFlags PROC FAR
                           CMP      ArrowRightFlag, 1
                           JNE      CmpFinish
                           ADD      PosXfirst , 1
+
+                          MOV XMovement , 1
+                          ScanX PosXfirst, PosYfirst , 1
 
     CmpFinish:            
                          RET
@@ -472,7 +492,7 @@ ScanYmovement PROC
                 
                 MOV DI , 0
                 
-                CMP YMovement , 0
+                CMP YMovement , 0  ; The car is moving down either car1 or car2
                 JNE UpMovement
                 ADD CarToDrawY , (CAR_SIZE-1)
 
@@ -505,7 +525,40 @@ ScanYmovement PROC
                 RET
 ScanYmovement ENDP
 
+ScanXmovement PROC FAR
+    MOV AX , 0A000H
+    MOV ES, AX
 
+    MOV DI , 0
+
+    CMP XMovement , 1   ; The car is moving right either car1 or car2
+    JNE LeftMovement
+    ADD CarToDrawX , (CarSize -1)
+
+LeftMovement:
+        CALL CalculateBoxVertex
+        MOV CX, CarSize
+
+CheckX:
+        CMP BYTE PTR ES:[DI] , 142
+        JNE NoObstacleDetected2   
+
+        ; Checking whether the car is car1 or car2
+        
+
+
+NoObstacleDetected2:
+        ADD DI, SCREEN_WIDTH
+        LOOP CheckX
+
+
+
+
+
+
+
+
+ScanXmovement ENDP
 
 INT09H PROC FAR
                 IN     AL, 60H
