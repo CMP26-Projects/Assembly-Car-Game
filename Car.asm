@@ -79,6 +79,10 @@
     LeftKeyCode    DB   ?
     RightKeyCode   DB   ?
 
+    ;Boolean to indicate if the path the car is going to move in is safe or not
+    ;0 -> Safe , 1->Not Safe
+    CanUpdateX    DB  0
+    CanUpdateY    DB  0
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -192,6 +196,34 @@ COLS_DRAW:
                 LOOP ROWS_DRAW
                 RET
 DrawCar ENDP
+
+;Scans the path of the car to handle collisions
+ScanCarPath PROC
+                MOV  ax , 0A000H
+                MOV  es , ax
+                MOV  DI , 0
+                MOV  cx , CarToDrawSize
+                MOV  DL , 0
+                CALL CalculateBoxVertex
+ROWS_Check:        
+                PUSH CX
+                PUSH DI
+                MOV  CX , CarToDrawSize
+COLS_Check:         
+                CMP BYTE PTR ES:[DI] , 142d
+                JNE SafePath
+                MOV IsSafeToMove, 1
+                JMP CheckHasFinished
+SafePath:                
+                INC  DI
+                LOOP COLS_Check
+                POP  DI
+                POP  CX
+                ADD  DI, SCREEN_WIDTH
+                LOOP ROWS_Check
+CheckHasFinished:                
+                RET
+ScanCarPath ENDP
 
                 ;clear the car's image from the screen
 ClearCarArea PROC
@@ -310,147 +342,156 @@ CheckWASDFlags PROC FAR
 
     ;------- checking Flags -------
 	
-                          CMP      WFlag , 1
-                          JNE      CmpLeft2
-                          SUB     PosYsecond , 1
+                CMP      WFlag , 1
+                JNE      CmpLeft2
+                SUB     PosYsecond , 1
     CmpLeft2:              
-                          CMP      AFlag , 1
-                          JNE      CmpDown2
-                          SUB      PosXsecond, 1
+                CMP      AFlag , 1
+                JNE      CmpDown2
+                SUB      PosXsecond, 1
     CmpDown2:              
-                          CMP      SFlag , 1
-                          JNE      CmpRight2
-                          ADD     PosYsecond, 1
+                CMP      SFlag , 1
+                JNE      CmpRight2
+                ADD     PosYsecond, 1
 
     CmpRight2:             
-                          CMP      DFlag, 1
-                          JNE      CmpFinish2
-                          ADD      PosXsecond , 1
+                CMP      DFlag, 1
+                JNE      CmpFinish2
+                ADD      PosXsecond , 1
 
     CmpFinish2:            
-                         RET
+                RET
+                
 CheckWASDFlags ENDP
 
 
 ;Update Flags after each game loop 
  UpdateArrowFlags PROC FAR
    
-     MOV BL , UpFlag
-     MOV ArrowUpFlag, BL
+                MOV BL , UpFlag
+                MOV ArrowUpFlag, BL
 
-    MOV BL , DownFlag
-    MOV ArrowDownFlag ,  BL
+                MOV BL , DownFlag
+                MOV ArrowDownFlag ,  BL
 
-    MOV BL , LeftFlag
-    MOV ArrowLeftFlag, BL
+                MOV BL , LeftFlag
+                MOV ArrowLeftFlag, BL
 
-    MOV BL , RightFlag
-    MOV ArrowRightFlag , BL
-     RET
+                MOV BL , RightFlag
+                MOV ArrowRightFlag , BL
+                RET
+
  UpdateArrowFlags ENDP
 
 ;description
 UpdateCar1Pos PROC
-    MOV DX , PosX
-    MOV PosXfirst, DX
+                MOV DX , PosX
+                MOV PosXfirst, DX
 
-    MOV DX, PosY
-    MOV PosYfirst, DX
-    RET
+                MOV DX, PosY
+                MOV PosYfirst, DX
+                RET
 UpdateCar1Pos ENDP
 
 ;description
 UpdateCar2Pos PROC
-    MOV DX , PosX
-    MOV PosXsecond, DX
+                MOV DX , PosX
+                MOV PosXsecond, DX
 
-    MOV DX, PosY
-    MOV PosYsecond, DX
-    RET
+                MOV DX, PosY
+                MOV PosYsecond, DX
+                RET
 UpdateCar2Pos ENDP
 
 ;description
 UpdateWASDFlags PROC
-    MOV BL , UpFlag
-     MOV WFlag, BL
+                MOV BL , UpFlag
+                MOV WFlag, BL
 
-    MOV BL , DownFlag
-    MOV SFlag ,  BL
+                MOV BL , DownFlag
+                MOV SFlag ,  BL
 
-    MOV BL , LeftFlag
-    MOV AFlag, BL
+                MOV BL , LeftFlag
+                MOV AFlag, BL
 
-    MOV BL , RightFlag
-    MOV DFlag , BL
-     RET
+                MOV BL , RightFlag
+                MOV DFlag , BL
+RET
 UpdateWASDFlags ENDP
 
 ;description
 
 ;procedure calls all arrow keys functions
 CheckArrowKeys PROC
-                        SetPosition PosXfirst, PosYfirst
-                        SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
-                        SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
-                        CALL InputButtonSwitchCase
-                        CALL UpdateArrowFlags
-                        CALL UpdateCar1Pos
-                        RET
+                SetPosition PosXfirst, PosYfirst
+                SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
+                SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
+                CALL InputButtonSwitchCase
+                CALL UpdateArrowFlags
+                CALL UpdateCar1Pos
+                RET
 CheckArrowKeys ENDP
 
 ;procedure calls all WASD keys functions
 CheckWASDKeys PROC
-                        SetPosition PosXsecond, PosYsecond
-                        SETKEYS WKey, SKey, AKey, DKey
-                        SetFlags WFlag, SFlag, AFlag, DFlag
-                        CALL InputButtonSwitchCase
-                        CALL UpdateWASDFlags
-                        CALL UpdateCar2Pos
-                        RET
+                SetPosition PosXsecond, PosYsecond
+                SETKEYS WKey, SKey, AKey, DKey
+                SetFlags WFlag, SFlag, AFlag, DFlag
+                CALL InputButtonSwitchCase
+                CALL UpdateWASDFlags
+                CALL UpdateCar2Pos
+                RET
 CheckWASDKeys ENDP
 
 Update1 PROC FAR
-                        CLEAR CAR_SIZE, PrevPosXfirst, PrevPosYfirst
-                        Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-                        RET
+                ; MOV DX , PosXfirst
+                ; MOV CarToDrawX , DX
+
+                ; MOV DX , PosYfirst
+                ; MOV CarToDrawY , DX
+
+                ; MOV IsSafeToMove , 0
+                ; CALL ScanCarPath
+                ; CMP IsSafeToMove , 1
+                ; JE CannotDraw
+
+                CLEAR CAR_SIZE, PrevPosXfirst, PrevPosYfirst
+                Draw  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
+    CannotDraw:                
+                RET
 Update1 ENDP
 
 
 Update2 PROC FAR
-                        CLEAR CAR_SIZE, PrevPosXsecond, PrevPosYsecond
-                        Draw  CarImg2, CAR_SIZE, PosXsecond , PosYsecond
-                        RET
+                CLEAR CAR_SIZE, PrevPosXsecond, PrevPosYsecond
+                Draw  CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+                RET
 Update2 ENDP
 
 INT09H PROC FAR
-                            IN     AL, 60H
- ; escape
-;                           cmp      AL, 01h
-;                           JNE      cont                                                      ;made as a bridge to avoid far jumps
-;                           JMP      exit
-;    cont:
+                IN     AL, 60H
                             
-                            CALL CheckArrowKeys
-                            CALL CheckWASDKeys
+                CALL CheckArrowKeys
+                CALL CheckWASDKeys
 
-                                               
-                            MOV AL , 20H
-                            OUT 20H, AL
-                            IRET
+                                    
+                MOV AL , 20H
+                OUT 20H, AL
+                IRET
 INT09H ENDP
 
 
 MAIN PROC FAR
 
-                       MOV   AX,@DATA
-                       MOV   DS,AX
-                       MOV   ax , 0A000H
-              
+                MOV   AX,@DATA
+                MOV   DS,AX
+                MOV   ax , 0A000H
+        
     ;video mode
-                       MOV   es , ax
-                       MOV   AH , 0
-                       MOV   AL , 13H
-                       INT   10H
+                MOV   es , ax
+                MOV   AH , 0
+                MOV   AL , 13H
+                INT   10H
 
      ; set initial pos of first car in the game
                 MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
@@ -469,70 +510,72 @@ MAIN PROC FAR
                 MOV PosY, DX
      mainLoop:          
 
-     MOV DX , PosXfirst
-     MOV PrevPosXfirst, DX
+                MOV DX , PosXfirst
+                MOV PrevPosXfirst, DX
 
-     MOV DX, PosYfirst
-     MOV PrevPosYfirst, DX
+                MOV DX, PosYfirst
+                MOV PrevPosYfirst, DX
 
-     MOV DX , PosXsecond
-     MOV PrevPosXsecond, DX
+                MOV DX , PosXsecond
+                MOV PrevPosXsecond, DX
 
-     MOV DX , PosYsecond
-     MOV PrevPosYsecond ,DX
+                MOV DX , PosYsecond
+                MOV PrevPosYsecond ,DX
 
 
      ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
-                          CLI
+                CLI
                        
     ;Saving DS it will be the base of the addressing mode inside the interrupt
-                          PUSH     DS
-                          MOV      AX , CS
-                          MOV      DS , AX
+                PUSH     DS
+                MOV      AX , CS
+                MOV      DS , AX
 
     ;changing interrup vector
-                          MOV AX , 2509H
-                          LEA DX , INT09H
-                          INT 21H
-                            
+                MOV AX , 2509H
+                LEA DX , INT09H
+                INT 21H
+                
     ;re-enabling interrupts
-                          POP DS
-                          STI
-                        
-                        
-                        CALL CheckArrowFlags
-                        CALL CheckWASDFlags
-                        
-                        MOV DX , PosXfirst
-                        CMP PrevPosXfirst, DX
-                        JE bridge1
-                        CALL Update1
-                        JMP Car2Check
+                POP DS
+                STI
+            
+                
+                CALL CheckArrowFlags
+                CALL CheckWASDFlags
+                
+                MOV DX , PosXfirst
+                CMP PrevPosXfirst, DX
+                JE bridge1
+                CALL Update1
+                JMP Car2Check
     bridge1:
-                        MOV DX , PosYfirst
-                        CMP PrevPosYfirst , DX
-                        JE Car2Check
-                        CALL Update1
+                MOV DX , PosYfirst
+                CMP PrevPosYfirst , DX
+                JE Car2Check
+                CALL Update1
     Car2Check:  
-                        MOV DX , PosXsecond
-                        CMP PrevPosXsecond, DX
-                        JE bridge2
-                        CALL Update2
-                        JMP ContinueLooping
+                MOV DX , PosXsecond
+                CMP PrevPosXsecond, DX
+                JE bridge2
+                CALL Update2
+                JMP ContinueLooping
     bridge2:
-                        MOV DX , PosYsecond
-                        CMP PrevPosYsecond , DX
-                        JE ContinueLooping
-                        CALL Update2
+                MOV DX , PosYsecond
+                CMP PrevPosYsecond , DX
+                JE ContinueLooping
+                CALL Update2
+
     ContinueLooping:
 
-                         MOV   CX , 60000
+                MOV   CX , 60000
      WasteTime:         
-                        LOOP  WasteTime
+                LOOP  WasteTime
 
-                       JMP  mainLoop                             ; keep looping
+                JMP  mainLoop                             ; keep looping
     exit:              
-                       HLT
+                HLT
+                
 MAIN ENDP
 END MAIN
