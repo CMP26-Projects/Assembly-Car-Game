@@ -84,6 +84,9 @@
     CanUpdateX    DB  0
     CanUpdateY    DB  0
 
+    ;boolean (up -> 1 or down -> 0)
+    YMovement    DB   ?
+
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -310,6 +313,8 @@ CheckArrowFlags PROC FAR
                           CMP      ArrowUpFlag , 1
                           JNE      CmpLeft
                           SUB      PosYfirst , 1
+                          
+                          MOV YMovement , 1
                           ScanY PosXfirst, PosYfirst , 1
 
     CmpLeft:              
@@ -320,7 +325,9 @@ CheckArrowFlags PROC FAR
                           CMP      ArrowDownFlag , 1
                           JNE      CmpRight
                           ADD      PosYfirst, 1
-                        ScanY PosXfirst, PosYfirst+CAR_SIZE , 1
+
+                          MOV YMovement , 0
+                          ScanY PosXfirst, PosYfirst , 1
                         
     CmpRight:             
                           CMP      ArrowRightFlag, 1
@@ -465,6 +472,11 @@ ScanYmovement PROC
                 
                 MOV DI , 0
                 
+                CMP YMovement , 0
+                JNE UpMovement
+                ADD CarToDrawY , (CAR_SIZE-1)
+
+    UpMovement:
                 CALL CalculateBoxVertex
                 MOV CX , CAR_SIZE
 
@@ -492,6 +504,8 @@ ScanYmovement PROC
     checkYFinish:
                 RET
 ScanYmovement ENDP
+
+
 
 INT09H PROC FAR
                 IN     AL, 60H
