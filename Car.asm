@@ -96,7 +96,7 @@
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-DRAW_CAR MACRO Img, CarSize, StartPosX, StartPosY
+DRAW MACRO Img, CarSize, StartPosX, StartPosY
           MOV  AX, OFFSET Img
           MOV  CarToDraw, AX
 
