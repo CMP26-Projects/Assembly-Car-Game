@@ -656,32 +656,7 @@ MAIN PROC FAR
                 MOV   AL , 13H
                 INT   10H
     
-    ;Testing Saving background
-
                 
-                MOV DI , 0
-                MOV CarToDrawX , 0
-                MOV CarToDrawY, 80
-                CALL CalculateBoxVertex
-
-                MOV CX , SCREEN_WIDTH
-    Coloring:
-                MOV BYTE PTR ES:[DI] , 04H
-                INC DI
-                LOOP Coloring
-              
-              MOV CX , SCREEN_WIDTH
-    Coloring1:
-                MOV BYTE PTR ES:[DI] , 05H
-                INC DI
-                LOOP Coloring1
-
-              MOV CX , SCREEN_WIDTH
-    Coloring2:
-                MOV BYTE PTR ES:[DI] , 06H
-                INC DI
-                LOOP Coloring2
-    
 
      ; set initial pos of first car in the game
                 MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
@@ -738,10 +713,7 @@ MAIN PROC FAR
                 
                 CALL checkingPositionChange               
  
-    ;             MOV   CX , 65000
-    ;  WasteTime:         
-    ;             LOOP  WasteTime
-
+    ;Delay 
                 MOV CX , 0
                 MOV DX , 30997D
                 MOV AH , 86H
