@@ -60,7 +60,6 @@
     SFlag   DB  0
     DFlag   DB  0
 
-
     ;Arrow Keys for movement
     ArrowUp        DB   48H
     ArrowDown      DB   50H
@@ -92,11 +91,12 @@
     CarToScan    DB   ?
 
     ;Buffer to store the background to save it upon movement
-    BackgroundBuffer    DB Car_Size*Car_Size 
+    BackgroundBufferCar1    DB Car_Size*Car_Size DUP(?)
+    BackgroundBufferCar2    DB Car_Size*Car_Size DUP(?)
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-DRAW_CAR MACRO Img, CarSize, StartPosX, StartPosY
+DRAW MACRO Img, CarSize, StartPosX, StartPosY
           MOV  AX, OFFSET Img
           MOV  CarToDraw, AX
 
@@ -112,7 +112,11 @@ DRAW_CAR MACRO Img, CarSize, StartPosX, StartPosY
           CALL DrawCar
 ENDM
 
-CLEAR MACRO ClearedSize, ClearedPosX, ClearedPosY
+CLEAR MACRO Img, ClearedSize, ClearedPosX, ClearedPosY
+           
+           MOV  AX, OFFSET Img
+           MOV  CarToDraw, AX    
+         
            MOV  AX , ClearedSize
            MOV  CarToDraw , ClearedSize
 
@@ -225,7 +229,16 @@ DrawCar PROC FAR
                 MOV  DL , 0
                 CALL CalculateBoxVertex
 
-                MOV BX ,OFFSET BackgroundBuffer
+;Checking which car to draw in order to store it's background
+                MOV DX, OFFSET CarImg1
+                CMP CarToDraw, DX
+                
+                JNE DrawCar2
+                MOV BX ,OFFSET BackgroundBufferCar1
+                JMP ROWS_DRAW
+
+    DrawCar2:
+                MOV BX, OFFSET BackgroundBufferCar2
 
 ROWS_DRAW:        
                 PUSH CX
@@ -259,7 +272,16 @@ ClearCarArea PROC FAR
                        MOV   cx , CarToDrawSize
                        CALL  CalculateBoxVertex
 
-                       MOV BX ,OFFSET BackgroundBuffer
+ ;Checking which car to draw in order to draw it's stored background
+                MOV DX, OFFSET CarImg1
+                CMP CarToDraw, DX
+                JNE ClearCar2
+                MOV BX ,OFFSET BackgroundBufferCar1
+                JMP ROWS_CLEAR
+
+    ClearCar2:
+                MOV BX, OFFSET BackgroundBufferCar2
+
     ROWS_CLEAR:        
                        PUSH  CX
                        PUSH  DI
@@ -350,14 +372,14 @@ CheckArrowFlags PROC FAR
 	
                           CMP      ArrowUpFlag , 1
                           JNE      CmpLeft
-                          SUB      PosYfirst , 1
+                          SUB      PosYfirst , 2
 
                           ScanY PosXfirst, PosYfirst , 1 , 1
                           CALL ScanYmovement
     CmpLeft:              
                           CMP      ArrowLeftFlag , 1
                           JNE      CmpDown
-                          SUB      PosXfirst, 1
+                          SUB      PosXfirst, 2
 
                           ScanX PosXfirst, PosYfirst , 1 , 0
                           CALL ScanXmovement
@@ -365,14 +387,14 @@ CheckArrowFlags PROC FAR
     CmpDown:              
                           CMP      ArrowDownFlag , 1
                           JNE      CmpRight
-                          ADD      PosYfirst, 1
+                          ADD      PosYfirst, 2
 
                           ScanY PosXfirst, PosYfirst , 1 , 0
                           CALL ScanYmovement
     CmpRight:             
                           CMP      ArrowRightFlag, 1
                           JNE      CmpFinish
-                          ADD      PosXfirst , 1
+                          ADD      PosXfirst , 2
 
                           ScanX PosXfirst, PosYfirst , 1 ,1
                           CALL ScanXmovement
@@ -387,14 +409,14 @@ CheckWASDFlags PROC FAR
 	
                 CMP      WFlag , 1
                 JNE      CmpLeft2
-                SUB     PosYsecond , 1
+                SUB     PosYsecond , 2
 
                 ScanY PosXsecond, PosYsecond , 0 , 1
                 CALL ScanYmovement
     CmpLeft2:              
                 CMP      AFlag , 1
                 JNE      CmpDown2
-                SUB      PosXsecond, 1
+                SUB      PosXsecond, 2
 
                 ScanX PosXsecond, PosYsecond , 0 , 0
                 CALL ScanXmovement
@@ -402,14 +424,14 @@ CheckWASDFlags PROC FAR
     CmpDown2:              
                 CMP      SFlag , 1
                 JNE      CmpRight2
-                ADD     PosYsecond, 1
+                ADD     PosYsecond, 2
 
                 ScanY PosXsecond, PosYsecond , 0 , 0
                 CALL ScanYmovement
     CmpRight2:             
                 CMP      DFlag, 1
                 JNE      CmpFinish2
-                ADD      PosXsecond , 1
+                ADD      PosXsecond , 2
 
                 ScanX PosXsecond, PosYsecond , 0 ,1
                 CALL ScanYmovement
@@ -506,7 +528,7 @@ Update1 PROC FAR
                 ; CMP IsSafeToMove , 1
                 ; JE CannotDraw
 
-                CLEAR CAR_SIZE, PrevPosXfirst, PrevPosYfirst
+                CLEAR CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
                 DRAW  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
     CannotDraw:                
                 RET
@@ -514,7 +536,7 @@ Update1 ENDP
 
 
 Update2 PROC FAR
-                CLEAR CAR_SIZE, PrevPosXsecond, PrevPosYsecond
+                CLEAR CarImg2, CAR_SIZE, PrevPosXsecond, PrevPosYsecond
                 DRAW CarImg2, CAR_SIZE, PosXsecond , PosYsecond
                 RET
 Update2 ENDP
@@ -739,9 +761,14 @@ MAIN PROC FAR
                 
                 CALL checkingPositionChange               
  
-                MOV   CX , 60000
-     WasteTime:         
-                LOOP  WasteTime
+    ;             MOV   CX , 65000
+    ;  WasteTime:         
+    ;             LOOP  WasteTime
+
+                MOV CX , 0
+                MOV DX , 30997D
+                MOV AH , 86H
+                INT 15H
 
                 JMP  mainLoop                             ; keep looping
     exit:              
