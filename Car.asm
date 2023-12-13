@@ -91,8 +91,7 @@
     CarToScan    DB   ?
 
     ;Buffer to store the background to save it upon movement
-    BackgroundBufferCar1    DB Car_Size*Car_Size DUP(?)
-    BackgroundBufferCar2    DB Car_Size*Car_Size DUP(?)
+    BackgroundBuffer    DB Car_Size*Car_Size 
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -112,11 +111,7 @@ DRAW MACRO Img, CarSize, StartPosX, StartPosY
           CALL DrawCar
 ENDM
 
-CLEAR MACRO Img, ClearedSize, ClearedPosX, ClearedPosY
-           
-           MOV  AX, OFFSET Img
-           MOV  CarToDraw, AX    
-         
+CLEAR MACRO ClearedSize, ClearedPosX, ClearedPosY
            MOV  AX , ClearedSize
            MOV  CarToDraw , ClearedSize
 
@@ -229,16 +224,7 @@ DrawCar PROC FAR
                 MOV  DL , 0
                 CALL CalculateBoxVertex
 
-;Checking which car to draw in order to store it's background
-                MOV DX, OFFSET CarImg1
-                CMP CarToDraw, DX
-                
-                JNE DrawCar2
-                MOV BX ,OFFSET BackgroundBufferCar1
-                JMP ROWS_DRAW
-
-    DrawCar2:
-                MOV BX, OFFSET BackgroundBufferCar2
+                MOV BX ,OFFSET BackgroundBuffer
 
 ROWS_DRAW:        
                 PUSH CX
@@ -272,16 +258,7 @@ ClearCarArea PROC FAR
                        MOV   cx , CarToDrawSize
                        CALL  CalculateBoxVertex
 
- ;Checking which car to draw in order to draw it's stored background
-                MOV DX, OFFSET CarImg1
-                CMP CarToDraw, DX
-                JNE ClearCar2
-                MOV BX ,OFFSET BackgroundBufferCar1
-                JMP ROWS_CLEAR
-
-    ClearCar2:
-                MOV BX, OFFSET BackgroundBufferCar2
-
+                       MOV BX ,OFFSET BackgroundBuffer
     ROWS_CLEAR:        
                        PUSH  CX
                        PUSH  DI
@@ -528,7 +505,7 @@ Update1 PROC FAR
                 ; CMP IsSafeToMove , 1
                 ; JE CannotDraw
 
-                CLEAR CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
+                CLEAR CAR_SIZE, PrevPosXfirst, PrevPosYfirst
                 DRAW  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
     CannotDraw:                
                 RET
@@ -536,7 +513,7 @@ Update1 ENDP
 
 
 Update2 PROC FAR
-                CLEAR CarImg2, CAR_SIZE, PrevPosXsecond, PrevPosYsecond
+                CLEAR CAR_SIZE, PrevPosXsecond, PrevPosYsecond
                 DRAW CarImg2, CAR_SIZE, PosXsecond , PosYsecond
                 RET
 Update2 ENDP
@@ -679,32 +656,7 @@ MAIN PROC FAR
                 MOV   AL , 13H
                 INT   10H
     
-    ;Testing Saving background
-
                 
-                MOV DI , 0
-                MOV CarToDrawX , 0
-                MOV CarToDrawY, 80
-                CALL CalculateBoxVertex
-
-                MOV CX , SCREEN_WIDTH
-    Coloring:
-                MOV BYTE PTR ES:[DI] , 04H
-                INC DI
-                LOOP Coloring
-              
-              MOV CX , SCREEN_WIDTH
-    Coloring1:
-                MOV BYTE PTR ES:[DI] , 05H
-                INC DI
-                LOOP Coloring1
-
-              MOV CX , SCREEN_WIDTH
-    Coloring2:
-                MOV BYTE PTR ES:[DI] , 06H
-                INC DI
-                LOOP Coloring2
-    
 
      ; set initial pos of first car in the game
                 MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
@@ -761,10 +713,7 @@ MAIN PROC FAR
                 
                 CALL checkingPositionChange               
  
-    ;             MOV   CX , 65000
-    ;  WasteTime:         
-    ;             LOOP  WasteTime
-
+    ;Delay 
                 MOV CX , 0
                 MOV DX , 30997D
                 MOV AH , 86H
