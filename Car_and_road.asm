@@ -519,6 +519,17 @@ HORROADIMG              DB      20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 
     XMovement    DB   ?
     ;boolean (CAR1 -> 1 or CAR2 -> 0)
     CarToScan    DB   ?
+    ;Flags for car1 powerups
+    IncSpeedPowerup1        DB ? 
+    DecSpeedPowerup1        DB ?
+    CreateObstaclePowerup1  DB ? 
+    ;Flags for car2 powerups
+    IncSpeedPowerup2        DB ? 
+    DecSpeedPowerup2        DB ?
+    CreateObstaclePowerup2  DB ? 
+    ;Speed for cars 1 and 2
+    Speed1                  DW ?
+    Speed2                  DW ?
 
 
 
@@ -880,29 +891,38 @@ CheckArrowFlags PROC FAR
 
     ;------- checking Flags -------
 	
+                          MOV      BX , Speed1
                           CMP      ArrowUpFlag , 1
                           JNE      CmpLeft
-                          SUB      PosYfirst , 1
+                          MOV      AX,  PosYfirst
+                          SUB      AX , BX
+                          MOV PosYfirst , AX
 
                           ScanY PosXfirst, PosYfirst , 1 , 1
 
     CmpLeft:              
                           CMP      ArrowLeftFlag , 1
                           JNE      CmpDown
-                          SUB      PosXfirst, 1
+                          MOV      AX,  PosXfirst
+                          SUB      AX , BX
+                          MOV PosXfirst , AX
 
                           ScanX PosXfirst, PosYfirst , 1 , 0
     CmpDown:              
                           CMP      ArrowDownFlag , 1
                           JNE      CmpRight
-                          ADD      PosYfirst, 1
+                          MOV      AX,  PosYfirst
+                          ADD      AX , BX
+                          MOV PosYfirst , AX
 
                           ScanY PosXfirst, PosYfirst , 1 , 0
                         
     CmpRight:             
                           CMP      ArrowRightFlag, 1
                           JNE      CmpFinish
-                          ADD      PosXfirst , 1
+                          MOV      AX,  PosXfirst
+                          ADD      AX , BX
+                          MOV PosXfirst , AX
 
                           ScanX PosXfirst, PosYfirst , 1 ,1
 
@@ -913,31 +933,39 @@ CheckArrowFlags ENDP
 CheckWASDFlags PROC FAR
 
     ;------- checking Flags -------
-	
+                MOV      BX , Speed2
                 CMP      WFlag , 1
                 JNE      CmpLeft2
-                SUB     PosYsecond , 1
+                MOV      AX,  PosYsecond
+                SUB      AX , BX
+                MOV PosYsecond , AX
 
                 ScanY PosXsecond, PosYsecond , 0 , 1
 
     CmpLeft2:              
                 CMP      AFlag , 1
                 JNE      CmpDown2
-                SUB      PosXsecond, 1
+                MOV      AX,  PosXsecond
+                SUB      AX , BX
+                MOV PosXsecond , AX
 
                 ScanX PosXsecond, PosYsecond , 0 , 0
 
     CmpDown2:              
                 CMP      SFlag , 1
                 JNE      CmpRight2
-                ADD     PosYsecond, 1
+                MOV      AX,  PosYsecond
+                ADD      AX , BX
+                MOV PosYsecond , AX
 
                 ScanY PosXsecond, PosYsecond , 0 , 0
 
     CmpRight2:             
                 CMP      DFlag, 1
                 JNE      CmpFinish2
-                ADD      PosXsecond , 1
+                MOV      AX,  PosXsecond
+                ADD      AX , BX
+                MOV PosXsecond , AX
 
                 ScanX PosXsecond, PosYsecond , 0 ,1
 
@@ -1056,7 +1084,15 @@ ScanYmovement PROC
                 
                 CMP YMovement , 0  ; The car is moving down either car1 or car2
                 JNE UpMovement
-                ADD CarToDrawY , (CAR_SIZE-1)
+                ADD CarToDrawX , (Car_Size)
+                CMP CarToScan , 0
+                JE Car2_Y_SpeedManipulation
+                MOV BX,Speed1
+                SUB CarToDrawY , BX
+                JMP UpMovement
+Car2_Y_SpeedManipulation:
+                MOV BX , Speed2
+                SUB CarToDrawX , BX
 
     UpMovement:
                 CALL CalculateBoxVertex
@@ -1068,6 +1104,20 @@ ScanYmovement PROC
                 CMP BYTE PTR ES:[DI] , 31   ; 31 is the WHITE color degree of the road
                 JE NoObstacleDetected 
                 CMP BYTE PTR ES:[DI] , 40   ; 40 is one of the color degrees for the end line
+                JE NoObstacleDetected
+                CMP BYTE PTR ES:[DI] , 121  ; Incrasing speed powerup is detecetd 
+                CMP CarToScan , 0           ; Car 2 is the current car I am operating on 
+                JE Car2_IncSpeed
+                MOV IncSpeedPowerup1 ,1     ; Setting the increasing speed powerup for car 1 
+                MOV Speed1 , 4
+                JE NoObstacleDetected
+Car2_IncSpeed:
+                MOV IncSpeedPowerup2 ,1     ; Setting the increasing speed powerup for car 1 
+                MOV Speed2 , 4
+                JE NoObstacleDetected
+
+
+
   
     ;Checking that the car that it is scanning      
                 CMP CarToScan , 0                   
@@ -1098,18 +1148,36 @@ ScanXmovement PROC FAR
 
     CMP XMovement , 1   ; The car is moving right either car1 or car2
     JNE LeftMovement
-    ADD CarToDrawX , (Car_Size -1)
+    ADD CarToDrawX , (Car_Size)
+    CMP CarToScan , 0
+    JE Car2_X_SpeedManipulation
+    MOV BX , Speed1 
+    SUB CarToDrawX , BX 
+    JMP LeftMovement
+Car2_X_SpeedManipulation:
+    MOV BX , Speed2
+    SUB CarToDrawX , BX
 
 LeftMovement:
         CALL CalculateBoxVertex
         MOV CX, Car_Size
 
 CheckX:         ; Check if there is an obstacle in the way
-                CMP BYTE PTR ES:[DI] , 20   ; 20 is the GREY color degree of the road
+                CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
                 JE NoObstacleDetected2 
-                CMP BYTE PTR ES:[DI] , 31   ; 31 is the WHITE color degree of the road
+                CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
                 JE NoObstacleDetected2 
                 CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
+                JE NoObstacleDetected2
+                CMP BYTE PTR ES:[DI] , 121   ; Incrasing speed powerup is detecetd 
+                CMP CarToScan , 0            ; Car 2 is the current car I am operating on 
+                JE Car2_IncSpeed_XDirection
+                MOV IncSpeedPowerup1 ,1      ; Setting the increasing speed powerup for car 1 
+                MOV Speed1 , 4               ; Increasing the speed of car 1 
+                JE NoObstacleDetected2
+Car2_IncSpeed_XDirection:
+                MOV IncSpeedPowerup2 ,1      ; Setting the increasing speed powerup for car 1 
+                MOV Speed2 , 4               ; Increasing the speed of car 2 
                 JE NoObstacleDetected2
 
 
@@ -1464,6 +1532,9 @@ CALL DRAWENDLINE
 
                 MOV DX , PosYfirst
                 MOV PosY, DX
+
+                MOV Speed1 , 1
+                MOV Speed2 , 1
      mainLoop:          
 
                 MOV DX , PosXfirst
