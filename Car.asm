@@ -89,6 +89,8 @@
     XMovement    DB   ?
     ;boolean (CAR1 -> 1 or CAR2 -> 0)
     CarToScan    DB   ?
+    CarToScanX   DW   ?
+    CarToScanY   DW   ?  
 
     ;Buffer to store the background to save it upon movement
     BackgroundBuffer    DB Car_Size*Car_Size 
@@ -170,33 +172,20 @@ ENDM
 ;Scans the path of the car to handle collisions
 ;pass the left point of the row you want to scan
 ;carNo -> 1 for first, 2 -> for second
-ScanY MACRO x , y , CarNo , MovemetType
+Scan MACRO x , y , CarNo , MovemetType
     MOV DX , x
     MOV CarToDrawX , DX
+    mov CarToScanX , DX
 
     MOV DX, y
     MOV CarToDrawY , DX
-
+    MOV CarToScanY , DX
+    
     MOV DL , CarNo
     MOV CarToScan , DL
 
     MOV DL , MovemetType
     MOV YMovement, DL
-
-ENDM
-
-ScanX MACRO x , y , CarNo , MovemetType
-    MOV DX , X
-    MOV CarToDrawX , DX
-
-    MOV DX, y
-    MOV CarToDrawY , DX
-
-    MOV DL , CarNo
-    MOV CarToScan , DL
-
-    MOV DL , MovemetType
-    MOV XMovement, DL
 
 ENDM
 
@@ -349,32 +338,41 @@ CheckArrowFlags PROC FAR
 	
                           CMP      ArrowUpFlag , 1
                           JNE      CmpLeft
-                          SUB      PosYfirst , 2
+                          SUB      PosYfirst , 1
 
-                          ScanY PosXfirst, PosYfirst , 1 , 1
-                          CALL ScanYmovement
+                          Scan PosXfirst, PosYfirst , 1 , 1
+                          CALL      ScanYmovement
+                          CALL      UpdateCar1Pos
+                          ADD       PosYfirst , 1
     CmpLeft:              
                           CMP      ArrowLeftFlag , 1
                           JNE      CmpDown
-                          SUB      PosXfirst, 2
+                          SUB      PosXfirst, 1
 
-                          ScanX PosXfirst, PosYfirst , 1 , 0
+                          Scan PosXfirst, PosYfirst , 1 , 0
                           CALL ScanXmovement
+                          CALL UpdateCar1Pos
+                          ADD  PosXfirst, 1
 
     CmpDown:              
                           CMP      ArrowDownFlag , 1
                           JNE      CmpRight
-                          ADD      PosYfirst, 2
-
-                          ScanY PosXfirst, PosYfirst , 1 , 0
+                    
+                          ADD      PosYfirst, 1
+                          Scan PosXfirst, PosYfirst , 1 , 0
                           CALL ScanYmovement
+                          CALL UpdateCar1Pos
+                          SUB PosYfirst , 1
+
     CmpRight:             
                           CMP      ArrowRightFlag, 1
                           JNE      CmpFinish
-                          ADD      PosXfirst , 2
-
-                          ScanX PosXfirst, PosYfirst , 1 ,1
+                         
+                          ADD     PosXfirst, 1
+                          Scan PosXfirst, PosYfirst , 1 , 1
                           CALL ScanXmovement
+                          CALL UpdateCar1Pos
+                          SUB  PosXfirst, 1
 
     CmpFinish:            
                          RET
@@ -386,31 +384,35 @@ CheckWASDFlags PROC FAR
 	
                 CMP      WFlag , 1
                 JNE      CmpLeft2
-                SUB     PosYsecond , 2
+                SUB     PosYsecond , 1
 
-                ScanY PosXsecond, PosYsecond , 0 , 1
+                Scan PosXsecond, PosYsecond , 0 , 1
                 CALL ScanYmovement
+                CALL UpdateCar2Pos
+                ADD PosYsecond , 1
     CmpLeft2:              
                 CMP      AFlag , 1
                 JNE      CmpDown2
                 SUB      PosXsecond, 2
 
-                ScanX PosXsecond, PosYsecond , 0 , 0
+                Scan PosXsecond, PosYsecond , 0 , 0
                 CALL ScanXmovement
 
     CmpDown2:              
                 CMP      SFlag , 1
                 JNE      CmpRight2
-                ADD     PosYsecond, 2
+                ADD     PosYsecond, 1
 
-                ScanY PosXsecond, PosYsecond , 0 , 0
+                Scan PosXsecond, PosYsecond , 0 , 0
                 CALL ScanYmovement
+                CALL UpdateCar2Pos
+                SUB PosYsecond , 1
     CmpRight2:             
                 CMP      DFlag, 1
                 JNE      CmpFinish2
                 ADD      PosXsecond , 2
 
-                ScanX PosXsecond, PosYsecond , 0 ,1
+                Scan PosXsecond, PosYsecond , 0 ,1
                 CALL ScanYmovement
 
     CmpFinish2:            
@@ -438,24 +440,24 @@ CheckWASDFlags ENDP
  UpdateArrowFlags ENDP
 
 ;description
-; UpdateCar1Pos PROC
-;                 MOV DX , PosX
-;                 MOV PosXfirst, DX
+UpdateCar1Pos PROC FAR
+                MOV DX , CarToScanX
+                MOV PosXfirst, DX
 
-;                 MOV DX, PosY
-;                 MOV PosYfirst, DX
-;                 RET
-; UpdateCar1Pos ENDP
+                MOV DX, CarToScanY
+                MOV PosYfirst, DX
+                RET
+UpdateCar1Pos ENDP
 
 ;description
-; UpdateCar2Pos PROC
-;                 MOV DX , PosX
-;                 MOV PosXsecond, DX
+UpdateCar2Pos PROC FAR
+                MOV DX , CarToScanX
+                MOV PosXsecond, DX
 
-;                 MOV DX, PosY
-;                 MOV PosYsecond, DX
-;                 RET
-; UpdateCar2Pos ENDP
+                MOV DX, CarToScanY
+                MOV PosYsecond, DX
+                RET
+UpdateCar2Pos ENDP
 
 ;description
 UpdateWASDFlags PROC FAR
@@ -528,81 +530,108 @@ ScanYmovement PROC FAR
                 
                 CMP YMovement , 0  ; The car is moving down either car1 or car2
                 JNE UpMovement
+                
                 ADD CarToDrawY , (CAR_SIZE-1)
-
     UpMovement:
                 CALL CalculateBoxVertex
+                MOV CX , 2              ;CAR SPEED
+    
+    RowsTocheck:
+                PUSH DI
+                PUSH CX
                 MOV CX , CAR_SIZE
 
     CheckY:
-                CMP BYTE PTR ES:[DI] , 142
-                JE ObstacleDetected
-                JMP NoObstacleDetected
-  
-  ObstacleDetected:
-    ;Checking that the car that it is scanning      
-                CMP CarToScan , 0                   
-                JE Car2
-    ;Changing car1 position to the previous position  
-                MOV DX , PrevPosYfirst    
-                MOV PosYfirst , DX
-                JMP checkYFinish
-    ;Changing car2 position to the previous position            
-    Car2:       
-                MOV DX , PrevPosYsecond
-                MOV PosYsecond , DX
-                JMP checkYFinish
-    ;No matching found, continue looping
+                CMP BYTE PTR ES:[DI] , 142           
+                JE checkYFinish
+               
+    ; ;Checking that the car that it is scanning      
+    ;             CMP CarToScan , 0                   
+    ;             JE Car2
+    ; ;Changing car1 position to the previous position  
+    ;             MOV DX , PrevPosYfirst    
+    ;             MOV PosYfirst , DX
+    ;             JMP checkYFinish
+    ; ;Changing car2 position to the previous position            
+    ; Car2:       
+    ;             MOV DX , PrevPosYsecond
+    ;             MOV PosYsecond , DX
+    ;             JMP checkYFinish
+    ; ;No matching found, continue looping
+
     NoObstacleDetected:
                 INC DI
                 LOOP checkY
+                
+                POP CX
+                POP DI
+                CMP YMovement , 0
+                JNE MoveUp
+                
+                ADD DI ,SCREEN_WIDTH
+                INC CarToScanY
+
+                JMP CurrentLoop
+    MoveUp:
+                SUB DI , SCREEN_WIDTH
+                DEC CarToScanY
+    CurrentLoop:
+                loop RowsTocheck
 
     checkYFinish:
                 RET
 ScanYmovement ENDP
 
 ScanXmovement PROC FAR
-    MOV AX , 0A000H
-    MOV ES, AX
+        MOV AX , 0A000H
+        MOV ES, AX
 
-    MOV DI , 0
+        MOV DI , 0
 
-    CMP XMovement , 1   ; The car is moving right either car1 or car2
-    JNE LeftMovement
-    ADD CarToDrawX , (Car_Size -1)
+        CMP XMovement , 1   ; The car is moving right either car1 or car2
+        JNE LeftMovement
+        ADD CarToDrawX , (Car_Size-1)
 
-LeftMovement:
-        CALL CalculateBoxVertex
-        MOV CX, Car_Size
+    LeftMovement:
+            CALL CalculateBoxVertex
+         
+            MOV CX , 2              ;CAR SPEED
+    
+    RowsTocheck2:
+            PUSH DI
+            PUSH CX
 
-CheckX:
-        CMP BYTE PTR ES:[DI] , 142
-        JE ObstacleDetected2
-        JMP NoObstacleDetected2  
-ObstacleDetected2:
-    ;Checking that the car that it is scanning      
-                CMP CarToScan , 0                    
-                JE Car2_XDetection
-    ;Changing car1 position to the previous position  
-                MOV DX , PrevPosXfirst    
-                MOV PosXfirst , DX
-                JMP checkXFinish
-    ;Changing car2 position to the previous position            
-    Car2_XDetection:       
-                MOV DX , PrevPosXsecond
-                MOV PosXsecond , DX
-                JMP checkXFinish
-    ;No matching found, continue looping
+            MOV CX, Car_Size
+
+    CheckX:
+            CMP BYTE PTR ES:[DI] , 142
+            JE checkXFinish
+
     NoObstacleDetected2:
                 ADD DI , SCREEN_WIDTH
                 LOOP checkX
 
+                POP CX
+                POP DI
+                CMP XMovement , 1
+                JNE MoveLeft
+                
+                INC DI
+                INC CarToScanX
+                JMP CurrentLoop2
+    MoveLeft:
+                DEC DI 
+                DEC CarToScanX
+
+    CurrentLoop2:
+                LOOP RowsTocheck2
+
     checkXFinish:
-                RET
+                    RET
 ScanXmovement ENDP
 
 ;description
-checkingPositionChange PROC FAR
+checkingPositionChange1 PROC FAR
              
                 MOV DX , PosXfirst
                 CMP PrevPosXfirst, DX
@@ -615,7 +644,13 @@ checkingPositionChange PROC FAR
                 CMP PrevPosYfirst , DX
                 JE Car2Check
                 CALL Update1
-    Car2Check:  
+    Car2Check:            
+                RET
+checkingPositionChange1 ENDP
+
+
+;description
+checkingPositionChange2 PROC FAR
                 MOV DX , PosXsecond
                 CMP PrevPosXsecond, DX
                 JE bridge2
@@ -629,8 +664,7 @@ checkingPositionChange PROC FAR
 
     ContinueLooping:
                 RET
-checkingPositionChange ENDP
-
+checkingPositionChange2 ENDP
 INT09H PROC FAR
                 IN     AL, 60H
                             
@@ -656,8 +690,6 @@ MAIN PROC FAR
                 MOV   AL , 13H
                 INT   10H
     
-                
-
      ; set initial pos of first car in the game
                 MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
                 MOV  PosYfirst , (SCREEN_HEIGHT-CAR_SIZE)/2
@@ -708,11 +740,11 @@ MAIN PROC FAR
                 STI
             
                 
-                CALL CheckArrowFlags
+                CALL CheckArrowFlags               
+                CALL checkingPositionChange1   
+
                 CALL CheckWASDFlags
-                
-                CALL checkingPositionChange               
- 
+                CALL checkingPositionChange2
     ;Delay 
                 MOV CX , 0
                 MOV DX , 30997D
