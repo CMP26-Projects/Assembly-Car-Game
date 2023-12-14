@@ -8,6 +8,8 @@
         ;CarImage
         CarImg1                 DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
         CarImg2                 DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
+        Car1Speed               DB   2
+        Car2Speed               DB   2
 
         ;CarDimensions
         CAR_SIZE                EQU  6
@@ -719,9 +721,9 @@ MAIN PROC FAR
                 CALL CheckWASDFlags
                 CALL checkingPositionChange2               
  
-    ;Delay 
+    ;Delay  
                 MOV CX , 0
-                MOV DX , 30997D
+                MOV DX , 20997D
                 MOV AH , 86H
                 INT 15H
 
