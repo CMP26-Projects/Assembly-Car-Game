@@ -93,7 +93,8 @@
     CarToScan    DB   ?
 
     ;Buffer to store the background to save it upon movement
-    BackgroundBuffer    DB Car_Size*Car_Size 
+    BackgroundBuffer1    DB     Car_Size*Car_Size DUP(?)
+    BackgroundBuffer2    DB     Car_Size*Car_Size DUP(?)
 
     ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    MACRO    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -109,19 +110,25 @@ DRAW MACRO Img, CarSize, StartPosX, StartPosY
 
           MOV  AX, StartPosY
           MOV  CarToDrawY, AX
-
+        
           CALL DrawCar
 ENDM
 
-CLEAR MACRO ClearedSize, ClearedPosX, ClearedPosY
+;CarNo: 1->car1 , 2->Car2
+CLEAR MACRO Car, ClearedSize, ClearedPosX, ClearedPosY
+            
            MOV  AX , ClearedSize
-           MOV  CarToDraw , ClearedSize
+           MOV  CarToDrawSize , ClearedSize
 
            MOV  AX , ClearedPosX
            MOV  CarToDrawX, AX
 
            MOV  AX , ClearedPosY
            MOV  CarToDrawY , AX
+
+            MOV AX, OFFSET Car
+            MOV CarToDraw , AX
+
            CALL ClearCarArea
 ENDM
 
@@ -217,6 +224,18 @@ CalculateBoxVertex PROC FAR
                        RET
 CalculateBoxVertex ENDP
 
+;Moves the background of the car to be drawn in BX
+CheckCarToDraw PROC FAR
+                MOV DX , OFFSET CarImg1
+                CMP CarToDraw , DX
+                JNE Car2Draw
+                MOV BX ,OFFSET BackgroundBuffer1
+                RET
+Car2Draw:
+                MOV BX ,OFFSET BackgroundBuffer2
+                RET
+CheckCarToDraw ENDP
+
 DrawCar PROC FAR
                 MOV  ax , 0A000H
                 MOV  es , ax
@@ -225,8 +244,8 @@ DrawCar PROC FAR
                 MOV  SI ,  CarToDraw
                 MOV  DL , 0
                 CALL CalculateBoxVertex
-
-                MOV BX ,OFFSET BackgroundBuffer
+                
+                CALL CheckCarToDraw               ;Get Background offset in BX
 
 ROWS_DRAW:        
                 PUSH CX
@@ -260,7 +279,8 @@ ClearCarArea PROC FAR
                        MOV   cx , CarToDrawSize
                        CALL  CalculateBoxVertex
 
-                       MOV BX ,OFFSET BackgroundBuffer
+                      CALL CheckCarToDraw               ;Get Background offset in BX
+
     ROWS_CLEAR:        
                        PUSH  CX
                        PUSH  DI
@@ -507,7 +527,7 @@ Update1 PROC FAR
                 ; CMP IsSafeToMove , 1
                 ; JE CannotDraw
 
-                CLEAR CAR_SIZE, PrevPosXfirst, PrevPosYfirst
+                CLEAR CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
                 DRAW  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
     CannotDraw:                
                 RET
@@ -515,7 +535,7 @@ Update1 ENDP
 
 
 Update2 PROC FAR
-                CLEAR CAR_SIZE, PrevPosXsecond, PrevPosYsecond
+                CLEAR CarImg2, CAR_SIZE, PrevPosXsecond, PrevPosYsecond
                 DRAW CarImg2, CAR_SIZE, PosXsecond , PosYsecond
                 RET
 Update2 ENDP
@@ -663,7 +683,28 @@ MAIN PROC FAR
                 MOV   AL , 13H
                 INT   10H
     
-                
+                MOV DI , 0
+                MOV CarToDrawX , 0
+                MOV CarToDrawY, 80
+                CALL CalculateBoxVertex
+
+                MOV CX , SCREEN_WIDTH
+    Coloring:
+                MOV BYTE PTR ES:[DI] , 04H
+                INC DI
+                LOOP Coloring
+              
+                MOV CX , SCREEN_WIDTH
+    Coloring1:
+                MOV BYTE PTR ES:[DI] , 05H
+                INC DI
+                LOOP Coloring1
+
+                MOV CX , SCREEN_WIDTH
+    Coloring2:
+                MOV BYTE PTR ES:[DI] , 06H
+                INC DI
+                LOOP Coloring2                
 
      ; set initial pos of first car in the game
                 MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
