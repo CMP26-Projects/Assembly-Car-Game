@@ -322,10 +322,10 @@ InputButtonSwitchCase PROC  FAR
                        MOV   BL , UpKeyCode 
                        ADD   BL, 80H
                        CMP   AL ,  BL
-                       JNE   CheckLeft
+                       JNE   CarCheckLeft
                        MOV   UpFlag , 0
                        JMP   Default
-    CheckLeft:         
+    CarCheckLeft:         
     ; left arrow
                        CMP   AL, LeftKeyCode
                        JNE   NotPressed2
@@ -335,11 +335,11 @@ InputButtonSwitchCase PROC  FAR
                        MOV   BL , LeftKeyCode
                        ADD   BL, 80H
                        CMP   AL , BL
-                       JNE   checkDown
+                       JNE   CarCheckDown
                        MOV   LeftFlag , 0
                        JMP   Default
 
-    checkDown:         
+    CarCheckDown:         
     ; down arrow
                        cmp   AL, DownKeyCode
                        JNE   NotPressed3
@@ -349,11 +349,11 @@ InputButtonSwitchCase PROC  FAR
                        MOV   BL , DownKeyCode
                        ADD   BL, 80H
                        CMP   AL , BL
-                       JNE   checkRight
+                       JNE   CarCheckRight
                        MOV   DownFlag , 0
                        JMP   Default
     
-    checkRight:        
+    CarCheckRight:        
     ; right arrow
                        CMP   AL , RightKeyCode
                        JNE   NotPressed4
@@ -476,26 +476,6 @@ CheckWASDFlags ENDP
  UpdateArrowFlags ENDP
 
 ;description
-; UpdateCar1Pos PROC
-;                 MOV DX , PosX
-;                 MOV PosXfirst, DX
-
-;                 MOV DX, PosY
-;                 MOV PosYfirst, DX
-;                 RET
-; UpdateCar1Pos ENDP
-
-;description
-; UpdateCar2Pos PROC
-;                 MOV DX , PosX
-;                 MOV PosXsecond, DX
-
-;                 MOV DX, PosY
-;                 MOV PosYsecond, DX
-;                 RET
-; UpdateCar2Pos ENDP
-
-;description
 UpdateWASDFlags PROC FAR
                 MOV BL , UpFlag
                 MOV WFlag, BL
@@ -532,17 +512,6 @@ CheckWASDKeys PROC FAR
 CheckWASDKeys ENDP
 
 Update1 PROC FAR
-                ; MOV DX , PosXfirst
-                ; MOV CarToDrawX , DX
-
-                ; MOV DX , PosYfirst
-                ; MOV CarToDrawY , DX
-
-                ; MOV IsSafeToMove , 0
-                ; CALL ScanCarPath
-                ; CMP IsSafeToMove , 1
-                ; JE CannotDraw
-
                 CLEAR CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
                 DRAW  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
     CannotDraw:                
@@ -755,37 +724,15 @@ MAIN PROC FAR
                 MOV   AL , 13H
                 INT   10H
     
-                MOV DI , 0
-                MOV CarToDrawX , 0
-                MOV CarToDrawY, 80
-                CALL CalculateBoxVertex
-
-                MOV CX , SCREEN_WIDTH
-    Coloring:
-                MOV BYTE PTR ES:[DI] , 04H
-                INC DI
-                LOOP Coloring
-              
-                MOV CX , SCREEN_WIDTH
-    Coloring1:
-                MOV BYTE PTR ES:[DI] , 05H
-                INC DI
-                LOOP Coloring1
-
-                MOV CX , SCREEN_WIDTH
-    Coloring2:
-                MOV BYTE PTR ES:[DI] , 06H
-                INC DI
-                LOOP Coloring2                
 
      ; set initial pos of first car in the game
-                MOV  PosXfirst , (SCREEN_WIDTH-CAR_SIZE)/2
-                MOV  PosYfirst , (SCREEN_HEIGHT-CAR_SIZE)/2
+                MOV  PosXfirst , STARTROADX
+                MOV  PosYfirst , STARTROADY + 1
                 DRAW CarImg1, CAR_SIZE, PosXfirst , PosYfirst
 
                 ; set initial pos of second car in the game
-                MOV  PosXsecond , (SCREEN_WIDTH-CAR_SIZE)/3
-                MOV  PosYsecond , (SCREEN_HEIGHT-CAR_SIZE)/3
+                MOV  PosXsecond , STARTROADX 
+                MOV  PosYsecond , STARTROADY + HORROADIMGH - Car_Size - 1
                 DRAW CarImg2, CAR_SIZE, PosXsecond , PosYsecond
 
 
