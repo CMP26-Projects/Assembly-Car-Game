@@ -613,6 +613,7 @@ ScanYmovement PROC FAR
     CheckY:
                 CMP BYTE PTR ES:[DI] , 142
                 JNE NoObstacleDetected
+                
                 POP DI
                 POP CX
                 RET
@@ -835,7 +836,7 @@ MAIN PROC FAR
  
     ;Delay  
                 MOV CX , 0
-                MOV DX , 20997D
+                MOV DX , 30997D
                 MOV AH , 86H
                 INT 15H
 
