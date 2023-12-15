@@ -1,5 +1,5 @@
 from PIL import Image
-filename = 'download.png'
+filename = 'tank1.png'
 im = Image.open(filename)
 width, height = im.size
 pixels = list(im.getdata())

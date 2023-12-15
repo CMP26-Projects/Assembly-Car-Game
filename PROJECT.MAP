@@ -1,2 +1,9 @@
-Fatal: Unable to open file 'd:\project.obj'
+
+ Start  Stop   Length Name               Class
+
+ 00000H 00C25H 00C26H _TEXT              CODE
+ 00C30H 015AEH 0097FH _DATA              DATA
+ 015B0H 015EFH 00040H STACK              STACK
+
+Program entry point at 0000:044C
 
