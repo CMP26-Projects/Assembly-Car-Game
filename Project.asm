@@ -476,6 +476,8 @@ CURPOWERINDEX           DW      0
 
 
 ;CAR
+CARIMGW                 EQU     6
+CARIMGH                 EQU     6
 CARIMG                  DB      142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
 
 ;START FLAG
@@ -1126,7 +1128,10 @@ DRAWIMAGE PROC FAR
         MOV CX, WIDTODRAW
         COLS:
             MOV DL, BYTE PTR [SI]
+            CMP DL, 0
+            JE DONTDRAWBYTE
             MOV ES:[DI], DL
+            DONTDRAWBYTE:
             INC SI
             INC DI
         LOOP COLS
@@ -1848,6 +1853,11 @@ JMP STARTPROGRAM
 NOTSTARTPROGRAM:
 CALL DRAWENDLINE
 
+
+MOV TEMPX, 10
+MOV TEMPY, 4
+MOV TMP, 0
+DRAW CARIMG, CARIMGW, CARIMGH, TEMPX, TEMPY, TMP
 ; MOV CURPOWERINDEX, 4
 ; CALL RETRIEVEROAD
 
