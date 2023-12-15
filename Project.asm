@@ -1989,23 +1989,23 @@ CALL DRAWENDLINE
                 MOV PosY, DX
      mainLoop:          
 
-                MOV AH, 2CH  ; INTERRUPT to get system time
-                INT 21H
-                MOV AL, DH
-                MOV AH, 0
-                MOV BL, 3
-                DIV BL
-                CMP AH, 0
-                JNE DONTSHOWPOWER
-                MOV SI, OFFSET ISVISIBLEPOWER
-                ADD SI, INDEXSTARTSHOWING
-                INC INDEXSTARTSHOWING
-                CMP BYTE PTR DS:[SI], 0
-                JNE DONTSHOWPOWER
-                CALL SHOWHIDDENPOWER
+                ; MOV AH, 2CH  ; INTERRUPT to get system time
+                ; INT 21H
+                ; MOV AL, DH
+                ; MOV AH, 0
+                ; MOV BL, 3
+                ; DIV BL
+                ; CMP AH, 0
+                ; JNE DONTSHOWPOWER
+                ; MOV SI, OFFSET ISVISIBLEPOWER
+                ; ADD SI, INDEXSTARTSHOWING
+                ; INC INDEXSTARTSHOWING
+                ; CMP BYTE PTR DS:[SI], 0
+                ; JNE DONTSHOWPOWER
+                ; CALL SHOWHIDDENPOWER
 
 
-                DONTSHOWPOWER:
+                ; DONTSHOWPOWER:
 
                 MOV DX , PosXfirst
                 MOV PrevPosXfirst, DX
