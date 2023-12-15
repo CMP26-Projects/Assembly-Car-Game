@@ -544,8 +544,8 @@ RANGEOFRAND             DB      ?
 ;STARTdd
 STARTROADX              EQU     2
 STARTROADY              EQU     2
-NUMBEROFPARTS           EQU     15
-MINNUMOFPARTS           EQU     15
+NUMBEROFPARTS           EQU     100
+MINNUMOFPARTS           EQU     30
 
 ;VARIABLES FOR DRAWIMAGE PROCEDURE
 IMGTODRAW               DW      ?
