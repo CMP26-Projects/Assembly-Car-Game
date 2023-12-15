@@ -477,8 +477,12 @@ CURPOWERINDEX           DW      0
 POWERTOPLEFTBYTE        DW      ?
 INDEXSTARTSHOWING       DW      5  ; INDEX TO START SHOWING THE HIDDEN POWER FROM
 
+;CURRENT SECOND
+CURSECOND               DB      61
+DURATIONTOSHOWPOWER     EQU     6
+
 ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
-POWERPROBABILITY        DB      30
+POWERPROBABILITY        DB      100
 OBSTPROBABILITY         DB      70
 POWERVISIBPROBABILITY   DB      60
 
@@ -540,8 +544,8 @@ RANGEOFRAND             DB      ?
 ;STARTdd
 STARTROADX              EQU     2
 STARTROADY              EQU     2
-NUMBEROFPARTS           EQU     30
-MINNUMOFPARTS           EQU     15
+NUMBEROFPARTS           EQU     100
+MINNUMOFPARTS           EQU     30
 
 ;VARIABLES FOR DRAWIMAGE PROCEDURE
 IMGTODRAW               DW      ?
@@ -1391,6 +1395,7 @@ SHOWHIDDENPOWER PROC
     ADD SI, AX
     MOV DI, WORD PTR DS:[SI]
     CALL CALCXY
+    MOV TMP4, 0
 
     ;DECIDING WHICH POWERUP TO DRAW
     CALL GETSYSTEMTIME
@@ -1498,7 +1503,7 @@ WHICHPOWERIMG PROC
 
     FINISHPOWER:
 
-RET
+    RET
 WHICHPOWERIMG ENDP
 
 
@@ -1988,24 +1993,32 @@ CALL DRAWENDLINE
                 MOV DX , PosYfirst
                 MOV PosY, DX
      mainLoop:          
+                MOV AX, POWERUPCOUNTER
+                CMP INDEXSTARTSHOWING, AX
+                JAE DONTSHOWPOWER
 
-                ; MOV AH, 2CH  ; INTERRUPT to get system time
-                ; INT 21H
-                ; MOV AL, DH
-                ; MOV AH, 0
-                ; MOV BL, 3
-                ; DIV BL
-                ; CMP AH, 0
-                ; JNE DONTSHOWPOWER
-                ; MOV SI, OFFSET ISVISIBLEPOWER
-                ; ADD SI, INDEXSTARTSHOWING
-                ; INC INDEXSTARTSHOWING
-                ; CMP BYTE PTR DS:[SI], 0
-                ; JNE DONTSHOWPOWER
-                ; CALL SHOWHIDDENPOWER
+                MOV AH, 2CH  ; INTERRUPT to get system time
+                INT 21H
+
+                CMP DH, CURSECOND
+                JE DONTSHOWPOWER
+                MOV CURSECOND, DH
+
+                MOV AL, DH
+                MOV AH, 0
+                MOV BL, DURATIONTOSHOWPOWER
+                DIV BL
+                CMP AH, 0
+                JNE DONTSHOWPOWER
+                MOV SI, OFFSET ISVISIBLEPOWER
+                ADD SI, INDEXSTARTSHOWING
+                INC INDEXSTARTSHOWING
+                CMP BYTE PTR DS:[SI], 0
+                JNE DONTSHOWPOWER
+                CALL SHOWHIDDENPOWER
 
 
-                ; DONTSHOWPOWER:
+                DONTSHOWPOWER:
 
                 MOV DX , PosXfirst
                 MOV PrevPosXfirst, DX
