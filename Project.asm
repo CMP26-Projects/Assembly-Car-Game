@@ -337,14 +337,35 @@ ENDM
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
         ;CarImage
-        CarImg1                 DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
-        CarImg2                 DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
+        CarImg1                 DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
+                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
+        CarImg2                 DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
+                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
+
+        CarImg1Up               DB   0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 122, 122, 122
+                                DB   122, 192, 17, 17, 0, 0, 0, 17, 17
+        CarImg1Right            DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
+                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
+        CarImg1Down             DB   17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 42, 42, 42, 122, 17, 192, 122, 42, 192, 42, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
+                                DB   192, 192, 0, 0, 0, 17, 0, 0, 0
+        CarImg1Left             DB   0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 9, 9, 122, 0, 17, 192, 192, 192, 9, 122, 0, 0, 0, 122, 9, 9, 122, 0, 0, 192, 122, 122, 122
+                                DB   122, 17, 0, 192, 17, 192, 17, 192, 17
+
+        CarImg2Up               DB   0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 122, 122, 122
+                                DB   122, 192, 17, 17, 0, 0, 0, 17, 17
+        CarImg2Right            DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
+                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
+        CarImg2Down             DB   17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
+                                DB   192, 192, 0, 0, 0, 17, 0, 0, 0 
+        CarImg2Left             DB   0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 43, 43, 122, 0, 17, 192, 192, 192, 43, 122, 0, 0, 0, 122, 43, 43, 122, 0, 0, 192, 122, 122, 122
+                                DB   122, 17, 0, 192, 17, 192, 17, 192, 17
+        
         Car1Speed               DW   2
         Car2Speed               DW   2
         CurrentSpeed            DW   ?      ;Stores the speed of the currently updating car 
 
         ;CarDimensions
-        CAR_SIZE                EQU  6
+        CAR_SIZE                EQU  7
         PosXfirst               DW   ?
         PosYfirst               DW   ?
         PosXsecond              DW   ?
@@ -451,7 +472,7 @@ SCREENSIZE              EQU     32*32
 
 
 ;OBSTACLE
-THRESHOLD               EQU     10
+THRESHOLD               EQU     14
 OBSTACLEW               EQU     5
 OBSTACLEH               EQU     5
 OBSTACLE                DB      16, 16, 16, 16, 16, 16, 28, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
@@ -461,7 +482,7 @@ YOBSTACLE               DW      ?
 ;POWERUPS
 POWERW                  EQU     3
 POWERH                  EQU     3
-CREATEOBSTPOWER         DB      36, 36, 36, 36, 16, 36, 36, 36, 36
+CREATEOBSTPOWER         DB      36, 36, 36, 36, 17, 36, 36, 36, 36
 PASSOBSTPOWER           DB      36, 36, 36, 36, 28, 36, 36, 36, 36
 DECSPEEDPOWER           DB      36, 36, 36, 112, 112, 112, 36, 36, 36
 INCSPEEDPOWER           DB      36, 121, 36, 121, 121, 121, 36, 121, 36
@@ -475,11 +496,11 @@ ISVISIBLEPOWER          DB      45 DUP(?)
 POWERUPCOUNTER          DW      0
 CURPOWERINDEX           DW      0
 POWERTOPLEFTBYTE        DW      ?
-INDEXSTARTSHOWING       DW      5  ; INDEX TO START SHOWING THE HIDDEN POWER FROM
+INDEXSTARTSHOWING       DW      0  ; INDEX TO START SHOWING THE HIDDEN POWER FROM
 
 ;CURRENT SECOND
 CURSECOND               DB      61
-DURATIONTOSHOWPOWER     EQU     6
+DURATIONTOSHOWPOWER     EQU     2
 
 ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
 POWERPROBABILITY        DB      100
@@ -545,7 +566,7 @@ RANGEOFRAND             DB      ?
 STARTROADX              EQU     2
 STARTROADY              EQU     2
 NUMBEROFPARTS           EQU     100
-MINNUMOFPARTS           EQU     30
+MINNUMOFPARTS           EQU     5
 
 ;VARIABLES FOR DRAWIMAGE PROCEDURE
 IMGTODRAW               DW      ?
@@ -972,7 +993,8 @@ ScanYmovement PROC FAR
     CheckY:
                 ; CMP BYTE PTR ES:[DI] , 142
                 ; JNE NoObstacleDetected
-
+                CMP BYTE PTR ES:[DI], 36
+                JE POWERUPDETECTED
                 CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
                 JE NoObstacleDetected
                 CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
@@ -983,6 +1005,14 @@ ScanYmovement PROC FAR
                 POP DI
                 POP CX
                 RET
+
+    POWERUPDETECTED:
+                PUSH CX
+                PUSH DI
+                CALL GETTOPLEFTPOWER
+                CALL SEARCHTORETRIEVE
+                POP DI
+                POP CX
     NoObstacleDetected:
                 INC DI
                 LOOP checkY
@@ -1034,18 +1064,29 @@ ScanXmovement PROC FAR
     CheckX:
                     ;CMP BYTE PTR ES:[DI] , 142
                     ;JNE NoObstacleDetected2
-
-                CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
-                JE NoObstacleDetected2 
-                CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
-                JE NoObstacleDetected2 
-                CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
-                JE NoObstacleDetected2
-
+                    CMP BYTE PTR ES:[DI], 36
+                    JE POWERUPDETECTED2
+                    CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
+                    JE NoObstacleDetected2 
+                    CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
+                    JE NoObstacleDetected2 
+                    CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
+                    JE NoObstacleDetected2
+                
+                
 
                     POP DI
                     POP cx
+                    
                     RET  
+
+    POWERUPDETECTED2:
+                    PUSH CX
+                    PUSH DI
+                    CALL GETTOPLEFTPOWER
+                    CALL SEARCHTORETRIEVE
+                    POP DI
+                    POP CX
     NoObstacleDetected2:
                     ADD DI , SCREEN_WIDTH
                     LOOP checkX
@@ -1306,6 +1347,49 @@ CALCXY PROC
     MOV TEMPY, AX
     RET
 CALCXY ENDP
+
+GETTOPLEFTPOWER PROC
+    GOLEFTBYTE:
+        MOV BX, DI
+        DEC BX
+        CMP BYTE PTR ES:[BX], 36
+        JE STILLLEFT
+        CMP BYTE PTR ES:[BX], 112
+        JE STILLLEFT
+        CMP BYTE PTR ES:[BX], 121
+        JE STILLLEFT
+        CMP BYTE PTR ES:[BX], 17
+        JE STILLLEFT
+        CMP BYTE PTR ES:[BX], 28
+        JE STILLLEFT
+        JMP GOUPBYTE
+
+        STILLLEFT:
+        DEC DI
+        JMP GOLEFTBYTE
+    GOUPBYTE:
+        MOV BX, DI
+        SUB BX, SCREEN_WIDTH
+        CMP BYTE PTR ES:[BX], 36
+        JE STILLUP
+        CMP BYTE PTR ES:[BX], 112
+        JE STILLUP
+        CMP BYTE PTR ES:[BX], 121
+        JE STILLUP
+        CMP BYTE PTR ES:[BX], 17
+        JE STILLUP
+        CMP BYTE PTR ES:[BX], 28
+        JE STILLUP
+        JMP FINISHGETTOPLEFT
+        
+        STILLUP:        
+        SUB DI, SCREEN_WIDTH
+        JMP GOUPBYTE
+
+    FINISHGETTOPLEFT:
+        MOV POWERTOPLEFTBYTE, DI
+    RET
+GETTOPLEFTPOWER ENDP
 
 STORINGROADUNDERPOWER PROC
     MOV AX, POWERH 
@@ -2060,7 +2144,7 @@ CALL DRAWENDLINE
  
     ;Delay  
                 MOV CX , 0
-                MOV DX , 40997D
+                MOV DX , 64000D
                 MOV AH , 86H
                 INT 15H
 
