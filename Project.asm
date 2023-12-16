@@ -3,69 +3,69 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 DrawPower MACRO powerX , powerY , PType
-            ; DRAW MACRO IMG, WID, HEI, STARX, STARY, ISROAD
-            LOCAL DECSPEED , SETOBSTACLE , PASSOBSTACLE , FINISH_DRAWING_POWER
+    ; DRAW MACRO IMG, WID, HEI, STARX, STARY, ISROAD
+                         LOCAL DECSPEED , SETOBSTACLE , PASSOBSTACLE , FINISH_DRAWING_POWER
 
-            MOV AH , PType
+                         MOV   AH , PType
 
-            CMP AH,1       ;Increase Speed Powerup
-            JNE DECSPEED
-            DRAW BIGINCSPEEDPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
-            JMP FINISH_DRAWING_POWER
-            ; MOV AX ,OFFSET INCSPEEDPOWER
-            ; MOV powerupToDraw , AX
+                         CMP   AH,1                                                              ;Increase Speed Powerup
+                         JNE   DECSPEED
+                         DRAW  BIGINCSPEEDPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
+                         JMP   FINISH_DRAWING_POWER
+    ; MOV AX ,OFFSET INCSPEEDPOWER
+    ; MOV powerupToDraw , AX
 
-            ; CALL DrawPowerup
+    ; CALL DrawPowerup
 
         
-DECSPEED:
-            CMP AH,2       ;Decrease Speed Powerup   
-            JNE SETOBSTACLE
-            DRAW BIGDECSPEEDPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
-            JMP FINISH_DRAWING_POWER
-            ; MOV AX , OFFSET DECSPEEDPOWER
-            ; MOV powerupToDraw , AX
+    DECSPEED:            
+                         CMP   AH,2                                                              ;Decrease Speed Powerup
+                         JNE   SETOBSTACLE
+                         DRAW  BIGDECSPEEDPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
+                         JMP   FINISH_DRAWING_POWER
+    ; MOV AX , OFFSET DECSPEEDPOWER
+    ; MOV powerupToDraw , AX
             
-            ; CALL DrawPowerup
-            ; JMP FINISH_DRAWING_POWER
+    ; CALL DrawPowerup
+    ; JMP FINISH_DRAWING_POWER
 
-SETOBSTACLE:
-            CMP AH,3       ;Create Obstacle Powerup
-            JNE PASSOBSTACLE
-            DRAW BIGCREATEOBSTPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
-            JMP FINISH_DRAWING_POWER
-            ; MOV AX , OFFSET CREATEOBSTPOWER
-            ; MOV powerupToDraw , AX
+    SETOBSTACLE:         
+                         CMP   AH,3                                                              ;Create Obstacle Powerup
+                         JNE   PASSOBSTACLE
+                         DRAW  BIGCREATEOBSTPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
+                         JMP   FINISH_DRAWING_POWER
+    ; MOV AX , OFFSET CREATEOBSTPOWER
+    ; MOV powerupToDraw , AX
 
-            ; CALL DrawPowerup
-            ; JMP FINISH_Drawing_POWER
+    ; CALL DrawPowerup
+    ; JMP FINISH_Drawing_POWER
 
-PASSOBSTACLE:
-            CMP AH,4       ;Pass Obstacle Powerup
-            JNE FINISHPOWER
-            DRAW BIGPASSOBSTPOWER , BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
-            ; MOV AX , OFFSET PASSOBSTPOWER
-            ; MOV powerupToDraw , AX
+    PASSOBSTACLE:        
+                         CMP   AH,4                                                              ;Pass Obstacle Powerup
+                         JNE   FINISHPOWER
+                         DRAW  BIGPASSOBSTPOWER , BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
+    ; MOV AX , OFFSET PASSOBSTPOWER
+    ; MOV powerupToDraw , AX
 
-            ; CALL DrawPowerup
+    ; CALL DrawPowerup
 
-FINISH_DRAWING_POWER:
- ENDM
+    FINISH_DRAWING_POWER:
+ENDM
 
 Draw_Car MACRO Img, CarSize, StartPosX, StartPosY
-          MOV  AX, OFFSET Img
-          MOV  CarToDraw, AX
+             MOV  AX, OFFSET Img
+             MOV  CarToDraw, AX
 
-          MOV  AX, CarSize
-          MOV  CarToDrawSize, AX
+             MOV  AX, CarSize
+             MOV  CarToDrawSize, AX
 
-          MOV  AX, StartPosX
-          MOV  CarToDrawX, AX
+             MOV  AX, StartPosX
+             MOV  CarToDrawX, AX
 
-          MOV  AX, StartPosY
-          MOV  CarToDrawY, AX
+             MOV  AX, StartPosY
+             MOV  CarToDrawY, AX
         
-          CALL DrawCar
+             CALL DrawCar
 ENDM
 
 
@@ -75,97 +75,129 @@ ENDM
 ;CarNo: 1->car1 , 2->Car2
 CLEAR MACRO Car, ClearedSize, ClearedPosX, ClearedPosY
             
-           MOV  AX , ClearedSize
-           MOV  CarToDrawSize , ClearedSize
+          MOV  AX , ClearedSize
+          MOV  CarToDrawSize , ClearedSize
 
-           MOV  AX , ClearedPosX
-           MOV  CarToDrawX, AX
+          MOV  AX , ClearedPosX
+          MOV  CarToDrawX, AX
 
-           MOV  AX , ClearedPosY
-           MOV  CarToDrawY , AX
+          MOV  AX , ClearedPosY
+          MOV  CarToDrawY , AX
 
-            MOV AX, OFFSET Car
-            MOV CarToDraw , AX
+          MOV  AX, OFFSET Car
+          MOV  CarToDraw , AX
 
-           CALL ClearCarArea
+          CALL ClearCarArea
 ENDM
 
-ClearPower MACRO 
-            LOCAL CLEAR_SECOND_POWERUP, Delete_Powerup
-            CMP powerupParent , 1
-            JNE CLEAR_SECOND_POWERUP
-            MOV AX , powerup1Posx
-            MOV TEMPX,AX
-            MOV AX , powerup1Posy
-            MOV TEMPY,AX
-            JMP Delete_Powerup
+SetVerticalLine MACRO StX , StY, height, Color
+                    MOV  DX , StX
+                    MOV  CarToDrawX , DX
 
-CLEAR_SECOND_POWERUP:
-            MOV AX , powerup2Posx
-            MOV TEMPX,AX
-            MOV AX , powerup2Posy
-            MOV TEMPY,AX
+                    MOV  DX , StY
+                    MOV  CarToDrawY , DX
+
+                    MOV  DX , height
+                    MOV  LineToDrawH , DX
+                    
+                    MOV  DX , Color
+                    MOV  DrawingColor , DX
+
+                    CALL DrawVerticlLine
+ENDM
+
+SetHorizontalLine MACRO StX , StY, width, Color
+                      MOV  DX , StX
+                      MOV  CarToDrawX , DX
+
+                      MOV  DX , StY
+                      MOV  CarToDrawY , DX
+
+                      MOV  DX , width
+                      MOV  LineToDrawW , DX
+
+                      MOV  DX , Color
+                      MOV  DrawingColor , DX
+                    
+                      CALL DrawHorizontalLine
+ENDM
+
+ClearPower MACRO
+                         LOCAL CLEAR_SECOND_POWERUP, Delete_Powerup
+                         CMP   powerupParent , 1
+                         JNE   CLEAR_SECOND_POWERUP
+                         MOV   AX , powerup1Posx
+                         MOV   TEMPX,AX
+                         MOV   AX , powerup1Posy
+                         MOV   TEMPY,AX
+                         JMP   Delete_Powerup
+
+    CLEAR_SECOND_POWERUP:
+                         MOV   AX , powerup2Posx
+                         MOV   TEMPX,AX
+                         MOV   AX , powerup2Posy
+                         MOV   TEMPY,AX
 
 
-Delete_Powerup:            
-            CALL ClearPowerup
+    Delete_Powerup:      
+                         CALL  ClearPowerup
 
 ENDM
 
 SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2
 
-                               MOV   DL , Up
-                               MOV   UpKeyCode , DL
+            MOV DL , Up
+            MOV UpKeyCode , DL
 
-                               MOV   DL , Down
-                               MOV   DownKeyCode , DL
+            MOV DL , Down
+            MOV DownKeyCode , DL
 
-                               MOV   DL , Left
-                               MOV   LeftKeyCode , DL
+            MOV DL , Left
+            MOV LeftKeyCode , DL
 
-                               MOV   DL , Right
-                               MOV   RightKeyCode , DL
+            MOV DL , Right
+            MOV RightKeyCode , DL
 
-                               MOV DL , DeletePower1
-                               MOV DeletePower1Key , DL
+            MOV DL , DeletePower1
+            MOV DeletePower1Key , DL
 
-                               MOV DL , DeletePower2
-                               MOV DeletePower2Key , DL
+            MOV DL , DeletePower2
+            MOV DeletePower2Key , DL
 
 
-                              ; CALL InputButtonSwitchCase
+    ; CALL InputButtonSwitchCase
 ENDM
 
     ;Setting Flags to be checked while movement
-SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6 
+SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6
 
-                                MOV   DL , f1
-                                MOV   UpFlag , DL
+             MOV DL , f1
+             MOV UpFlag , DL
 
-                                MOV   DL , f2
-                                MOV   DownFlag , DL
+             MOV DL , f2
+             MOV DownFlag , DL
 
-                                MOV   DL , f3
-                                MOV   LeftFlag , DL
+             MOV DL , f3
+             MOV LeftFlag , DL
 
-                                MOV   DL , f4
-                                MOV   RightFlag , DL
+             MOV DL , f4
+             MOV RightFlag , DL
 
-                                MOV  DL , f5
-                                MOV  KFlag , DL
+             MOV DL , f5
+             MOV KFlag , DL
 
-                                MOV  DL , f6
-                                MOV  MFlag , DL
+             MOV DL , f6
+             MOV MFlag , DL
 
 
 ENDM
 
-SetPosition  MACRO X , Y
-    MOV DX , X
-    MOV PosX, DX
+SetPosition MACRO X , Y
+                MOV DX , X
+                MOV PosX, DX
 
-    MOV DX , Y
-    MOV PosY, DX
+                MOV DX , Y
+                MOV PosY, DX
 ENDM
 
 
@@ -173,40 +205,47 @@ ENDM
 ;pass the left point of the row you want to scan
 ;carNo -> 1 for first, 0 -> for second
 ScanY MACRO x , y , CarNo , MovemetType, Speed
-    MOV DX , x
-    MOV CarToDrawX , DX
+          MOV DX , x
+          MOV CarToDrawX , DX
 
-    MOV DX, y
-    MOV CarToDrawY , DX
+          MOV DX, y
+          MOV CarToDrawY , DX
 
-    MOV DL , CarNo
-    MOV CarToScan , DL
+          MOV DL , CarNo
+          MOV CarToScan , DL
 
-    MOV DL , MovemetType
-    MOV YMovement, DL
+          MOV DL , MovemetType
+          MOV YMovement, DL
 
-    MOV DX , Speed
-    MOV CurrentSpeed , DX
+          MOV DX , Speed
+          MOV CurrentSpeed , DX
 ENDM
 
 ScanX MACRO x , y , CarNo , MovemetType, Speed
-    MOV DX , X
-    MOV CarToDrawX , DX
+          MOV DX , X
+          MOV CarToDrawX , DX
 
-    MOV DX, y
-    MOV CarToDrawY , DX
+          MOV DX, y
+          MOV CarToDrawY , DX
 
-    MOV DL , CarNo
-    MOV CarToScan , DL
+          MOV DL , CarNo
+          MOV CarToScan , DL
 
-    MOV DL , MovemetType
-    MOV XMovement, DL
+          MOV DL , MovemetType
+          MOV XMovement, DL
 
-    MOV DX , Speed
-    MOV CurrentSpeed , DX
+          MOV DX , Speed
+          MOV CurrentSpeed , DX
 
 ENDM
 
+CalcStatBarStPts MACRO
+                     MOV StatusBarStartX , 0
+                     MOV StatusBarStartY,  BACKGROUNDIMAGEPARTH*VERTICALBACKGROUNDPARTSNO
+                     MOV DX , SCREEN_HEIGHT
+                     SUB DX , StatusBarStartY
+                     MOV StatusBarTotalheight, DX
+ENDM
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;; road MACROS ;;;;;;;;;;;;;;;
@@ -214,22 +253,22 @@ ENDM
 ;MACRO TO DRAW AN IMAGE GIVEN THESE PARAMS
 
 DRAW MACRO IMG, WID, HEI, STARX, STARY, ISROAD
-LOCAL FINISHDRAW
-MOV AX, OFFSET IMG
-MOV IMGTODRAW, AX
-MOV AX, WID
-MOV WIDTODRAW, AX
-MOV AX, HEI
-MOV HEITODRAW, AX
-MOV AX, STARX
-MOV STARXTODRAW, AX
-MOV AX, STARY
-MOV STARYTODRAW, AX
-CALL DRAWIMAGE
-CMP ISROAD, 1
-JNE FINISHDRAW
-MOV LASTDI, DI
-FINISHDRAW:
+               LOCAL FINISHDRAW
+               MOV   AX, OFFSET IMG
+               MOV   IMGTODRAW, AX
+               MOV   AX, WID
+               MOV   WIDTODRAW, AX
+               MOV   AX, HEI
+               MOV   HEITODRAW, AX
+               MOV   AX, STARX
+               MOV   STARXTODRAW, AX
+               MOV   AX, STARY
+               MOV   STARYTODRAW, AX
+               CALL  DrawImage
+               CMP   ISROAD, 1
+               JNE   FINISHDRAW
+               MOV   LASTDI, DI
+    FINISHDRAW:
 ENDM
 
 ;THIS MACRO CHECKS ONLY THE BYTES AT THE WIDTH AND HEIGHT FOR SIMPLICITY AND FAST RUN
@@ -240,7 +279,7 @@ ENDM
 ;     MOV ES, AX
 
 ;     MOV DI, STARY
-;     MOV AX, SCREENWIDTH
+;     MOV AX, SCREEN_WIDTH
 ;     MUL DI
 ;     MOV DI, AX
 ;     ADD DI, STARX
@@ -265,7 +304,7 @@ ENDM
 ;         JE HANDLECANTDRAW
 ;         CMP BYTE PTR ES:[DI], 31
 ;         JE HANDLECANTDRAW
-;         ADD DI, SCREENWIDTH
+;         ADD DI, SCREEN_WIDTH
 ;         DEC OUTCOUNTER
 ;     JNZ VER
 ;     JMP FINISH
@@ -303,59 +342,60 @@ ENDM
 ;THIS MACRO CHECKS THE WHOLE AREA TO BE DRAWN
 
 CHECKCANDRAW MACRO WID, HEI, STARX, STARY, DIRECTION
-    LOCAL ROWS, COLS, FINISH, HANDLECANTDRAW, CONTINUEUP, CONTINUERIGHT, CONTINUEDOWN, CONTINUELEFT
+                   LOCAL ROWS, COLS, FINISH, HANDLECANTDRAW, CONTINUEUP, CONTINUERIGHT, CONTINUEDOWN, CONTINUELEFT
     ;VIDEO MEMORY
-    MOV AX, 0A000H
-    MOV ES, AX 
-    MOV DI, STARY
-    MOV AX, SCREENWIDTH
-    MUL DI
-    MOV DI, AX
-    ADD DI, STARX
-    MOV AX, HEI
-    MOV OUTCOUNTER, AX
+                   MOV   AX, 0A000H
+                   MOV   ES, AX
+                   MOV   DI, STARY
+                   MOV   AX, SCREEN_WIDTH
+                   MUL   DI
+                   MOV   DI, AX
+                   ADD   DI, STARX
+                   MOV   AX, HEI
+                   MOV   OUTCOUNTER, AX
 
-    ROWS:
-        MOV FIRSTBYTEINROW, DI
-        MOV AX, WID
-        MOV INCOUNTER, AX
-        COLS:
-            CMP BYTE PTR ES:[DI], 20
-            JE HANDLECANTDRAW
-            CMP BYTE PTR ES:[DI], 31
-            JE HANDLECANTDRAW
-            INC DI
-            DEC INCOUNTER
-        JNZ COLS
-        MOV DI, FIRSTBYTEINROW
-        ADD DI, SCREENWIDTH
-    DEC OUTCOUNTER
-    JNZ ROWS
-    JMP FINISH
+    ROWS:          
+                   MOV   FIRSTBYTEINROW, DI
+                   MOV   AX, WID
+                   MOV   INCOUNTER, AX
+    COLS:          
+                   CMP   BYTE PTR ES:[DI], 20
+                   JE    HANDLECANTDRAW
+                   CMP   BYTE PTR ES:[DI], 31
+                   JE    HANDLECANTDRAW
+                   INC   DI
+                   DEC   INCOUNTER
+                   JNZ   COLS
+                   
+                   MOV   DI, FIRSTBYTEINROW
+                   ADD   DI, SCREEN_WIDTH
+                   DEC   OUTCOUNTER
+                   JNZ   ROWS
+                   JMP   FINISH
 
     HANDLECANTDRAW:
-    CMP DIRECTION, 0
-    JNE CONTINUEUP
-    MOV CANTUP, 1
-    CONTINUEUP:
+                   CMP   DIRECTION, 0
+                   JNE   CONTINUEUP
+                   MOV   CANTUP, 1
+    CONTINUEUP:    
     
-    CMP DIRECTION, 1
-    JNE CONTINUERIGHT
-    MOV CANTRIGHT, 1
-    CONTINUERIGHT:
+                   CMP   DIRECTION, 1
+                   JNE   CONTINUERIGHT
+                   MOV   CANTRIGHT, 1
+    CONTINUERIGHT: 
     
-    CMP DIRECTION, 2
-    JNE CONTINUEDOWN
-    MOV CANTDOWN, 1
-    CONTINUEDOWN:
+                   CMP   DIRECTION, 2
+                   JNE   CONTINUEDOWN
+                   MOV   CANTDOWN, 1
+    CONTINUEDOWN:  
 
-    CMP DIRECTION, 3
-    JNE CONTINUELEFT
-    MOV CANTLEFT, 1
-    CONTINUELEFT:
+                   CMP   DIRECTION, 3
+                   JNE   CONTINUELEFT
+                   MOV   CANTLEFT, 1
+    CONTINUELEFT:  
 
-    JMP RANDOMIZEPART
-    FINISH:
+                   JMP   RANDOMIZEPART
+    FINISH:        
 ENDM
 
 
@@ -363,39 +403,39 @@ ENDM
 
 ;MACRO TO CHECK POWERUP AREA
 CHECKCANDRAWPOWER MACRO WID, HEI, STARX, STARY
-    LOCAL ROWS, COLS, FINISH, HANDLECANTDRAW, CONTINUEUP, CONTINUERIGHT, CONTINUEDOWN, CONTINUELEFT
+                      LOCAL ROWS, COLS, FINISH, HANDLECANTDRAW, CONTINUEUP, CONTINUERIGHT, CONTINUEDOWN, CONTINUELEFT
     ;VIDEO MEMORY
-    MOV AX, 0A000H
-    MOV ES, AX 
-    MOV DI, STARY
-    MOV AX, SCREENWIDTH
-    MUL DI
-    MOV DI, AX
-    ADD DI, STARX
-    MOV AX, HEI
-    MOV OUTCOUNTER, AX
+                      MOV   AX, 0A000H
+                      MOV   ES, AX
+                      MOV   DI, STARY
+                      MOV   AX, SCREEN_WIDTH
+                      MUL   DI
+                      MOV   DI, AX
+                      ADD   DI, STARX
+                      MOV   AX, HEI
+                      MOV   OUTCOUNTER, AX
 
-    ROWS:
-        MOV FIRSTBYTEINROW, DI
-        MOV AX, WID
-        MOV INCOUNTER, AX
-        COLS:
-            CMP BYTE PTR ES:[DI], 16
-            JE HANDLECANTDRAW
-            INC DI
-            DEC INCOUNTER
-        JNZ COLS
-        MOV DI, FIRSTBYTEINROW
-        ADD DI, SCREENWIDTH
-    DEC OUTCOUNTER
-    JNZ ROWS
-    JMP FINISH
+    ROWS:             
+                      MOV   FIRSTBYTEINROW, DI
+                      MOV   AX, WID
+                      MOV   INCOUNTER, AX
+    COLS:             
+                      CMP   BYTE PTR ES:[DI], 16
+                      JE    HANDLECANTDRAW
+                      INC   DI
+                      DEC   INCOUNTER
+                      JNZ   COLS
+                      MOV   DI, FIRSTBYTEINROW
+                      ADD   DI, SCREEN_WIDTH
+                      DEC   OUTCOUNTER
+                      JNZ   ROWS
+                      JMP   FINISH
 
-    HANDLECANTDRAW:
+    HANDLECANTDRAW:   
     
 
-    JMP FINISHPOWER
-    FINISH:
+                      JMP   FINISHPOWER
+    FINISH:           
 ENDM
 
 
@@ -403,15 +443,15 @@ ENDM
 
 
 CHECKPOSSIBILITIES MACRO
-    CMP CANTUP, 0
-    JE START
-    CMP CANTRIGHT, 0
-    JE START
-    CMP CANTDOWN, 0
-    JE START
-    CMP CANTLEFT, 0
-    JE START
-    JMP LAST
+                       CMP CANTUP, 0
+                       JE  START
+                       CMP CANTRIGHT, 0
+                       JE  START
+                       CMP CANTDOWN, 0
+                       JE  START
+                       CMP CANTLEFT, 0
+                       JE  START
+                       JMP LAST
 ENDM
 
 
@@ -420,430 +460,430 @@ ENDM
 .DATA
 
 
-;INTERFACE
-;LOGO
-LOGOIMGW                EQU     168
-LOGOIMGH                EQU     35 
-LOGOIMG                 DB      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0  
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16   
- DB 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0     
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 16   
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0       
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0     
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 186, 115  
- DB 42, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 186, 115, 42, 17, 16, 16, 16 
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0        
- DB 0, 16, 16, 16, 6, 42, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 6
- DB 42, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16     
- DB 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 187, 114, 115, 6, 42, 42, 17, 16, 16, 16, 0, 0, 0, 0, 0
- DB 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16
- DB 16, 16, 16, 186, 187, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 18, 43, 43, 43, 43, 43, 43, 187
- DB 16, 16, 16, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0        
- DB 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 186, 187, 16, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 16, 16, 16, 17, 114, 6, 42, 43, 42, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 187, 114, 115, 6, 42, 43
- DB 43, 43, 43, 43, 43, 43, 43, 115, 16, 16, 16, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 211, 6, 42, 43, 43, 16, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 186, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 16, 16, 16, 16, 42, 43, 43, 43
- DB 43, 17, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 17, 43, 43, 43, 43, 43, 186, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16
- DB 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 42, 42, 6, 114, 17, 16, 16, 16, 16, 16, 16, 186, 115, 6, 42, 42
- DB 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 186, 6, 114, 17, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 6, 115, 17, 16, 16, 43
- DB 43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 18, 16, 16, 16, 17, 17, 16, 186
- DB 114, 6, 42, 43, 43, 43, 43, 43, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 115, 43, 43, 43, 43, 43, 43, 43, 43, 42, 6, 6, 115, 187, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 115, 43, 43, 43, 42, 115, 187, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16
- DB 17, 16, 16, 16, 17, 17, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16
- DB 16, 187, 115, 42, 43, 114, 114, 43, 43, 43, 43, 43, 43, 43, 43, 43, 187, 16, 16, 16, 42, 43, 43, 43, 43, 17, 187, 43, 43, 43, 42, 6, 115, 187, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43, 43, 6, 115, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 16, 16, 16, 16, 186, 115, 42, 43, 115, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 6, 6, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16
- DB 16, 16, 16, 16, 16, 186, 115, 114, 187, 186, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 0, 0
- DB 0, 0, 0, 0, 0, 16, 16, 16, 6, 43, 43, 43, 43, 114, 186, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 186, 17, 16, 42, 43, 43, 43, 43, 17, 16, 42, 43, 43, 43, 43
- DB 43, 43, 43, 42, 42, 6, 6, 115, 114, 187, 16, 16, 16, 0, 16, 16, 16, 16, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 115, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 16, 16, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 17, 16, 42, 43, 43, 43
- DB 43, 43, 43, 43, 43, 43, 43, 42, 6, 6, 115, 211, 16, 115, 43, 43, 43, 43, 43, 43, 43, 42, 42, 6, 6, 115, 114, 186, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 6, 43, 43, 43, 43, 114, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 42, 43, 43, 43
- DB 43, 17, 16, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 16, 16, 16, 0, 16, 16, 16, 187, 115, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 186, 16, 16
- DB 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 16, 186, 115
- DB 6, 43, 6, 16, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 6, 43, 43, 43, 43, 114, 17, 43, 43, 43, 43, 43, 6, 42, 43, 43
- DB 43, 43, 6, 16, 42, 43, 43, 43, 43, 17, 16, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43
- DB 43, 43, 43, 43, 17, 114, 43, 43, 43, 43, 6, 16, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 115, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 6, 43, 43, 43, 43, 114, 17, 43
- DB 43, 43, 43, 42, 16, 115, 43, 43, 43, 43, 6, 16, 42, 43, 43, 43, 43, 17, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0, 16, 16
- DB 16, 42, 43, 43, 43, 43, 187, 115, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 114, 43, 43, 43, 43, 6, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 115, 16, 42, 43, 43
- DB 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 115, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 187, 114, 17, 16, 16, 16, 16, 16, 16, 16
- DB 6, 43, 43, 43, 43, 114, 17, 43, 43, 43, 43, 42, 16, 115, 43, 43, 43, 43, 6, 16, 42, 43, 43, 43, 43, 17, 17, 114, 115, 6, 6, 42, 42, 43, 43, 43, 43, 43, 43, 43
- DB 43, 115, 16, 16, 16, 0, 16, 16, 16, 42, 43, 43, 43, 43, 186, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 186, 114
- DB 17, 16, 16, 16, 16, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 114, 43, 43, 43, 43, 6, 17, 43, 43, 43, 43, 43, 6, 42, 42, 43, 43, 43, 43
- DB 43, 43, 43, 114, 16, 114, 6, 6, 6, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 114, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 6, 43
- DB 43, 42, 115, 187, 16, 16, 16, 16, 6, 43, 43, 43, 43, 114, 17, 43, 43, 43, 43, 42, 16, 115, 43, 43, 43, 43, 6, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16
- DB 16, 16, 186, 211, 115, 6, 42, 43, 43, 115, 16, 16, 16, 0, 16, 16, 16, 42, 43, 43, 43, 43, 186, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 16, 16, 16, 6, 43, 43, 42, 6, 187, 17, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 114, 43, 43, 43, 43, 6, 17, 43, 43, 43, 43
- DB 42, 16, 17, 17, 186, 114, 6, 42, 43, 43, 43, 114, 16, 16, 16, 16, 16, 16, 16, 16, 186, 114, 115, 6, 42, 43, 43, 114, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 0, 0
- DB 0, 0, 16, 16, 16, 17, 43, 43, 43, 43, 43, 43, 43, 6, 115, 186, 42, 43, 43, 43, 43, 115, 187, 43, 43, 43, 43, 42, 186, 6, 43, 43, 43, 43, 6, 187, 42, 43, 43, 43
- DB 43, 211, 187, 114, 115, 6, 6, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 42, 16, 16, 16, 0, 16, 16, 16, 42, 43, 43, 43, 43, 6, 114, 43, 43, 43, 43, 43, 17, 16, 16
- DB 16, 0, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43, 6, 115, 186, 6, 43, 43, 43, 43, 6, 187, 43, 43, 43, 43, 43, 17, 114, 43, 43
- DB 43, 43, 42, 115, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 187, 114, 115, 6, 6, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0
- DB 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 187, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 186, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 6, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 42, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 115, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 187, 16, 16, 16, 16, 16
- DB 16, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 115, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 187, 6, 42, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 6, 16, 16, 16, 16, 16, 16, 16, 17, 114, 6, 43, 43, 43, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 186, 6, 42
- DB 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 114, 16, 16, 16, 0, 16, 16, 16, 187, 43, 42, 6, 187, 17, 16, 16, 16, 16, 17, 186
- DB 114, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 6, 6, 43, 43, 43, 43, 42, 6, 42, 43, 43, 43, 42, 6, 6, 43, 43, 43, 43, 42, 6, 6, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 42, 42, 6, 6, 115, 114, 187, 186, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 187, 114, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 186, 43, 42, 6
- DB 187, 17, 16, 16, 16, 16, 17, 18, 114, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 6, 6, 43, 43, 43, 43, 42, 6, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 42, 42, 6, 6, 115, 115, 114, 187, 114, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 42, 6, 6, 6, 115, 114, 186, 16, 16, 16, 0, 16, 16, 16, 6, 43, 43, 43
- DB 43, 43, 42, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 115, 186, 16, 16, 186, 43, 42, 115, 186, 16, 16, 6, 42, 115, 187, 16, 16, 17, 42, 6, 114, 17, 16
- DB 16, 187, 6, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16
- DB 16, 16, 16, 16, 115, 43, 43, 43, 43, 43, 42, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 115, 186, 16, 16, 17, 42, 6, 114, 17, 16, 16, 115, 43, 43, 43
- DB 42, 42, 42, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 42, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 0, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16
- DB 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 17, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0
- DB 0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 186, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 17, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
- DB 43, 43, 43, 43, 43, 43, 43, 43, 186, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0
- DB 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 17, 114, 6, 42, 43, 43, 43, 43, 43, 43, 42
- DB 42, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 17, 114, 6
- DB 42, 43, 43, 43, 43, 43, 43, 42, 42, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 186, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 43, 43, 42, 17, 16, 16      
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 186, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16
- DB 42, 6, 114, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ;INTERFACE
+    ;LOGO
+    LOGOIMGW                  EQU 168
+    LOGOIMGH                  EQU 35
+    LOGOIMG                   DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16
+                              DB  16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 186, 115
+                              DB  42, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 186, 115, 42, 17, 16, 16, 16
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 16, 16, 16, 6, 42, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 6
+                              DB  42, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 187, 114, 115, 6, 42, 42, 17, 16, 16, 16, 0, 0, 0, 0, 0
+                              DB  0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16
+                              DB  16, 16, 16, 186, 187, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 18, 43, 43, 43, 43, 43, 43, 187
+                              DB  16, 16, 16, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 186, 187, 16, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 16, 16, 16, 17, 114, 6, 42, 43, 42, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 187, 114, 115, 6, 42, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 115, 16, 16, 16, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 211, 6, 42, 43, 43, 16, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 186, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 16, 16, 16, 16, 42, 43, 43, 43
+                              DB  43, 17, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 17, 43, 43, 43, 43, 43, 186, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16
+                              DB  0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 42, 42, 6, 114, 17, 16, 16, 16, 16, 16, 16, 186, 115, 6, 42, 42
+                              DB  16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 186, 6, 114, 17, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 6, 115, 17, 16, 16, 43
+                              DB  43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 18, 16, 16, 16, 17, 17, 16, 186
+                              DB  114, 6, 42, 43, 43, 43, 43, 43, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 115, 43, 43, 43, 43, 43, 43, 43, 43, 42, 6, 6, 115, 187, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 115, 43, 43, 43, 42, 115, 187, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16
+                              DB  17, 16, 16, 16, 17, 17, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16
+                              DB  16, 187, 115, 42, 43, 114, 114, 43, 43, 43, 43, 43, 43, 43, 43, 43, 187, 16, 16, 16, 42, 43, 43, 43, 43, 17, 187, 43, 43, 43, 42, 6, 115, 187, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43, 43, 6, 115, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 16, 16, 16, 16, 186, 115, 42, 43, 115, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 6, 6, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 186, 115, 114, 187, 186, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 0, 0
+                              DB  0, 0, 0, 0, 0, 16, 16, 16, 6, 43, 43, 43, 43, 114, 186, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 186, 17, 16, 42, 43, 43, 43, 43, 17, 16, 42, 43, 43, 43, 43
+                              DB  43, 43, 43, 42, 42, 6, 6, 115, 114, 187, 16, 16, 16, 0, 16, 16, 16, 16, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 115, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 16, 16, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 17, 16, 42, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 42, 6, 6, 115, 211, 16, 115, 43, 43, 43, 43, 43, 43, 43, 42, 42, 6, 6, 115, 114, 186, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 6, 43, 43, 43, 43, 114, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 42, 43, 43, 43
+                              DB  43, 17, 16, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 16, 16, 16, 0, 16, 16, 16, 187, 115, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 186, 16, 16
+                              DB  16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 16, 186, 115
+                              DB  6, 43, 6, 16, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 6, 43, 43, 43, 43, 114, 17, 43, 43, 43, 43, 43, 6, 42, 43, 43
+                              DB  43, 43, 6, 16, 42, 43, 43, 43, 43, 17, 16, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43
+                              DB  43, 43, 43, 43, 17, 114, 43, 43, 43, 43, 6, 16, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 115, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 6, 43, 43, 43, 43, 114, 17, 43
+                              DB  43, 43, 43, 42, 16, 115, 43, 43, 43, 43, 6, 16, 42, 43, 43, 43, 43, 17, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0, 16, 16
+                              DB  16, 42, 43, 43, 43, 43, 187, 115, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 114, 43, 43, 43, 43, 6, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 115, 16, 42, 43, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 115, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 187, 114, 17, 16, 16, 16, 16, 16, 16, 16
+                              DB  6, 43, 43, 43, 43, 114, 17, 43, 43, 43, 43, 42, 16, 115, 43, 43, 43, 43, 6, 16, 42, 43, 43, 43, 43, 17, 17, 114, 115, 6, 6, 42, 42, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 115, 16, 16, 16, 0, 16, 16, 16, 42, 43, 43, 43, 43, 186, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 186, 114
+                              DB  17, 16, 16, 16, 16, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 114, 43, 43, 43, 43, 6, 17, 43, 43, 43, 43, 43, 6, 42, 42, 43, 43, 43, 43
+                              DB  43, 43, 43, 114, 16, 114, 6, 6, 6, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 114, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 6, 43
+                              DB  43, 42, 115, 187, 16, 16, 16, 16, 6, 43, 43, 43, 43, 114, 17, 43, 43, 43, 43, 42, 16, 115, 43, 43, 43, 43, 6, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 186, 211, 115, 6, 42, 43, 43, 115, 16, 16, 16, 0, 16, 16, 16, 42, 43, 43, 43, 43, 186, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 16, 16, 16, 6, 43, 43, 42, 6, 187, 17, 16, 16, 16, 115, 43, 43, 43, 43, 115, 16, 43, 43, 43, 43, 43, 17, 114, 43, 43, 43, 43, 6, 17, 43, 43, 43, 43
+                              DB  42, 16, 17, 17, 186, 114, 6, 42, 43, 43, 43, 114, 16, 16, 16, 16, 16, 16, 16, 16, 186, 114, 115, 6, 42, 43, 43, 114, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 0, 0
+                              DB  0, 0, 16, 16, 16, 17, 43, 43, 43, 43, 43, 43, 43, 6, 115, 186, 42, 43, 43, 43, 43, 115, 187, 43, 43, 43, 43, 42, 186, 6, 43, 43, 43, 43, 6, 187, 42, 43, 43, 43
+                              DB  43, 211, 187, 114, 115, 6, 6, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 42, 16, 16, 16, 0, 16, 16, 16, 42, 43, 43, 43, 43, 6, 114, 43, 43, 43, 43, 43, 17, 16, 16
+                              DB  16, 0, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43, 6, 115, 186, 6, 43, 43, 43, 43, 6, 187, 43, 43, 43, 43, 43, 17, 114, 43, 43
+                              DB  43, 43, 42, 115, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 187, 114, 115, 6, 6, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 0
+                              DB  0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 187, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 186, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 6, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 42, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 115, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 187, 16, 16, 16, 16, 16
+                              DB  16, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 115, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 17, 16, 16, 16, 0, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 187, 6, 42, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 6, 16, 16, 16, 16, 16, 16, 16, 17, 114, 6, 43, 43, 43, 43, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 186, 6, 42
+                              DB  43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 114, 16, 16, 16, 0, 16, 16, 16, 187, 43, 42, 6, 187, 17, 16, 16, 16, 16, 17, 186
+                              DB  114, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 6, 6, 43, 43, 43, 43, 42, 6, 42, 43, 43, 43, 42, 6, 6, 43, 43, 43, 43, 42, 6, 6, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 42, 42, 6, 6, 115, 114, 187, 186, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 187, 114, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 186, 43, 42, 6
+                              DB  187, 17, 16, 16, 16, 16, 17, 18, 114, 6, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 6, 6, 43, 43, 43, 43, 42, 6, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 42, 42, 6, 6, 115, 115, 114, 187, 114, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 42, 6, 6, 6, 115, 114, 186, 16, 16, 16, 0, 16, 16, 16, 6, 43, 43, 43
+                              DB  43, 43, 42, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 115, 186, 16, 16, 186, 43, 42, 115, 186, 16, 16, 6, 42, 115, 187, 16, 16, 17, 42, 6, 114, 17, 16
+                              DB  16, 187, 6, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16
+                              DB  16, 16, 16, 16, 115, 43, 43, 43, 43, 43, 42, 42, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 115, 186, 16, 16, 17, 42, 6, 114, 17, 16, 16, 115, 43, 43, 43
+                              DB  42, 42, 42, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 42, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  0, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16
+                              DB  42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 6, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 17, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 17, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 42
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 186, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 17, 42, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43
+                              DB  43, 43, 43, 43, 43, 43, 43, 43, 186, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0
+                              DB  0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 17, 114, 6, 42, 43, 43, 43, 43, 43, 43, 42
+                              DB  42, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 43, 43, 43, 17, 16, 16, 16, 16, 16, 16, 16, 17, 114, 6
+                              DB  42, 43, 43, 43, 43, 43, 43, 42, 42, 6, 6, 115, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 186, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 42, 43, 43, 43, 42, 17, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 186, 114, 187, 186, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16
+                              DB  42, 6, 114, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-INPUTIMGW               EQU     180
-INPUTIMGH               EQU     43
-INPUTIMG                DB      0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16,16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 0, 16, 16
- DB 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 0, 0
- DB 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16
- DB 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16
- DB 16, 0, 16, 16, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0
- DB 0, 0, 16, 16, 16, 16, 16, 16, 22, 26, 22, 18, 20, 22, 21, 19, 18, 16, 16, 224, 28, 24, 29, 25, 21, 16, 26, 23, 17, 16, 17, 28, 24, 20, 16, 16, 18, 18, 16, 19
- DB 17, 17, 23, 22, 20, 224, 17, 24, 27, 25, 24, 22, 17, 16, 0, 16, 16, 20, 27, 24, 29, 24, 20, 18, 26, 22, 17, 16, 19, 22, 21, 227, 18, 17, 27, 25, 21, 17, 16, 16
- DB 16, 22, 26, 22, 18, 20, 22, 21, 19, 18, 16, 16, 19, 23, 21, 20, 18, 17, 19, 17, 18, 18, 16, 17, 23, 21, 20, 224, 17, 22, 22, 20, 19, 18, 20, 27, 26, 24, 23, 19
- DB 16, 16, 19, 17, 16, 19, 17, 16, 20, 17, 16, 16, 16, 19, 17, 16, 20, 16, 16, 28, 26, 24, 23, 21, 16, 16, 17, 224, 16, 19, 16, 16, 20, 27, 22, 18, 16, 16, 19, 17
- DB 18, 18, 16, 19, 17, 16, 19, 22, 21, 19, 18, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 16, 16, 17, 17, 16, 16, 24, 30, 31, 31, 25, 25, 31, 31, 31, 31, 20, 16, 22
- DB 31, 30, 30, 31, 29, 227, 31, 31, 18, 16, 19, 30, 31, 31, 30, 24, 25, 31, 22, 30, 31, 22, 31, 31, 31, 31, 27, 26, 31, 31, 31, 31, 18, 16, 16, 16, 16, 24, 31, 30
- DB 30, 31, 27, 22, 31, 31, 17, 16, 24, 31, 31, 31, 31, 22, 29, 31, 31, 31, 27, 16, 24, 30, 31, 31, 25, 25, 31, 31, 31, 31, 20, 16, 23, 31, 31, 31, 31, 23, 30, 31
- DB 29, 31, 29, 22, 31, 31, 31, 31, 26, 30, 31, 31, 31, 30, 22, 31, 31, 31, 31, 23, 16, 16, 28, 31, 20, 31, 30, 224, 31, 31, 28, 24, 19, 30, 30, 20, 31, 29, 18, 31
- DB 31, 31, 31, 28, 16, 16, 23, 31, 29, 31, 30, 24, 24, 31, 31, 31, 29, 21, 30, 31, 29, 31, 29, 30, 31, 27, 25, 31, 31, 31, 31, 21, 16, 16, 16, 0, 0, 0, 0, 0
- DB 0, 16, 16, 26, 30, 23, 22, 31, 28, 224, 23, 17, 19, 25, 31, 27, 26, 18, 16, 224, 31, 26, 19, 31, 26, 21, 31, 26, 16, 16, 18, 30, 29, 27, 31, 24, 25, 31, 22, 29
- DB 31, 19, 29, 29, 24, 26, 23, 23, 31, 22, 27, 31, 17, 16, 16, 16, 16, 20, 31, 24, 21, 31, 24, 23, 31, 24, 16, 16, 22, 31, 27, 24, 26, 224, 29, 30, 25, 31, 27, 22
- DB 31, 28, 224, 23, 18, 23, 31, 26, 25, 26, 18, 16, 20, 30, 27, 24, 26, 20, 28, 31, 25, 30, 30, 18, 22, 30, 29, 26, 22, 27, 31, 24, 25, 25, 19, 31, 26, 24, 31, 22
- DB 16, 16, 28, 31, 20, 30, 29, 18, 31, 31, 31, 31, 28, 29, 30, 20, 31, 28, 16, 29, 29, 20, 31, 27, 16, 16, 21, 31, 29, 27, 31, 24, 22, 31, 26, 30, 31, 19, 28, 31
- DB 25, 31, 31, 25, 31, 27, 23, 31, 27, 24, 26, 18, 16, 16, 16, 16, 0, 0, 0, 0, 0, 16, 16, 26, 31, 25, 16, 27, 31, 28, 26, 16, 16, 23, 31, 21, 16, 16, 16, 224
- DB 31, 26, 19, 31, 25, 21, 31, 23, 16, 16, 18, 31, 28, 24, 31, 22, 23, 31, 21, 28, 31, 18, 30, 29, 21, 18, 16, 24, 31, 24, 28, 30, 17, 25, 24, 16, 16, 20, 31, 24
- DB 21, 31, 23, 23, 31, 20, 16, 16, 22, 31, 26, 21, 16, 16, 30, 30, 22, 31, 25, 16, 27, 31, 28, 26, 16, 23, 31, 25, 21, 16, 16, 16, 20, 31, 26, 21, 17, 16, 24, 31
- DB 19, 29, 29, 16, 17, 31, 27, 16, 16, 27, 31, 22, 227, 16, 19, 31, 27, 24, 31, 20, 16, 16, 26, 31, 224, 30, 29, 16, 31, 28, 21, 31, 24, 27, 30, 18, 31, 28, 16, 30
- DB 30, 21, 31, 25, 16, 16, 17, 31, 27, 21, 31, 23, 23, 31, 24, 28, 31, 17, 25, 31, 19, 30, 30, 19, 31, 25, 22, 31, 25, 21, 16, 16, 27, 22, 16, 16, 0, 0, 0, 0
- DB 0, 16, 16, 19, 31, 25, 16, 17, 28, 29, 31, 24, 16, 23, 31, 21, 16, 16, 16, 224, 31, 30, 29, 31, 25, 21, 31, 23, 16, 16, 18, 31, 31, 30, 31, 22, 23, 31, 21, 28
- DB 31, 18, 30, 31, 31, 20, 16, 24, 31, 30, 31, 29, 17, 23, 25, 16, 16, 20, 31, 29, 29, 31, 23, 23, 31, 20, 16, 16, 22, 31, 31, 29, 16, 16, 30, 31, 29, 31, 25, 16
- DB 17, 29, 29, 31, 24, 23, 31, 31, 29, 16, 16, 16, 20, 31, 31, 31, 16, 16, 24, 31, 19, 29, 29, 16, 17, 31, 27, 16, 16, 27, 31, 31, 24, 16, 19, 31, 31, 31, 30, 20
- DB 16, 16, 26, 31, 224, 30, 29, 16, 31, 28, 20, 31, 23, 27, 30, 18, 31, 28, 16, 30, 31, 31, 31, 24, 16, 16, 17, 31, 27, 21, 31, 23, 23, 31, 30, 30, 31, 17, 25, 31
- DB 19, 30, 30, 19, 31, 25, 22, 31, 31, 29, 16, 16, 24, 23, 16, 16, 0, 0, 0, 0, 0, 0, 16, 19, 31, 25, 16, 17, 18, 18, 29, 30, 16, 23, 31, 21, 16, 16, 16, 224
- DB 31, 30, 31, 27, 18, 21, 31, 23, 16, 16, 18, 31, 27, 22, 31, 22, 23, 31, 21, 28, 31, 18, 30, 29, 22, 17, 16, 24, 31, 21, 27, 31, 17, 16, 16, 16, 16, 20, 31, 30
- DB 31, 26, 17, 23, 31, 20, 16, 16, 22, 31, 26, 21, 16, 16, 30, 30, 19, 31, 25, 16, 17, 18, 18, 29, 30, 23, 31, 26, 21, 16, 16, 16, 20, 31, 27, 22, 16, 16, 24, 31
- DB 19, 29, 29, 16, 17, 31, 27, 16, 16, 27, 31, 23, 19, 16, 19, 31, 25, 23, 31, 22, 16, 16, 26, 31, 224, 30, 29, 16, 31, 28, 20, 31, 23, 27, 30, 18, 31, 28, 16, 30
- DB 29, 224, 31, 27, 16, 16, 17, 31, 27, 21, 31, 23, 23, 31, 22, 28, 31, 17, 25, 31, 19, 30, 30, 19, 31, 25, 22, 31, 26, 21, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0
- DB 0, 16, 16, 20, 31, 28, 16, 24, 31, 28, 27, 28, 16, 24, 30, 23, 16, 16, 16, 20, 31, 29, 17, 16, 16, 22, 31, 28, 26, 25, 20, 31, 29, 24, 31, 25, 25, 31, 29, 30
- DB 31, 18, 30, 30, 25, 21, 16, 25, 31, 24, 28, 31, 21, 21, 20, 16, 16, 22, 31, 27, 17, 16, 16, 24, 30, 28, 26, 24, 22, 31, 29, 23, 19, 17, 30, 31, 22, 31, 28, 16
- DB 24, 31, 28, 27, 27, 23, 31, 28, 23, 18, 16, 16, 20, 31, 29, 24, 19, 16, 26, 31, 23, 29, 31, 18, 19, 31, 28, 16, 16, 28, 31, 26, 22, 17, 21, 31, 28, 24, 31, 25
- DB 16, 16, 27, 31, 28, 31, 29, 18, 31, 30, 27, 31, 23, 29, 31, 28, 31, 30, 19, 30, 30, 20, 31, 29, 17, 16, 224, 31, 29, 22, 31, 26, 24, 31, 25, 29, 31, 20, 26, 31
- DB 23, 30, 31, 21, 31, 28, 22, 31, 28, 23, 18, 16, 22, 19, 16, 16, 0, 0, 0, 0, 0, 16, 16, 21, 29, 26, 16, 23, 28, 30, 26, 17, 16, 24, 29, 23, 16, 16, 16, 20
- DB 29, 27, 16, 16, 16, 22, 29, 30, 31, 30, 21, 28, 28, 23, 29, 23, 22, 28, 29, 29, 31, 18, 27, 30, 31, 29, 16, 25, 29, 23, 26, 30, 20, 27, 28, 16, 16, 22, 29, 25
- DB 16, 16, 16, 24, 29, 30, 31, 29, 21, 28, 31, 31, 24, 18, 28, 29, 22, 29, 26, 16, 23, 28, 30, 25, 17, 22, 29, 31, 31, 23, 16, 16, 20, 28, 30, 31, 25, 16, 25, 29
- DB 21, 27, 29, 17, 20, 28, 28, 16, 16, 25, 29, 31, 31, 224, 21, 29, 26, 23, 29, 24, 16, 16, 24, 28, 29, 30, 29, 19, 28, 30, 31, 31, 224, 24, 29, 28, 27, 30, 19, 28
- DB 29, 227, 28, 28, 16, 16, 19, 28, 28, 21, 29, 24, 24, 29, 24, 27, 30, 224, 26, 29, 21, 27, 29, 19, 29, 26, 21, 28, 31, 31, 23, 17, 29, 25, 16, 16, 0, 0, 0, 0
- DB 0, 16, 16, 16, 16, 17, 16, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 17, 17, 224, 16, 16, 17, 16, 16, 16, 16, 23, 22, 29
- DB 31, 17, 16, 17, 20, 21, 16, 16, 16, 16, 16, 17, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 224, 16, 16, 17, 22, 18, 16, 16, 17, 16, 16, 16, 16
- DB 16, 16, 17, 16, 16, 16, 16, 18, 22, 18, 16, 16, 16, 16, 17, 21, 19, 16, 16, 16, 16, 16, 17, 16, 16, 16, 17, 16, 16, 16, 16, 224, 23, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 17, 24, 21, 30, 29, 16, 16, 17, 20, 24, 16, 16, 16, 17, 16, 17, 16, 16, 17, 16, 16, 17, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 17, 16, 16, 16
- DB 16, 16, 17, 16, 16, 16, 16, 16, 17, 22, 18, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 31, 31, 31, 30, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 224, 31, 31, 31, 28, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 19, 24, 28  
- DB 27, 16, 16, 0, 0, 16, 16, 0, 0, 0, 16, 0, 0, 16, 0, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 16
- DB 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 16, 0, 0
- DB 16, 16, 17, 20, 24, 28, 24, 16, 16, 0, 16, 16, 16, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 16, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0
- DB 0, 16, 0, 0, 0, 0, 16, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0     
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0  
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0  
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 0
- DB 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16
- DB 16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 0, 0, 0, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16
- DB 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0
- DB 0, 16, 16, 16, 16, 16, 16, 16, 18, 18, 16, 19, 16, 16, 17, 27, 23, 19, 16, 16, 16, 16, 27, 24, 28, 26, 22, 17, 24, 23, 224, 16, 16, 26, 24, 20, 17, 16, 17, 224
- DB 16, 18, 18, 16, 21, 21, 20, 224, 17, 20, 27, 25, 24, 22, 19, 16, 16, 0, 16, 17, 28, 23, 29, 25, 21, 16, 26, 23, 18, 16, 17, 22, 21, 19, 18, 17, 23, 25, 21, 17
- DB 16, 16, 16, 224, 27, 23, 19, 18, 22, 21, 19, 18, 17, 16, 17, 22, 21, 227, 18, 17, 18, 17, 17, 224, 16, 16, 22, 21, 20, 224, 17, 20, 22, 20, 19, 18, 17, 27, 26, 24
- DB 23, 20, 16, 16, 18, 18, 16, 224, 17, 16, 19, 18, 16, 16, 16, 18, 18, 16, 19, 17, 16, 25, 26, 24, 23, 21, 17, 16, 16, 19, 16, 224, 17, 16, 17, 27, 23, 19, 16, 16
- DB 18, 17, 17, 18, 16, 18, 17, 16, 18, 22, 21, 19, 18, 17, 16, 16, 0, 0, 0, 0, 0, 16, 16, 17, 17, 16, 16, 16, 24, 31, 28, 31, 30, 23, 20, 31, 31, 31, 30, 22
- DB 16, 18, 31, 31, 30, 31, 31, 19, 30, 31, 23, 16, 17, 29, 31, 31, 31, 27, 21, 31, 26, 26, 31, 24, 29, 31, 31, 31, 30, 22, 31, 31, 31, 31, 23, 16, 16, 16, 16, 20
- DB 31, 31, 30, 31, 30, 224, 31, 31, 21, 16, 20, 31, 31, 31, 31, 25, 27, 31, 31, 31, 28, 18, 20, 30, 31, 31, 29, 21, 31, 31, 31, 31, 24, 16, 19, 31, 31, 31, 31, 26
- DB 26, 31, 28, 31, 29, 22, 30, 31, 31, 31, 29, 26, 31, 31, 31, 31, 22, 31, 31, 31, 31, 27, 16, 16, 24, 31, 23, 29, 31, 21, 28, 31, 28, 24, 20, 26, 31, 22, 30, 31
- DB 19, 28, 31, 31, 31, 30, 17, 16, 18, 31, 30, 29, 31, 27, 21, 31, 31, 31, 30, 23, 26, 31, 28, 31, 29, 29, 31, 28, 22, 31, 31, 31, 31, 24, 16, 16, 16, 16, 16, 0
- DB 0, 16, 16, 30, 30, 29, 29, 25, 23, 31, 28, 28, 31, 22, 18, 28, 28, 27, 31, 25, 16, 16, 30, 30, 17, 30, 30, 18, 31, 29, 18, 16, 16, 28, 31, 25, 31, 28, 21, 31
- DB 25, 26, 31, 22, 27, 31, 25, 26, 26, 19, 31, 26, 24, 31, 21, 16, 16, 16, 16, 17, 31, 28, 18, 31, 28, 19, 31, 28, 17, 16, 18, 30, 29, 25, 26, 22, 24, 31, 26, 31
- DB 30, 224, 31, 30, 227, 22, 20, 19, 30, 28, 25, 26, 21, 16, 18, 30, 29, 24, 26, 23, 25, 31, 28, 29, 31, 21, 21, 29, 30, 26, 25, 23, 31, 27, 25, 27, 19, 30, 29, 21
- DB 31, 25, 16, 16, 24, 31, 23, 28, 31, 18, 29, 31, 31, 31, 30, 26, 31, 22, 29, 31, 18, 25, 31, 21, 29, 30, 17, 16, 18, 30, 31, 25, 31, 28, 18, 30, 28, 28, 31, 23
- DB 25, 31, 27, 29, 31, 26, 30, 30, 19, 30, 28, 25, 26, 22, 16, 16, 16, 16, 16, 16, 0, 16, 16, 31, 31, 31, 31, 27, 19, 31, 25, 23, 31, 20, 18, 31, 25, 19, 31, 25
- DB 16, 16, 30, 30, 16, 30, 30, 18, 31, 27, 16, 16, 16, 29, 31, 21, 31, 26, 224, 31, 25, 23, 31, 21, 27, 31, 21, 19, 16, 19, 31, 27, 24, 31, 20, 21, 26, 17, 16, 17
- DB 31, 28, 18, 31, 27, 19, 31, 25, 16, 16, 18, 31, 28, 21, 17, 16, 25, 31, 22, 30, 29, 16, 24, 31, 29, 27, 17, 224, 31, 27, 21, 17, 16, 16, 17, 31, 29, 21, 18, 16
- DB 20, 31, 24, 25, 31, 19, 16, 29, 30, 16, 16, 23, 31, 24, 20, 16, 17, 30, 29, 21, 31, 24, 16, 16, 21, 31, 23, 26, 31, 17, 28, 30, 19, 31, 28, 23, 31, 21, 28, 30
- DB 17, 25, 31, 22, 30, 29, 16, 16, 16, 29, 31, 18, 31, 27, 18, 31, 27, 24, 31, 21, 20, 31, 24, 25, 31, 19, 29, 29, 18, 31, 28, 21, 17, 16, 16, 16, 26, 23, 16, 16
- DB 0, 16, 17, 26, 24, 30, 30, 20, 19, 31, 25, 23, 31, 20, 18, 31, 25, 19, 31, 25, 16, 16, 30, 31, 28, 31, 30, 18, 31, 27, 16, 16, 16, 29, 31, 29, 31, 26, 224, 31
- DB 25, 23, 31, 21, 27, 31, 31, 25, 16, 19, 31, 31, 31, 30, 19, 21, 27, 16, 16, 17, 31, 30, 29, 31, 27, 19, 31, 25, 16, 16, 18, 31, 31, 31, 18, 16, 25, 31, 30, 30
- DB 29, 16, 16, 26, 29, 31, 27, 19, 31, 31, 31, 18, 16, 16, 17, 31, 31, 31, 20, 16, 20, 31, 24, 25, 31, 19, 16, 29, 30, 16, 16, 23, 31, 31, 28, 16, 17, 30, 31, 31
- DB 31, 22, 16, 16, 21, 31, 23, 26, 31, 17, 28, 30, 18, 31, 28, 23, 31, 21, 28, 30, 17, 25, 31, 31, 31, 27, 16, 16, 16, 29, 31, 18, 31, 27, 18, 31, 31, 30, 31, 21 
- DB 20, 31, 24, 25, 31, 19, 29, 29, 18, 31, 31, 31, 18, 16, 16, 16, 25, 24, 16, 16, 0, 16, 16, 18, 29, 31, 22, 16, 19, 31, 25, 23, 31, 20, 20, 31, 25, 19, 31, 25
- DB 16, 16, 30, 31, 30, 29, 21, 18, 31, 27, 16, 16, 16, 29, 31, 224, 31, 26, 224, 31, 25, 23, 31, 21, 27, 31, 23, 19, 16, 19, 31, 25, 23, 31, 21, 16, 16, 16, 16, 17
- DB 31, 31, 31, 28, 227, 19, 31, 24, 16, 16, 18, 31, 28, 23, 16, 16, 25, 31, 20, 29, 29, 16, 16, 224, 17, 27, 31, 22, 31, 28, 22, 16, 16, 16, 17, 31, 29, 23, 17, 16
- DB 20, 31, 24, 25, 31, 19, 16, 29, 30, 16, 16, 23, 31, 26, 21, 16, 17, 30, 29, 20, 31, 25, 16, 16, 21, 31, 23, 26, 31, 17, 28, 30, 18, 31, 28, 23, 31, 21, 28, 30
- DB 17, 25, 31, 19, 29, 30, 17, 16, 16, 29, 31, 18, 31, 27, 18, 31, 26, 23, 31, 21, 20, 31, 24, 25, 31, 19, 29, 29, 18, 31, 28, 23, 17, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 17, 28, 31, 31, 27, 23, 20, 31, 28, 23, 31, 24, 26, 31, 28, 24, 31, 25, 16, 17, 30, 31, 18, 16, 16, 18, 31, 28, 26, 24, 0, 30, 31, 22, 31, 29, 21, 31
- DB 30, 28, 31, 21, 27, 31, 26, 21, 17, 21, 31, 28, 23, 31, 25, 19, 21, 17, 16, 18, 31, 29, 17, 16, 16, 20, 31, 28, 26, 24, 20, 31, 30, 24, 20, 16, 27, 31, 23, 30
- DB 30, 18, 19, 31, 29, 26, 30, 21, 31, 29, 24, 19, 16, 16, 17, 31, 30, 24, 20, 16, 22, 31, 27, 25, 31, 22, 16, 30, 29, 18, 16, 23, 31, 28, 22, 18, 17, 31, 30, 21
- DB 31, 29, 16, 16, 23, 31, 29, 29, 31, 17, 29, 31, 26, 31, 28, 25, 31, 29, 30, 31, 22, 27, 31, 22, 30, 31, 19, 16, 16, 29, 31, 21, 31, 29, 20, 31, 29, 24, 31, 24
- DB 22, 31, 27, 25, 31, 22, 29, 30, 20, 31, 29, 24, 19, 16, 16, 16, 22, 19, 16, 16, 16, 16, 18, 29, 29, 30, 31, 26, 21, 29, 27, 22, 30, 22, 24, 29, 31, 31, 21, 17
- DB 16, 18, 28, 30, 17, 16, 16, 224, 30, 30, 31, 31, 23, 28, 30, 22, 29, 28, 20, 27, 30, 28, 31, 21, 25, 30, 31, 31, 18, 22, 29, 26, 23, 30, 24, 23, 30, 17, 16, 19
- DB 29, 29, 16, 16, 16, 20, 30, 30, 31, 31, 21, 28, 30, 31, 28, 16, 26, 30, 23, 28, 30, 16, 21, 28, 30, 28, 18, 19, 28, 30, 31, 27, 16, 16, 18, 28, 30, 31, 29, 16
- DB 22, 29, 25, 24, 30, 20, 17, 28, 30, 17, 16, 22, 29, 31, 31, 23, 224, 29, 29, 20, 29, 28, 16, 16, 22, 28, 30, 28, 31, 18, 27, 30, 31, 31, 22, 23, 28, 30, 26, 30
- DB 21, 27, 30, 21, 28, 30, 18, 16, 17, 28, 30, 20, 29, 28, 21, 29, 27, 24, 30, 23, 23, 29, 25, 24, 30, 21, 28, 29, 19, 28, 30, 31, 28, 16, 16, 16, 29, 26, 16, 16
- DB 0, 16, 16, 17, 17, 17, 17, 17, 16, 16, 17, 16, 17, 16, 16, 16, 18, 21, 17, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 17, 18, 19, 17, 16, 17, 16, 16, 17, 16, 21
- DB 23, 25, 31, 21, 16, 17, 19, 23, 16, 16, 16, 17, 16, 16, 17, 16, 17, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 17, 18, 19, 17, 16, 17, 21, 21, 16, 16, 17, 16, 16
- DB 17, 16, 16, 16, 17, 17, 16, 16, 16, 17, 21, 20, 16, 16, 16, 16, 17, 20, 21, 16, 16, 16, 17, 16, 17, 16, 16, 16, 17, 16, 16, 16, 16, 18, 23, 18, 16, 16, 17, 16
- DB 16, 17, 16, 16, 16, 22, 22, 27, 31, 17, 16, 17, 19, 24, 18, 16, 16, 17, 16, 17, 16, 16, 17, 16, 16, 17, 16, 16, 16, 16, 17, 16, 16, 17, 16, 16, 17, 16, 17, 16
- DB 16, 16, 17, 16, 17, 16, 16, 17, 16, 16, 17, 21, 21, 16, 16, 16, 16, 17, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 27, 31, 31, 31, 20, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 29, 31, 31, 30, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0
- DB 0, 0, 0, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 16, 16, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 19
- DB 23, 27, 29, 16, 16, 0, 0, 16, 16, 0, 0, 0, 16, 0, 0, 16, 0, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 16
- DB 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 16
- DB 0, 0, 16, 16, 16, 227, 24, 28, 28, 16, 16, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 16, 0, 0, 16, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0
- DB 16, 0, 0, 16, 0, 0, 16, 0, 16, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0   
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0  
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0  
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0
- DB 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 16, 16, 0, 16, 16, 0, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0
- DB 0, 16, 16, 0, 16, 16, 0, 0, 16, 16, 16, 16, 0, 0, 16, 16, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 0, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 0, 16, 16
- DB 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0    
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 27, 23, 28, 25, 21, 18, 26, 25, 23, 22, 19, 19, 21, 20, 19, 18, 16, 16
- DB 17, 26, 23, 19, 16, 16, 18, 26, 23, 19, 16, 16, 17, 27, 23, 19, 16, 16, 18, 17, 17, 18, 16, 16, 18, 17, 16, 224, 16, 16, 16, 19, 26, 21, 16, 16, 16, 22, 21, 19
- DB 18, 17, 17, 18, 16, 18, 17, 16, 16, 16, 22, 21, 19, 18, 17, 18, 18, 16, 16, 16, 16, 16, 17, 27, 23, 19, 16, 16, 18, 18, 16, 16, 16, 17, 18, 16, 224, 16, 16, 20
- DB 21, 20, 224, 17, 17, 27, 23, 17, 19, 16, 224, 17, 16, 17, 18, 16, 18, 17, 16, 20, 21, 20, 224, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 16, 19, 31, 31, 30, 31, 31, 20, 31, 31, 31, 31, 26, 23, 31, 31, 31, 31, 21, 19, 29, 31, 31, 30, 17, 19, 29, 31, 31, 30, 17, 16, 227, 31, 31, 31, 30, 23, 25, 31
- DB 28, 31, 29, 21, 27, 31, 20, 31, 30, 18, 16, 23, 31, 28, 20, 28, 20, 30, 31, 31, 31, 30, 22, 31, 25, 27, 31, 23, 16, 18, 31, 31, 31, 31, 27, 23, 31, 29, 25, 21
- DB 17, 16, 224, 31, 31, 31, 30, 23, 24, 31, 29, 25, 20, 22, 31, 28, 31, 30, 24, 26, 31, 31, 31, 31, 22, 31, 30, 227, 31, 29, 30, 30, 26, 22, 31, 25, 26, 31, 23, 26
- DB 31, 31, 31, 31, 18, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0    
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 17, 30, 29, 17, 31, 29, 17, 30, 29, 22, 31, 25, 22, 31, 28, 26, 27, 20, 30
- DB 30, 21, 22, 22, 18, 30, 30, 20, 22, 21, 16, 16, 17, 30, 29, 28, 31, 23, 24, 31, 28, 29, 31, 21, 28, 31, 20, 30, 29, 16, 16, 20, 31, 25, 24, 31, 20, 28, 31, 25
- DB 26, 26, 22, 31, 25, 27, 31, 21, 16, 17, 22, 29, 30, 26, 24, 24, 31, 31, 31, 31, 19, 16, 17, 28, 29, 26, 29, 23, 25, 31, 31, 31, 31, 24, 31, 29, 27, 31, 25, 20
- DB 26, 31, 27, 27, 17, 31, 28, 19, 30, 30, 26, 31, 27, 22, 31, 25, 27, 31, 21, 24, 31, 26, 26, 27, 17, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16
- DB 16, 17, 30, 29, 17, 30, 29, 17, 31, 29, 21, 31, 24, 21, 31, 25, 20, 16, 16, 22, 31, 29, 27, 18, 16, 23, 31, 29, 27, 17, 16, 16, 18, 31, 27, 24, 31, 21, 20, 31
- DB 24, 24, 31, 19, 25, 31, 224, 29, 29, 16, 16, 227, 31, 30, 29, 28, 18, 28, 31, 21, 19, 16, 19, 31, 25, 24, 31, 20, 16, 16, 17, 30, 28, 16, 16, 23, 31, 21, 29, 30
- DB 17, 16, 17, 31, 28, 16, 16, 16, 24, 31, 21, 29, 31, 17, 30, 28, 21, 31, 23, 16, 24, 31, 20, 16, 17, 31, 28, 16, 29, 29, 19, 31, 25, 19, 31, 25, 24, 31, 20, 24
- DB 31, 23, 20, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0    
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 30, 30, 28, 31, 29, 17, 31, 31, 31, 31, 22, 21, 31, 31, 30, 16, 16, 16
- DB 25, 30, 31, 28, 17, 16, 25, 30, 31, 28, 17, 16, 18, 31, 31, 30, 31, 21, 20, 31, 24, 24, 31, 19, 25, 31, 224, 29, 29, 16, 16, 227, 31, 31, 31, 29, 18, 28, 31, 31
- DB 24, 16, 19, 31, 25, 24, 31, 20, 16, 16, 17, 30, 28, 16, 16, 23, 31, 20, 28, 30, 17, 16, 17, 31, 28, 16, 16, 16, 24, 31, 20, 29, 30, 17, 30, 28, 21, 31, 23, 16
- DB 24, 31, 20, 16, 17, 31, 28, 16, 29, 29, 19, 31, 25, 19, 31, 25, 24, 31, 20, 24, 31, 31, 28, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 16, 17, 30, 31, 30, 29, 21, 17, 31, 29, 20, 31, 25, 21, 31, 27, 22, 16, 16, 16, 18, 17, 26, 31, 22, 16, 18, 17, 26, 31, 21, 16, 18, 31, 27, 23, 31, 21, 20, 31
- DB 24, 24, 31, 19, 25, 31, 224, 29, 29, 16, 16, 227, 31, 26, 27, 31, 20, 28, 31, 24, 19, 16, 19, 31, 25, 24, 31, 20, 16, 16, 17, 30, 28, 16, 16, 23, 31, 20, 28, 30
- DB 17, 16, 18, 31, 28, 16, 16, 16, 24, 31, 20, 29, 30, 17, 30, 28, 21, 31, 23, 16, 24, 31, 20, 16, 17, 31, 28, 16, 29, 29, 19, 31, 25, 19, 31, 25, 24, 31, 20, 24
- DB 31, 25, 21, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 31, 30, 18, 16, 16, 18, 31, 30, 20, 31, 28, 22, 31, 28, 22, 18, 16, 18
- DB 30, 29, 25, 30, 20, 18, 30, 29, 25, 30, 19, 16, 19, 31, 29, 24, 31, 24, 21, 31, 27, 24, 31, 22, 27, 31, 28, 30, 29, 16, 16, 21, 31, 27, 26, 31, 23, 28, 31, 25
- DB 21, 17, 21, 31, 29, 28, 31, 20, 16, 16, 18, 31, 28, 17, 16, 25, 31, 27, 29, 30, 17, 16, 24, 31, 28, 23, 26, 224, 26, 31, 27, 30, 30, 18, 31, 30, 22, 31, 26, 16
- DB 26, 30, 22, 16, 18, 31, 29, 17, 30, 30, 21, 31, 28, 21, 31, 30, 29, 31, 25, 24, 31, 27, 22, 17, 16, 21, 18, 19, 19, 16, 21, 18, 16, 16, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 16, 224, 29, 29, 17, 16, 16, 19, 29, 29, 21, 29, 28, 21, 29, 31, 31, 24, 16, 20, 27, 30, 30, 227, 16, 20, 28, 30, 29, 19, 16, 16, 20, 29, 28, 24, 30, 23, 22, 30
- DB 26, 24, 30, 21, 25, 29, 30, 30, 29, 16, 16, 22, 30, 27, 26, 30, 22, 26, 30, 31, 31, 18, 21, 28, 30, 28, 31, 20, 16, 16, 19, 29, 29, 16, 16, 25, 30, 31, 31, 27
- DB 16, 16, 23, 29, 31, 31, 31, 23, 25, 30, 31, 31, 26, 19, 29, 29, 20, 30, 25, 16, 26, 30, 21, 16, 227, 29, 29, 18, 28, 30, 19, 29, 27, 21, 28, 30, 27, 30, 25, 23
- DB 30, 31, 31, 21, 18, 30, 24, 25, 30, 19, 30, 24, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 17, 16, 16, 17, 16, 16, 18, 23, 19, 16, 16
- DB 16, 17, 17, 16, 16, 16, 16, 17, 17, 16, 16, 16, 16, 16, 17, 16, 17, 17, 16, 16, 17, 16, 17, 16, 16, 23, 21, 30, 29, 16, 16, 16, 16, 17, 16, 17, 16, 16, 17, 20
- DB 23, 16, 16, 21, 22, 25, 31, 20, 16, 16, 16, 16, 17, 16, 16, 16, 17, 19, 24, 21, 16, 16, 16, 16, 18, 21, 19, 16, 16, 17, 19, 24, 20, 16, 16, 17, 16, 16, 17, 16
- DB 16, 17, 16, 16, 16, 16, 17, 16, 16, 17, 16, 16, 17, 16, 16, 17, 16, 17, 17, 16, 16, 19, 23, 17, 16, 17, 17, 16, 18, 16, 17, 17, 16, 16, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 18, 31, 31, 31, 28, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 28, 31, 31, 31, 19, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
- DB 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 16, 16, 16, 0      
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 16, 0, 0, 16, 16, 16, 17, 21, 25, 29, 25, 16, 16, 0, 0, 0, 16, 0, 0, 0, 0, 0
- DB 16, 16, 16, 20, 24, 28, 30, 16, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 16, 0, 0, 0, 16, 0, 16, 0, 0, 16, 16, 16, 0, 0, 16, 0, 16, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 16, 16, 16, 16, 16, 16, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
- DB 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    INPUTIMGW                 EQU 180
+    INPUTIMGH                 EQU 43
+    INPUTIMG                  DB  0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16,16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 0, 16, 16
+                              DB  16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 0, 0
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16
+                              DB  0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16
+                              DB  16, 0, 16, 16, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 16, 16, 16, 16, 16, 16, 22, 26, 22, 18, 20, 22, 21, 19, 18, 16, 16, 224, 28, 24, 29, 25, 21, 16, 26, 23, 17, 16, 17, 28, 24, 20, 16, 16, 18, 18, 16, 19
+                              DB  17, 17, 23, 22, 20, 224, 17, 24, 27, 25, 24, 22, 17, 16, 0, 16, 16, 20, 27, 24, 29, 24, 20, 18, 26, 22, 17, 16, 19, 22, 21, 227, 18, 17, 27, 25, 21, 17, 16, 16
+                              DB  16, 22, 26, 22, 18, 20, 22, 21, 19, 18, 16, 16, 19, 23, 21, 20, 18, 17, 19, 17, 18, 18, 16, 17, 23, 21, 20, 224, 17, 22, 22, 20, 19, 18, 20, 27, 26, 24, 23, 19
+                              DB  16, 16, 19, 17, 16, 19, 17, 16, 20, 17, 16, 16, 16, 19, 17, 16, 20, 16, 16, 28, 26, 24, 23, 21, 16, 16, 17, 224, 16, 19, 16, 16, 20, 27, 22, 18, 16, 16, 19, 17
+                              DB  18, 18, 16, 19, 17, 16, 19, 22, 21, 19, 18, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 16, 16, 17, 17, 16, 16, 24, 30, 31, 31, 25, 25, 31, 31, 31, 31, 20, 16, 22
+                              DB  31, 30, 30, 31, 29, 227, 31, 31, 18, 16, 19, 30, 31, 31, 30, 24, 25, 31, 22, 30, 31, 22, 31, 31, 31, 31, 27, 26, 31, 31, 31, 31, 18, 16, 16, 16, 16, 24, 31, 30
+                              DB  30, 31, 27, 22, 31, 31, 17, 16, 24, 31, 31, 31, 31, 22, 29, 31, 31, 31, 27, 16, 24, 30, 31, 31, 25, 25, 31, 31, 31, 31, 20, 16, 23, 31, 31, 31, 31, 23, 30, 31
+                              DB  29, 31, 29, 22, 31, 31, 31, 31, 26, 30, 31, 31, 31, 30, 22, 31, 31, 31, 31, 23, 16, 16, 28, 31, 20, 31, 30, 224, 31, 31, 28, 24, 19, 30, 30, 20, 31, 29, 18, 31
+                              DB  31, 31, 31, 28, 16, 16, 23, 31, 29, 31, 30, 24, 24, 31, 31, 31, 29, 21, 30, 31, 29, 31, 29, 30, 31, 27, 25, 31, 31, 31, 31, 21, 16, 16, 16, 0, 0, 0, 0, 0
+                              DB  0, 16, 16, 26, 30, 23, 22, 31, 28, 224, 23, 17, 19, 25, 31, 27, 26, 18, 16, 224, 31, 26, 19, 31, 26, 21, 31, 26, 16, 16, 18, 30, 29, 27, 31, 24, 25, 31, 22, 29
+                              DB  31, 19, 29, 29, 24, 26, 23, 23, 31, 22, 27, 31, 17, 16, 16, 16, 16, 20, 31, 24, 21, 31, 24, 23, 31, 24, 16, 16, 22, 31, 27, 24, 26, 224, 29, 30, 25, 31, 27, 22
+                              DB  31, 28, 224, 23, 18, 23, 31, 26, 25, 26, 18, 16, 20, 30, 27, 24, 26, 20, 28, 31, 25, 30, 30, 18, 22, 30, 29, 26, 22, 27, 31, 24, 25, 25, 19, 31, 26, 24, 31, 22
+                              DB  16, 16, 28, 31, 20, 30, 29, 18, 31, 31, 31, 31, 28, 29, 30, 20, 31, 28, 16, 29, 29, 20, 31, 27, 16, 16, 21, 31, 29, 27, 31, 24, 22, 31, 26, 30, 31, 19, 28, 31
+                              DB  25, 31, 31, 25, 31, 27, 23, 31, 27, 24, 26, 18, 16, 16, 16, 16, 0, 0, 0, 0, 0, 16, 16, 26, 31, 25, 16, 27, 31, 28, 26, 16, 16, 23, 31, 21, 16, 16, 16, 224
+                              DB  31, 26, 19, 31, 25, 21, 31, 23, 16, 16, 18, 31, 28, 24, 31, 22, 23, 31, 21, 28, 31, 18, 30, 29, 21, 18, 16, 24, 31, 24, 28, 30, 17, 25, 24, 16, 16, 20, 31, 24
+                              DB  21, 31, 23, 23, 31, 20, 16, 16, 22, 31, 26, 21, 16, 16, 30, 30, 22, 31, 25, 16, 27, 31, 28, 26, 16, 23, 31, 25, 21, 16, 16, 16, 20, 31, 26, 21, 17, 16, 24, 31
+                              DB  19, 29, 29, 16, 17, 31, 27, 16, 16, 27, 31, 22, 227, 16, 19, 31, 27, 24, 31, 20, 16, 16, 26, 31, 224, 30, 29, 16, 31, 28, 21, 31, 24, 27, 30, 18, 31, 28, 16, 30
+                              DB  30, 21, 31, 25, 16, 16, 17, 31, 27, 21, 31, 23, 23, 31, 24, 28, 31, 17, 25, 31, 19, 30, 30, 19, 31, 25, 22, 31, 25, 21, 16, 16, 27, 22, 16, 16, 0, 0, 0, 0
+                              DB  0, 16, 16, 19, 31, 25, 16, 17, 28, 29, 31, 24, 16, 23, 31, 21, 16, 16, 16, 224, 31, 30, 29, 31, 25, 21, 31, 23, 16, 16, 18, 31, 31, 30, 31, 22, 23, 31, 21, 28
+                              DB  31, 18, 30, 31, 31, 20, 16, 24, 31, 30, 31, 29, 17, 23, 25, 16, 16, 20, 31, 29, 29, 31, 23, 23, 31, 20, 16, 16, 22, 31, 31, 29, 16, 16, 30, 31, 29, 31, 25, 16
+                              DB  17, 29, 29, 31, 24, 23, 31, 31, 29, 16, 16, 16, 20, 31, 31, 31, 16, 16, 24, 31, 19, 29, 29, 16, 17, 31, 27, 16, 16, 27, 31, 31, 24, 16, 19, 31, 31, 31, 30, 20
+                              DB  16, 16, 26, 31, 224, 30, 29, 16, 31, 28, 20, 31, 23, 27, 30, 18, 31, 28, 16, 30, 31, 31, 31, 24, 16, 16, 17, 31, 27, 21, 31, 23, 23, 31, 30, 30, 31, 17, 25, 31
+                              DB  19, 30, 30, 19, 31, 25, 22, 31, 31, 29, 16, 16, 24, 23, 16, 16, 0, 0, 0, 0, 0, 0, 16, 19, 31, 25, 16, 17, 18, 18, 29, 30, 16, 23, 31, 21, 16, 16, 16, 224
+                              DB  31, 30, 31, 27, 18, 21, 31, 23, 16, 16, 18, 31, 27, 22, 31, 22, 23, 31, 21, 28, 31, 18, 30, 29, 22, 17, 16, 24, 31, 21, 27, 31, 17, 16, 16, 16, 16, 20, 31, 30
+                              DB  31, 26, 17, 23, 31, 20, 16, 16, 22, 31, 26, 21, 16, 16, 30, 30, 19, 31, 25, 16, 17, 18, 18, 29, 30, 23, 31, 26, 21, 16, 16, 16, 20, 31, 27, 22, 16, 16, 24, 31
+                              DB  19, 29, 29, 16, 17, 31, 27, 16, 16, 27, 31, 23, 19, 16, 19, 31, 25, 23, 31, 22, 16, 16, 26, 31, 224, 30, 29, 16, 31, 28, 20, 31, 23, 27, 30, 18, 31, 28, 16, 30
+                              DB  29, 224, 31, 27, 16, 16, 17, 31, 27, 21, 31, 23, 23, 31, 22, 28, 31, 17, 25, 31, 19, 30, 30, 19, 31, 25, 22, 31, 26, 21, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0
+                              DB  0, 16, 16, 20, 31, 28, 16, 24, 31, 28, 27, 28, 16, 24, 30, 23, 16, 16, 16, 20, 31, 29, 17, 16, 16, 22, 31, 28, 26, 25, 20, 31, 29, 24, 31, 25, 25, 31, 29, 30
+                              DB  31, 18, 30, 30, 25, 21, 16, 25, 31, 24, 28, 31, 21, 21, 20, 16, 16, 22, 31, 27, 17, 16, 16, 24, 30, 28, 26, 24, 22, 31, 29, 23, 19, 17, 30, 31, 22, 31, 28, 16
+                              DB  24, 31, 28, 27, 27, 23, 31, 28, 23, 18, 16, 16, 20, 31, 29, 24, 19, 16, 26, 31, 23, 29, 31, 18, 19, 31, 28, 16, 16, 28, 31, 26, 22, 17, 21, 31, 28, 24, 31, 25
+                              DB  16, 16, 27, 31, 28, 31, 29, 18, 31, 30, 27, 31, 23, 29, 31, 28, 31, 30, 19, 30, 30, 20, 31, 29, 17, 16, 224, 31, 29, 22, 31, 26, 24, 31, 25, 29, 31, 20, 26, 31
+                              DB  23, 30, 31, 21, 31, 28, 22, 31, 28, 23, 18, 16, 22, 19, 16, 16, 0, 0, 0, 0, 0, 16, 16, 21, 29, 26, 16, 23, 28, 30, 26, 17, 16, 24, 29, 23, 16, 16, 16, 20
+                              DB  29, 27, 16, 16, 16, 22, 29, 30, 31, 30, 21, 28, 28, 23, 29, 23, 22, 28, 29, 29, 31, 18, 27, 30, 31, 29, 16, 25, 29, 23, 26, 30, 20, 27, 28, 16, 16, 22, 29, 25
+                              DB  16, 16, 16, 24, 29, 30, 31, 29, 21, 28, 31, 31, 24, 18, 28, 29, 22, 29, 26, 16, 23, 28, 30, 25, 17, 22, 29, 31, 31, 23, 16, 16, 20, 28, 30, 31, 25, 16, 25, 29
+                              DB  21, 27, 29, 17, 20, 28, 28, 16, 16, 25, 29, 31, 31, 224, 21, 29, 26, 23, 29, 24, 16, 16, 24, 28, 29, 30, 29, 19, 28, 30, 31, 31, 224, 24, 29, 28, 27, 30, 19, 28
+                              DB  29, 227, 28, 28, 16, 16, 19, 28, 28, 21, 29, 24, 24, 29, 24, 27, 30, 224, 26, 29, 21, 27, 29, 19, 29, 26, 21, 28, 31, 31, 23, 17, 29, 25, 16, 16, 0, 0, 0, 0
+                              DB  0, 16, 16, 16, 16, 17, 16, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 17, 17, 224, 16, 16, 17, 16, 16, 16, 16, 23, 22, 29
+                              DB  31, 17, 16, 17, 20, 21, 16, 16, 16, 16, 16, 17, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 224, 16, 16, 17, 22, 18, 16, 16, 17, 16, 16, 16, 16
+                              DB  16, 16, 17, 16, 16, 16, 16, 18, 22, 18, 16, 16, 16, 16, 17, 21, 19, 16, 16, 16, 16, 16, 17, 16, 16, 16, 17, 16, 16, 16, 16, 224, 23, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 17, 24, 21, 30, 29, 16, 16, 17, 20, 24, 16, 16, 16, 17, 16, 17, 16, 16, 17, 16, 16, 17, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 16, 16, 17, 16, 16, 16
+                              DB  16, 16, 17, 16, 16, 16, 16, 16, 17, 22, 18, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 31, 31, 31, 30, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 224, 31, 31, 31, 28, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 19, 24, 28
+                              DB  27, 16, 16, 0, 0, 16, 16, 0, 0, 0, 16, 0, 0, 16, 0, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 16
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 16, 0, 0
+                              DB  16, 16, 17, 20, 24, 28, 24, 16, 16, 0, 16, 16, 16, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 16, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 16, 0, 0, 0, 0, 16, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 0
+                              DB  0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16
+                              DB  16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 0, 0, 0, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16
+                              DB  16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0
+                              DB  0, 16, 16, 16, 16, 16, 16, 16, 18, 18, 16, 19, 16, 16, 17, 27, 23, 19, 16, 16, 16, 16, 27, 24, 28, 26, 22, 17, 24, 23, 224, 16, 16, 26, 24, 20, 17, 16, 17, 224
+                              DB  16, 18, 18, 16, 21, 21, 20, 224, 17, 20, 27, 25, 24, 22, 19, 16, 16, 0, 16, 17, 28, 23, 29, 25, 21, 16, 26, 23, 18, 16, 17, 22, 21, 19, 18, 17, 23, 25, 21, 17
+                              DB  16, 16, 16, 224, 27, 23, 19, 18, 22, 21, 19, 18, 17, 16, 17, 22, 21, 227, 18, 17, 18, 17, 17, 224, 16, 16, 22, 21, 20, 224, 17, 20, 22, 20, 19, 18, 17, 27, 26, 24
+                              DB  23, 20, 16, 16, 18, 18, 16, 224, 17, 16, 19, 18, 16, 16, 16, 18, 18, 16, 19, 17, 16, 25, 26, 24, 23, 21, 17, 16, 16, 19, 16, 224, 17, 16, 17, 27, 23, 19, 16, 16
+                              DB  18, 17, 17, 18, 16, 18, 17, 16, 18, 22, 21, 19, 18, 17, 16, 16, 0, 0, 0, 0, 0, 16, 16, 17, 17, 16, 16, 16, 24, 31, 28, 31, 30, 23, 20, 31, 31, 31, 30, 22
+                              DB  16, 18, 31, 31, 30, 31, 31, 19, 30, 31, 23, 16, 17, 29, 31, 31, 31, 27, 21, 31, 26, 26, 31, 24, 29, 31, 31, 31, 30, 22, 31, 31, 31, 31, 23, 16, 16, 16, 16, 20
+                              DB  31, 31, 30, 31, 30, 224, 31, 31, 21, 16, 20, 31, 31, 31, 31, 25, 27, 31, 31, 31, 28, 18, 20, 30, 31, 31, 29, 21, 31, 31, 31, 31, 24, 16, 19, 31, 31, 31, 31, 26
+                              DB  26, 31, 28, 31, 29, 22, 30, 31, 31, 31, 29, 26, 31, 31, 31, 31, 22, 31, 31, 31, 31, 27, 16, 16, 24, 31, 23, 29, 31, 21, 28, 31, 28, 24, 20, 26, 31, 22, 30, 31
+                              DB  19, 28, 31, 31, 31, 30, 17, 16, 18, 31, 30, 29, 31, 27, 21, 31, 31, 31, 30, 23, 26, 31, 28, 31, 29, 29, 31, 28, 22, 31, 31, 31, 31, 24, 16, 16, 16, 16, 16, 0
+                              DB  0, 16, 16, 30, 30, 29, 29, 25, 23, 31, 28, 28, 31, 22, 18, 28, 28, 27, 31, 25, 16, 16, 30, 30, 17, 30, 30, 18, 31, 29, 18, 16, 16, 28, 31, 25, 31, 28, 21, 31
+                              DB  25, 26, 31, 22, 27, 31, 25, 26, 26, 19, 31, 26, 24, 31, 21, 16, 16, 16, 16, 17, 31, 28, 18, 31, 28, 19, 31, 28, 17, 16, 18, 30, 29, 25, 26, 22, 24, 31, 26, 31
+                              DB  30, 224, 31, 30, 227, 22, 20, 19, 30, 28, 25, 26, 21, 16, 18, 30, 29, 24, 26, 23, 25, 31, 28, 29, 31, 21, 21, 29, 30, 26, 25, 23, 31, 27, 25, 27, 19, 30, 29, 21
+                              DB  31, 25, 16, 16, 24, 31, 23, 28, 31, 18, 29, 31, 31, 31, 30, 26, 31, 22, 29, 31, 18, 25, 31, 21, 29, 30, 17, 16, 18, 30, 31, 25, 31, 28, 18, 30, 28, 28, 31, 23
+                              DB  25, 31, 27, 29, 31, 26, 30, 30, 19, 30, 28, 25, 26, 22, 16, 16, 16, 16, 16, 16, 0, 16, 16, 31, 31, 31, 31, 27, 19, 31, 25, 23, 31, 20, 18, 31, 25, 19, 31, 25
+                              DB  16, 16, 30, 30, 16, 30, 30, 18, 31, 27, 16, 16, 16, 29, 31, 21, 31, 26, 224, 31, 25, 23, 31, 21, 27, 31, 21, 19, 16, 19, 31, 27, 24, 31, 20, 21, 26, 17, 16, 17
+                              DB  31, 28, 18, 31, 27, 19, 31, 25, 16, 16, 18, 31, 28, 21, 17, 16, 25, 31, 22, 30, 29, 16, 24, 31, 29, 27, 17, 224, 31, 27, 21, 17, 16, 16, 17, 31, 29, 21, 18, 16
+                              DB  20, 31, 24, 25, 31, 19, 16, 29, 30, 16, 16, 23, 31, 24, 20, 16, 17, 30, 29, 21, 31, 24, 16, 16, 21, 31, 23, 26, 31, 17, 28, 30, 19, 31, 28, 23, 31, 21, 28, 30
+                              DB  17, 25, 31, 22, 30, 29, 16, 16, 16, 29, 31, 18, 31, 27, 18, 31, 27, 24, 31, 21, 20, 31, 24, 25, 31, 19, 29, 29, 18, 31, 28, 21, 17, 16, 16, 16, 26, 23, 16, 16
+                              DB  0, 16, 17, 26, 24, 30, 30, 20, 19, 31, 25, 23, 31, 20, 18, 31, 25, 19, 31, 25, 16, 16, 30, 31, 28, 31, 30, 18, 31, 27, 16, 16, 16, 29, 31, 29, 31, 26, 224, 31
+                              DB  25, 23, 31, 21, 27, 31, 31, 25, 16, 19, 31, 31, 31, 30, 19, 21, 27, 16, 16, 17, 31, 30, 29, 31, 27, 19, 31, 25, 16, 16, 18, 31, 31, 31, 18, 16, 25, 31, 30, 30
+                              DB  29, 16, 16, 26, 29, 31, 27, 19, 31, 31, 31, 18, 16, 16, 17, 31, 31, 31, 20, 16, 20, 31, 24, 25, 31, 19, 16, 29, 30, 16, 16, 23, 31, 31, 28, 16, 17, 30, 31, 31
+                              DB  31, 22, 16, 16, 21, 31, 23, 26, 31, 17, 28, 30, 18, 31, 28, 23, 31, 21, 28, 30, 17, 25, 31, 31, 31, 27, 16, 16, 16, 29, 31, 18, 31, 27, 18, 31, 31, 30, 31, 21
+                              DB  20, 31, 24, 25, 31, 19, 29, 29, 18, 31, 31, 31, 18, 16, 16, 16, 25, 24, 16, 16, 0, 16, 16, 18, 29, 31, 22, 16, 19, 31, 25, 23, 31, 20, 20, 31, 25, 19, 31, 25
+                              DB  16, 16, 30, 31, 30, 29, 21, 18, 31, 27, 16, 16, 16, 29, 31, 224, 31, 26, 224, 31, 25, 23, 31, 21, 27, 31, 23, 19, 16, 19, 31, 25, 23, 31, 21, 16, 16, 16, 16, 17
+                              DB  31, 31, 31, 28, 227, 19, 31, 24, 16, 16, 18, 31, 28, 23, 16, 16, 25, 31, 20, 29, 29, 16, 16, 224, 17, 27, 31, 22, 31, 28, 22, 16, 16, 16, 17, 31, 29, 23, 17, 16
+                              DB  20, 31, 24, 25, 31, 19, 16, 29, 30, 16, 16, 23, 31, 26, 21, 16, 17, 30, 29, 20, 31, 25, 16, 16, 21, 31, 23, 26, 31, 17, 28, 30, 18, 31, 28, 23, 31, 21, 28, 30
+                              DB  17, 25, 31, 19, 29, 30, 17, 16, 16, 29, 31, 18, 31, 27, 18, 31, 26, 23, 31, 21, 20, 31, 24, 25, 31, 19, 29, 29, 18, 31, 28, 23, 17, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 17, 28, 31, 31, 27, 23, 20, 31, 28, 23, 31, 24, 26, 31, 28, 24, 31, 25, 16, 17, 30, 31, 18, 16, 16, 18, 31, 28, 26, 24, 0, 30, 31, 22, 31, 29, 21, 31
+                              DB  30, 28, 31, 21, 27, 31, 26, 21, 17, 21, 31, 28, 23, 31, 25, 19, 21, 17, 16, 18, 31, 29, 17, 16, 16, 20, 31, 28, 26, 24, 20, 31, 30, 24, 20, 16, 27, 31, 23, 30
+                              DB  30, 18, 19, 31, 29, 26, 30, 21, 31, 29, 24, 19, 16, 16, 17, 31, 30, 24, 20, 16, 22, 31, 27, 25, 31, 22, 16, 30, 29, 18, 16, 23, 31, 28, 22, 18, 17, 31, 30, 21
+                              DB  31, 29, 16, 16, 23, 31, 29, 29, 31, 17, 29, 31, 26, 31, 28, 25, 31, 29, 30, 31, 22, 27, 31, 22, 30, 31, 19, 16, 16, 29, 31, 21, 31, 29, 20, 31, 29, 24, 31, 24
+                              DB  22, 31, 27, 25, 31, 22, 29, 30, 20, 31, 29, 24, 19, 16, 16, 16, 22, 19, 16, 16, 16, 16, 18, 29, 29, 30, 31, 26, 21, 29, 27, 22, 30, 22, 24, 29, 31, 31, 21, 17
+                              DB  16, 18, 28, 30, 17, 16, 16, 224, 30, 30, 31, 31, 23, 28, 30, 22, 29, 28, 20, 27, 30, 28, 31, 21, 25, 30, 31, 31, 18, 22, 29, 26, 23, 30, 24, 23, 30, 17, 16, 19
+                              DB  29, 29, 16, 16, 16, 20, 30, 30, 31, 31, 21, 28, 30, 31, 28, 16, 26, 30, 23, 28, 30, 16, 21, 28, 30, 28, 18, 19, 28, 30, 31, 27, 16, 16, 18, 28, 30, 31, 29, 16
+                              DB  22, 29, 25, 24, 30, 20, 17, 28, 30, 17, 16, 22, 29, 31, 31, 23, 224, 29, 29, 20, 29, 28, 16, 16, 22, 28, 30, 28, 31, 18, 27, 30, 31, 31, 22, 23, 28, 30, 26, 30
+                              DB  21, 27, 30, 21, 28, 30, 18, 16, 17, 28, 30, 20, 29, 28, 21, 29, 27, 24, 30, 23, 23, 29, 25, 24, 30, 21, 28, 29, 19, 28, 30, 31, 28, 16, 16, 16, 29, 26, 16, 16
+                              DB  0, 16, 16, 17, 17, 17, 17, 17, 16, 16, 17, 16, 17, 16, 16, 16, 18, 21, 17, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 17, 18, 19, 17, 16, 17, 16, 16, 17, 16, 21
+                              DB  23, 25, 31, 21, 16, 17, 19, 23, 16, 16, 16, 17, 16, 16, 17, 16, 17, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 17, 18, 19, 17, 16, 17, 21, 21, 16, 16, 17, 16, 16
+                              DB  17, 16, 16, 16, 17, 17, 16, 16, 16, 17, 21, 20, 16, 16, 16, 16, 17, 20, 21, 16, 16, 16, 17, 16, 17, 16, 16, 16, 17, 16, 16, 16, 16, 18, 23, 18, 16, 16, 17, 16
+                              DB  16, 17, 16, 16, 16, 22, 22, 27, 31, 17, 16, 17, 19, 24, 18, 16, 16, 17, 16, 17, 16, 16, 17, 16, 16, 17, 16, 16, 16, 16, 17, 16, 16, 17, 16, 16, 17, 16, 17, 16
+                              DB  16, 16, 17, 16, 17, 16, 16, 17, 16, 16, 17, 21, 21, 16, 16, 16, 16, 17, 16, 16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 27, 31, 31, 31, 20, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 29, 31, 31, 30, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0
+                              DB  0, 0, 0, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 16, 16, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 19
+                              DB  23, 27, 29, 16, 16, 0, 0, 16, 16, 0, 0, 0, 16, 0, 0, 16, 0, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 16
+                              DB  0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 16
+                              DB  0, 0, 16, 16, 16, 227, 24, 28, 28, 16, 16, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 16, 0, 0, 16, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0
+                              DB  16, 0, 0, 16, 0, 0, 16, 0, 16, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0
+                              DB  16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0, 0, 16, 16, 0, 16, 16, 0, 0, 16, 16, 16, 16, 0, 16, 16, 16, 16, 0
+                              DB  0, 16, 16, 0, 16, 16, 0, 0, 16, 16, 16, 16, 0, 0, 16, 16, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 0, 16, 16, 0, 0, 0, 16, 16, 16, 16, 16, 0, 16, 16
+                              DB  16, 0, 0, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 27, 23, 28, 25, 21, 18, 26, 25, 23, 22, 19, 19, 21, 20, 19, 18, 16, 16
+                              DB  17, 26, 23, 19, 16, 16, 18, 26, 23, 19, 16, 16, 17, 27, 23, 19, 16, 16, 18, 17, 17, 18, 16, 16, 18, 17, 16, 224, 16, 16, 16, 19, 26, 21, 16, 16, 16, 22, 21, 19
+                              DB  18, 17, 17, 18, 16, 18, 17, 16, 16, 16, 22, 21, 19, 18, 17, 18, 18, 16, 16, 16, 16, 16, 17, 27, 23, 19, 16, 16, 18, 18, 16, 16, 16, 17, 18, 16, 224, 16, 16, 20
+                              DB  21, 20, 224, 17, 17, 27, 23, 17, 19, 16, 224, 17, 16, 17, 18, 16, 18, 17, 16, 20, 21, 20, 224, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  16, 19, 31, 31, 30, 31, 31, 20, 31, 31, 31, 31, 26, 23, 31, 31, 31, 31, 21, 19, 29, 31, 31, 30, 17, 19, 29, 31, 31, 30, 17, 16, 227, 31, 31, 31, 30, 23, 25, 31
+                              DB  28, 31, 29, 21, 27, 31, 20, 31, 30, 18, 16, 23, 31, 28, 20, 28, 20, 30, 31, 31, 31, 30, 22, 31, 25, 27, 31, 23, 16, 18, 31, 31, 31, 31, 27, 23, 31, 29, 25, 21
+                              DB  17, 16, 224, 31, 31, 31, 30, 23, 24, 31, 29, 25, 20, 22, 31, 28, 31, 30, 24, 26, 31, 31, 31, 31, 22, 31, 30, 227, 31, 29, 30, 30, 26, 22, 31, 25, 26, 31, 23, 26
+                              DB  31, 31, 31, 31, 18, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 17, 30, 29, 17, 31, 29, 17, 30, 29, 22, 31, 25, 22, 31, 28, 26, 27, 20, 30
+                              DB  30, 21, 22, 22, 18, 30, 30, 20, 22, 21, 16, 16, 17, 30, 29, 28, 31, 23, 24, 31, 28, 29, 31, 21, 28, 31, 20, 30, 29, 16, 16, 20, 31, 25, 24, 31, 20, 28, 31, 25
+                              DB  26, 26, 22, 31, 25, 27, 31, 21, 16, 17, 22, 29, 30, 26, 24, 24, 31, 31, 31, 31, 19, 16, 17, 28, 29, 26, 29, 23, 25, 31, 31, 31, 31, 24, 31, 29, 27, 31, 25, 20
+                              DB  26, 31, 27, 27, 17, 31, 28, 19, 30, 30, 26, 31, 27, 22, 31, 25, 27, 31, 21, 24, 31, 26, 26, 27, 17, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16
+                              DB  16, 17, 30, 29, 17, 30, 29, 17, 31, 29, 21, 31, 24, 21, 31, 25, 20, 16, 16, 22, 31, 29, 27, 18, 16, 23, 31, 29, 27, 17, 16, 16, 18, 31, 27, 24, 31, 21, 20, 31
+                              DB  24, 24, 31, 19, 25, 31, 224, 29, 29, 16, 16, 227, 31, 30, 29, 28, 18, 28, 31, 21, 19, 16, 19, 31, 25, 24, 31, 20, 16, 16, 17, 30, 28, 16, 16, 23, 31, 21, 29, 30
+                              DB  17, 16, 17, 31, 28, 16, 16, 16, 24, 31, 21, 29, 31, 17, 30, 28, 21, 31, 23, 16, 24, 31, 20, 16, 17, 31, 28, 16, 29, 29, 19, 31, 25, 19, 31, 25, 24, 31, 20, 24
+                              DB  31, 23, 20, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 30, 30, 28, 31, 29, 17, 31, 31, 31, 31, 22, 21, 31, 31, 30, 16, 16, 16
+                              DB  25, 30, 31, 28, 17, 16, 25, 30, 31, 28, 17, 16, 18, 31, 31, 30, 31, 21, 20, 31, 24, 24, 31, 19, 25, 31, 224, 29, 29, 16, 16, 227, 31, 31, 31, 29, 18, 28, 31, 31
+                              DB  24, 16, 19, 31, 25, 24, 31, 20, 16, 16, 17, 30, 28, 16, 16, 23, 31, 20, 28, 30, 17, 16, 17, 31, 28, 16, 16, 16, 24, 31, 20, 29, 30, 17, 30, 28, 21, 31, 23, 16
+                              DB  24, 31, 20, 16, 17, 31, 28, 16, 29, 29, 19, 31, 25, 19, 31, 25, 24, 31, 20, 24, 31, 31, 28, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  16, 17, 30, 31, 30, 29, 21, 17, 31, 29, 20, 31, 25, 21, 31, 27, 22, 16, 16, 16, 18, 17, 26, 31, 22, 16, 18, 17, 26, 31, 21, 16, 18, 31, 27, 23, 31, 21, 20, 31
+                              DB  24, 24, 31, 19, 25, 31, 224, 29, 29, 16, 16, 227, 31, 26, 27, 31, 20, 28, 31, 24, 19, 16, 19, 31, 25, 24, 31, 20, 16, 16, 17, 30, 28, 16, 16, 23, 31, 20, 28, 30
+                              DB  17, 16, 18, 31, 28, 16, 16, 16, 24, 31, 20, 29, 30, 17, 30, 28, 21, 31, 23, 16, 24, 31, 20, 16, 17, 31, 28, 16, 29, 29, 19, 31, 25, 19, 31, 25, 24, 31, 20, 24
+                              DB  31, 25, 21, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 17, 31, 30, 18, 16, 16, 18, 31, 30, 20, 31, 28, 22, 31, 28, 22, 18, 16, 18
+                              DB  30, 29, 25, 30, 20, 18, 30, 29, 25, 30, 19, 16, 19, 31, 29, 24, 31, 24, 21, 31, 27, 24, 31, 22, 27, 31, 28, 30, 29, 16, 16, 21, 31, 27, 26, 31, 23, 28, 31, 25
+                              DB  21, 17, 21, 31, 29, 28, 31, 20, 16, 16, 18, 31, 28, 17, 16, 25, 31, 27, 29, 30, 17, 16, 24, 31, 28, 23, 26, 224, 26, 31, 27, 30, 30, 18, 31, 30, 22, 31, 26, 16
+                              DB  26, 30, 22, 16, 18, 31, 29, 17, 30, 30, 21, 31, 28, 21, 31, 30, 29, 31, 25, 24, 31, 27, 22, 17, 16, 21, 18, 19, 19, 16, 21, 18, 16, 16, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  16, 224, 29, 29, 17, 16, 16, 19, 29, 29, 21, 29, 28, 21, 29, 31, 31, 24, 16, 20, 27, 30, 30, 227, 16, 20, 28, 30, 29, 19, 16, 16, 20, 29, 28, 24, 30, 23, 22, 30
+                              DB  26, 24, 30, 21, 25, 29, 30, 30, 29, 16, 16, 22, 30, 27, 26, 30, 22, 26, 30, 31, 31, 18, 21, 28, 30, 28, 31, 20, 16, 16, 19, 29, 29, 16, 16, 25, 30, 31, 31, 27
+                              DB  16, 16, 23, 29, 31, 31, 31, 23, 25, 30, 31, 31, 26, 19, 29, 29, 20, 30, 25, 16, 26, 30, 21, 16, 227, 29, 29, 18, 28, 30, 19, 29, 27, 21, 28, 30, 27, 30, 25, 23
+                              DB  30, 31, 31, 21, 18, 30, 24, 25, 30, 19, 30, 24, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 17, 16, 16, 16, 16, 16, 17, 16, 16, 17, 16, 16, 18, 23, 19, 16, 16
+                              DB  16, 17, 17, 16, 16, 16, 16, 17, 17, 16, 16, 16, 16, 16, 17, 16, 17, 17, 16, 16, 17, 16, 17, 16, 16, 23, 21, 30, 29, 16, 16, 16, 16, 17, 16, 17, 16, 16, 17, 20
+                              DB  23, 16, 16, 21, 22, 25, 31, 20, 16, 16, 16, 16, 17, 16, 16, 16, 17, 19, 24, 21, 16, 16, 16, 16, 18, 21, 19, 16, 16, 17, 19, 24, 20, 16, 16, 17, 16, 16, 17, 16
+                              DB  16, 17, 16, 16, 16, 16, 17, 16, 16, 17, 16, 16, 17, 16, 16, 17, 16, 17, 17, 16, 16, 19, 23, 17, 16, 17, 17, 16, 18, 16, 17, 17, 16, 16, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 18, 31, 31, 31, 28, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 28, 31, 31, 31, 19, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+                              DB  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 16, 16, 16, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 16, 0, 0, 16, 16, 16, 17, 21, 25, 29, 25, 16, 16, 0, 0, 0, 16, 0, 0, 0, 0, 0
+                              DB  16, 16, 16, 20, 24, 28, 30, 16, 16, 0, 0, 0, 0, 16, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 16, 0, 0, 0, 16, 0, 16, 0, 0, 16, 16, 16, 0, 0, 16, 0, 16, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 16, 16, 16, 16, 16, 16, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 17, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 16, 16, 16, 16, 16, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                              DB  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-; FIRSTNAME               DB      16,?, 16 DUP('$')
-; WASTE                   DB      50 DUP('$')
-; SECONDNAME              DB      16,?, 16 DUP('$')
+    ; FIRSTNAME               DB      16,?, 16 DUP('$')
+    ; WASTE                   DB      50 DUP('$')
+    ; SECONDNAME              DB      16,?, 16 DUP('$')
 
-;USERNAMES
-FIRSTNAME               DB      16 DUP('$')
-SECONDNAME              DB      16 DUP('$')
+    ;USERNAMES
+    FIRSTNAME                 DB  16 DUP('$')
+    SECONDNAME                DB  16 DUP('$')
 
 
-;NOTES
-NOTE1                   DB      'THE NAMES MUST NOT EXCEED 15 CHARACTERS', '$'
-NOTE2                   DB      "DON'T START WITH NUMBERS, SPECIAL CHARS", '$'
+    ;NOTES
+    NOTE1                     DB  'THE NAMES MUST NOT EXCEED 15 CHARACTERS', '$'
+    NOTE2                     DB  "DON'T START WITH NUMBERS, SPECIAL CHARS", '$'
 
-;INSTRUCTIONS
-INSTRUCTION1            DB      'TO START THE GAME PRESS ENTER...', '$'
-INSTRUCTION2            DB      'TO END THE PROGRAM PRESS ESC...', '$'
+    ;INSTRUCTIONS
+    INSTRUCTION1              DB  'TO START THE GAME PRESS ENTER...', '$'
+    INSTRUCTION2              DB  'TO END THE PROGRAM PRESS ESC...', '$'
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;   car data   ;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;   car data   ;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-        ;CarImage
-        CarImg1                 DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
-                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
-        CarImg2                 DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
-                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
+    ;CarImage
+    CarImg1                   DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
+                              DB  192, 0, 17, 192, 17, 192, 17, 192, 0
+    CarImg2                   DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
+                              DB  192, 0, 17, 192, 17, 192, 17, 192, 0
 
-        CarImg1Up               DB   0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 122, 122, 122
-                                DB   122, 192, 17, 17, 0, 0, 0, 17, 17
-        CarImg1Right            DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
-                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
-        CarImg1Down             DB   17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 42, 42, 42, 122, 17, 192, 122, 42, 192, 42, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
-                                DB   192, 192, 0, 0, 0, 17, 0, 0, 0
-        CarImg1Left             DB   0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 9, 9, 122, 0, 17, 192, 192, 192, 9, 122, 0, 0, 0, 122, 9, 9, 122, 0, 0, 192, 122, 122, 122
-                                DB   122, 17, 0, 192, 17, 192, 17, 192, 17
+    CarImg1Up                 DB  0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 122, 122, 122
+                              DB  122, 192, 17, 17, 0, 0, 0, 17, 17
+    CarImg1Right              DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
+                              DB  192, 0, 17, 192, 17, 192, 17, 192, 0
+    CarImg1Down               DB  17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 42, 42, 42, 122, 17, 192, 122, 42, 192, 42, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
+                              DB  192, 192, 0, 0, 0, 17, 0, 0, 0
+    CarImg1Left               DB  0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 9, 9, 122, 0, 17, 192, 192, 192, 9, 122, 0, 0, 0, 122, 9, 9, 122, 0, 0, 192, 122, 122, 122
+                              DB  122, 17, 0, 192, 17, 192, 17, 192, 17
 
-        CarImg2Up               DB   0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 122, 122, 122
-                                DB   122, 192, 17, 17, 0, 0, 0, 17, 17
-        CarImg2Right            DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
-                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
-        CarImg2Down             DB   17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
-                                DB   192, 192, 0, 0, 0, 17, 0, 0, 0 
-        CarImg2Left             DB   0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 43, 43, 122, 0, 17, 192, 192, 192, 43, 122, 0, 0, 0, 122, 43, 43, 122, 0, 0, 192, 122, 122, 122
-                                DB   122, 17, 0, 192, 17, 192, 17, 192, 17
+    CarImg2Up                 DB  0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 122, 122, 122
+                              DB  122, 192, 17, 17, 0, 0, 0, 17, 17
+    CarImg2Right              DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
+                              DB  192, 0, 17, 192, 17, 192, 17, 192, 0
+    CarImg2Down               DB  17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
+                              DB  192, 192, 0, 0, 0, 17, 0, 0, 0
+    CarImg2Left               DB  0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 43, 43, 122, 0, 17, 192, 192, 192, 43, 122, 0, 0, 0, 122, 43, 43, 122, 0, 0, 192, 122, 122, 122
+                              DB  122, 17, 0, 192, 17, 192, 17, 192, 17
         
-        Car1Speed               DW   2
-        Car2Speed               DW   2
-        CurrentSpeed            DW   ?      ;Stores the speed of the currently updating car 
+    Car1Speed                 DW  2
+    Car2Speed                 DW  2
+    CurrentSpeed              DW  ?                                                                                                                                                                                                      ;Stores the speed of the currently updating car
 
-        ;CarDimensions
-        CAR_SIZE                EQU  7
-        PosXfirst               DW   ?
-        PosYfirst               DW   ?
-        PosXsecond              DW   ?
-        PosYsecond              DW   ?
+    ;CarDimensions
+    CAR_SIZE                  EQU 7
+    PosXfirst                 DW  ?
+    PosYfirst                 DW  ?
+    PosXsecond                DW  ?
+    PosYsecond                DW  ?
 
-        PosX    DW  ?
-        PosY    DW  ?
+    PosX                      DW  ?
+    PosY                      DW  ?
         
-        ;previous postions to check for updates
-        PrevPosXfirst               DW   ?
-        PrevPosYfirst               DW   ?
-        PrevPosXsecond              DW   ?
-        PrevPosYsecond              DW   ?
+    ;previous postions to check for updates
+    PrevPosXfirst             DW  ?
+    PrevPosYfirst             DW  ?
+    PrevPosXsecond            DW  ?
+    PrevPosYsecond            DW  ?
 
-        ;CarTodraw  info
-        CarToDrawSize           DW   ?
-        CarToDraw               DW   ?
-        CarToDrawX              DW   ?
-        CarToDrawY              DW   ?
+    ;CarTodraw  info
+    CarToDrawSize             DW  ?
+    CarToDraw                 DW  ?
+    CarToDrawX                DW  ?
+    CarToDrawY                DW  ?
 
     ; Screen Info
-    SCREEN_WIDTH   EQU  320
-    SCREEN_HEIGHT  EQU  200
-    SCREEN_SIZE    EQU  SCREEN_WIDTH*SCREEN_HEIGHT
+    SCREEN_WIDTH              EQU 320
+    SCREEN_HEIGHT             EQU 200
+    SCREEN_SIZE               EQU SCREEN_WIDTH*SCREEN_HEIGHT
 
     ; ;Buffer for reading input keys
     ; BufferSize     EQU  30000
@@ -852,1262 +892,1283 @@ INSTRUCTION2            DB      'TO END THE PROGRAM PRESS ESC...', '$'
     ; bufferTail     DW   0
 
     ;ButtonFlags
-    UpFlag         DB   ?
-    DownFlag       DB   ?
-    LeftFlag       DB   ?
-    RightFlag      DB   ?
-    KFlag          DB   ?
-    MFlag          DB   ?
+    UpFlag                    DB  ?
+    DownFlag                  DB  ?
+    LeftFlag                  DB  ?
+    RightFlag                 DB  ?
+    KFlag                     DB  ?
+    MFlag                     DB  ?
 
     ;Arrow flags to check whether this key is pressed down or not
-    ArrowUpFlag    DB   0
-    ArrowDownFlag  DB   0
-    ArrowLeftFlag  DB   0
-    ArrowRightFlag DB   0
-    LetterKFlag    DB   0
-    LetterMFlag    DB   0
+    ArrowUpFlag               DB  0
+    ArrowDownFlag             DB  0
+    ArrowLeftFlag             DB  0
+    ArrowRightFlag            DB  0
+    LetterKFlag               DB  0
+    LetterMFlag               DB  0
    
     ;WASD flags to check whether this key is pressed down or not
-    WFlag   DB  0
-    AFlag   DB  0
-    SFlag   DB  0
-    DFlag   DB  0
+    WFlag                     DB  0
+    AFlag                     DB  0
+    SFlag                     DB  0
+    DFlag                     DB  0
 
     ;Arrow Keys for movement
-    ArrowUp        DB   48H
-    ArrowDown      DB   50H
-    ArrowLeft      DB   4BH
-    ArrowRight     DB   4DH
-    LetterK        DB   25h
-    LetterM        DB   32H
+    ArrowUp                   DB  48H
+    ArrowDown                 DB  50H
+    ArrowLeft                 DB  4BH
+    ArrowRight                DB  4DH
+    LetterK                   DB  25h
+    LetterM                   DB  32H
 
     ;WASD keys for movement
-    WKey db 11h
-    AKey db 1Eh
-    SKey db 1Fh
-    DKey db 20h
+    WKey                      db  11h
+    AKey                      db  1Eh
+    SKey                      db  1Fh
+    DKey                      db  20h
 
     ;Used to save scan codes to indicate the used system of movement(WASD or arrows)
-    UpKeyCode      DB   ?
-    DownKeyCode    DB   ?
-    LeftKeyCode    DB   ?
-    RightKeyCode   DB   ?
-    DeletePower1Key DB  ?
-    DeletePower2Key DB  ?
+    UpKeyCode                 DB  ?
+    DownKeyCode               DB  ?
+    LeftKeyCode               DB  ?
+    RightKeyCode              DB  ?
+    DeletePower1Key           DB  ?
+    DeletePower2Key           DB  ?
 
     ;Boolean to indicate if the path the car is going to move in is safe or not
     ;0 -> Safe , 1->Not Safe
-    CanUpdateX    DB  0
-    CanUpdateY    DB  0
+    CanUpdateX                DB  0
+    CanUpdateY                DB  0
 
     ;boolean (up -> 1 or down -> 0)
-    YMovement    DB   ?
+    YMovement                 DB  ?
     ;boolean (right -> 1 or left -> 0)
-    XMovement    DB   ?
+    XMovement                 DB  ?
     ;boolean (CAR1 -> 1 or CAR2 -> 0)
-    CarToScan    DB   ?
+    CarToScan                 DB  ?
 
     ;Buffer to store the background to save it upon movement
-    BackgroundBuffer1    DB     Car_Size*Car_Size DUP(?)
-    BackgroundBuffer2    DB     Car_Size*Car_Size DUP(?)
+    BackgroundBuffer1         DB  Car_Size*Car_Size DUP(?)
+    BackgroundBuffer2         DB  Car_Size*Car_Size DUP(?)
 
     ;Data for the status bar (First Player's data)
-    player1PosX     EQU  0
-    player1PosY     EQU  22
-    player1Name     DB  'Abd El-Rahman', '$'
+    player1PosX               EQU 0
+    player1PosY               EQU 22
+    player1Name               DB  'Abd El-Rahman', '$'
    
 
     ;Data for the status bar (Second Player's data)
-    player2PosX     DB  65
-    player2PosY     DB  22
-    player2Name     DB  'Ahmed', '$'
+    player2PosX               DB  65
+    player2PosY               DB  22
+    player2Name               DB  'Ahmed', '$'
 
 
     ; Data for the powerups
-    powerupMessage      DB  'Powerup :', '$'
+    powerupMessage            DB  'Powerup :', '$'
 
-    powerup1Posx        EQU  71
-    powerup1Posy        EQU  184
+    powerup1Posx              EQU 70
+    powerup1Posy              EQU 190
 
-    powerup2Posx        EQU  271
-    powerup2Posy        EQU  184
+    powerup2Posx              EQU 230
+    powerup2Posy              EQU 190
 
-    powerupToDraw       DW   ?
-    powerupToDrawPosX   DW   ?
-    powerupToDrawPosY   DW   ?
+    powerupToDraw             DW  ?
+    powerupToDrawPosX         DW  ?
+    powerupToDrawPosY         DW  ?
 
-    powerupParent       DB   ?
-    powerupType         DB   ?
+    powerupParent             DB  ?
+    powerupType               DB  ?
 
-    catchedIndex        DW   ?
+    catchedIndex              DW  ?
 
-    verticalFlag        DB   ?
-    horizontalFlag      DB   ?
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;   road data   ;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    verticalFlag              DB  ?
+    horizontalFlag            DB  ?
 
 
-;BACKGROUND
-BACKGROUNDIMAGEPARTH    EQU     16
-BACKGROUNDIMAGEPARTW    EQU     16
-BACKGROUNDIMAGEPART     DB      142, 203, 142, 142, 71, 142, 203, 142, 143, 203, 142, 142, 142, 71, 142, 142, 71, 142, 203, 142, 71, 142, 203, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 203, 142, 142, 142, 142, 142
- DB 71, 142, 142, 142, 203, 142, 142, 71, 142, 142, 142, 142, 143, 142, 142, 142, 142, 71, 142, 203, 142, 142, 143, 71, 142, 143, 142, 142, 142, 142, 142, 142, 142, 71, 142, 203, 142, 142, 142, 71
- DB 142, 142, 142, 71, 142, 142, 142, 142, 142, 142, 142, 142, 142, 203, 142, 142, 142, 142, 142, 142, 71, 142, 203, 142, 142, 143, 142, 142, 142, 203, 142, 142, 142, 203, 142, 142, 71, 142, 142, 203
- DB 142, 142, 142, 142, 142, 142, 142, 203, 142, 142, 203, 142, 71, 142, 142, 203, 142, 142, 142, 71, 142, 142, 203, 142, 142, 142, 203, 142, 142, 142, 142, 142, 142, 142, 71, 142, 142, 203, 142, 143
- DB 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 71, 142, 142, 203, 142, 142, 143, 142, 142, 142, 203, 142, 142, 71, 142, 142, 142, 142, 142, 142, 142, 142, 71, 142, 142, 203, 142, 142, 71, 142
- DB 143, 142, 142, 142, 143, 142, 142, 142, 142, 71, 142, 203, 142, 142, 71, 142, 142, 142, 203, 142, 142, 142, 71, 142, 142, 71, 142, 142, 142, 142, 71, 142, 142, 203, 142, 142, 142, 71, 142, 142
- DB 142, 143, 142, 71, 142, 203, 142, 142, 142, 203, 142, 143, 142, 71, 142, 142
-SCREENWIDTH             EQU     320
-SCREENHEIGHT            EQU     200
-SCREENSIZE              EQU     32*32
+    ;Status Bar Variables
+    StatusBarStartX           DW  ?
+    StatusBarStartY           DW  ?
+    StatusBarTotalheight      DW  ?
+    STATUS_BAR_COLOR          EQU 8
+    STATUS_BAR_COLOR2         EQU 7
+
+    ;Drawing line variables
+    LineToDrawH               DW  ?
+    LineToDrawW               DW  ?
+    DrawingColor              DW  ?
+
+    ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; ;;;;;;;;;;;;;   Interface data   ;;;;;;;;;;;
+    ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+    ; FirstName                    DB  'User1Name', '$'
+    ; SecondName                   DB  'User2Name', '$'
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;   road data   ;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;OBSTACLE
-THRESHOLD               EQU     14
-OBSTACLEW               EQU     5
-OBSTACLEH               EQU     5
-OBSTACLE                DB      16, 16, 16, 16, 16, 16, 28, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
-XOBSTACLE               DW      ?
-YOBSTACLE               DW      ?
+    ;BACKGROUND
+    BACKGROUNDIMAGEPARTH      EQU 16
+    BACKGROUNDIMAGEPARTW      EQU 16
+    VERTICALBACKGROUNDPARTSNO EQU 11
 
-;POWERUPS
-POWERW                  EQU     3
-POWERH                  EQU     3
-CREATEOBSTPOWER         DB      36, 36, 36, 36, 17, 36, 36, 36, 36
-PASSOBSTPOWER           DB      36, 36, 36, 36, 28, 36, 36, 36, 36
-DECSPEEDPOWER           DB      36, 36, 36, 112, 112, 112, 36, 36, 36
-INCSPEEDPOWER           DB      36, 121, 36, 121, 121, 121, 36, 121, 36
+    ;Background Image
+    BackGroundImagePart       DB  142, 203, 142, 142, 71, 142, 203, 142, 143, 203, 142, 142, 142, 71, 142, 142, 71, 142, 203, 142, 71, 142, 203, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 203, 142, 142, 142, 142, 142
+                              DB  71, 142, 142, 142, 203, 142, 142, 71, 142, 142, 142, 142, 143, 142, 142, 142, 142, 71, 142, 203, 142, 142, 143, 71, 142, 143, 142, 142, 142, 142, 142, 142, 142, 71, 142, 203, 142, 142, 142, 71
+                              DB  142, 142, 142, 71, 142, 142, 142, 142, 142, 142, 142, 142, 142, 203, 142, 142, 142, 142, 142, 142, 71, 142, 203, 142, 142, 143, 142, 142, 142, 203, 142, 142, 142, 203, 142, 142, 71, 142, 142, 203
+                              DB  142, 142, 142, 142, 142, 142, 142, 203, 142, 142, 203, 142, 71, 142, 142, 203, 142, 142, 142, 71, 142, 142, 203, 142, 142, 142, 203, 142, 142, 142, 142, 142, 142, 142, 71, 142, 142, 203, 142, 143
+                              DB  142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 71, 142, 142, 203, 142, 142, 143, 142, 142, 142, 203, 142, 142, 71, 142, 142, 142, 142, 142, 142, 142, 142, 71, 142, 142, 203, 142, 142, 71, 142
+                              DB  143, 142, 142, 142, 143, 142, 142, 142, 142, 71, 142, 203, 142, 142, 71, 142, 142, 142, 203, 142, 142, 142, 71, 142, 142, 71, 142, 142, 142, 142, 71, 142, 142, 203, 142, 142, 142, 71, 142, 142
+                              DB  142, 143, 142, 71, 142, 203, 142, 142, 142, 203, 142, 143, 142, 71, 142, 142
 
-BIGPOWERW               EQU     9
-BIGPOWERH               EQU     9
-BIGCREATEOBSTPOWER      DB 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 17, 17, 17, 36, 36, 36, 36, 36, 36, 17
- DB 17, 17, 36, 36, 36, 36, 36, 36, 17, 17, 17, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
- DB 36
-BIGPASSOBSTPOWER        DB 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 28, 28, 28, 36, 36, 36, 36, 36, 36, 28
- DB 28, 28, 36, 36, 36, 36, 36, 36, 28, 28, 28, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
- DB 36
-BIGDECSPEEDPOWER        DB 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112
- DB 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
- DB 36    
-BIGINCSPEEDPOWER        DB 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121
- DB 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36
- DB 36
-;STORING ROAD UNDER POWERUPS TO DRAW IT AGAIN WHEN IT'S COLLECTED
-TOPLEFTPOWER            DW      45 DUP(?)  
-ROADUNDERPOWER          DB      405 DUP(?)
-ISVISIBLEPOWER          DB      45 DUP(?)
-; TOPLEFTPOWER            DW      45 DUP(?)  
-; ROADUNDERPOWER          DB      40 DUP(2)
-POWERUPCOUNTER          DW      0
-CURPOWERINDEX           DW      0
-POWERTOPLEFTBYTE        DW      ?
-INDEXSTARTSHOWING       DW      0  ; INDEX TO START SHOWING THE HIDDEN POWER FROM
+    ;OBSTACLE
+    THRESHOLD                 EQU 14
+    OBSTACLEW                 EQU 5
+    OBSTACLEH                 EQU 5
+    OBSTACLE                  DB  16, 16, 16, 16, 16, 16, 28, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+    XOBSTACLE                 DW  ?
+    YOBSTACLE                 DW  ?
 
-;CURRENT SECOND
-CURSECOND               DB      61
-DURATIONTOSHOWPOWER     EQU     2
+    ;POWERUPS
+    POWERW                    EQU 3
+    POWERH                    EQU 3
+    CREATEOBSTPOWER           DB  36, 36, 36, 36, 17, 36, 36, 36, 36
+    PASSOBSTPOWER             DB  36, 36, 36, 36, 28, 36, 36, 36, 36
+    DECSPEEDPOWER             DB  36, 36, 36, 112, 112, 112, 36, 36, 36
+    INCSPEEDPOWER             DB  36, 121, 36, 121, 121, 121, 36, 121, 36
 
-;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
-POWERPROBABILITY        DB      100
-OBSTPROBABILITY         DB      70
-POWERVISIBPROBABILITY   DB      100
+    BIGPOWERW                 EQU 9
+    BIGPOWERH                 EQU 9
+    BIGCREATEOBSTPOWER        DB  36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 17, 17, 17, 36, 36, 36, 36, 36, 36, 17
+                              DB  17, 17, 36, 36, 36, 36, 36, 36, 17, 17, 17, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
+                              DB  36
+    BIGPASSOBSTPOWER          DB  36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 28, 28, 28, 36, 36, 36, 36, 36, 36, 28
+                              DB  28, 28, 36, 36, 36, 36, 36, 36, 28, 28, 28, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
+                              DB  36
+    BIGDECSPEEDPOWER          DB  36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112
+                              DB  112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
+                              DB  36
+    BIGINCSPEEDPOWER          DB  36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121
+                              DB  121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36
+                              DB  36
+    ;STORING ROAD UNDER POWERUPS TO DRAW IT AGAIN WHEN IT'S COLLECTED
+    TOPLEFTPOWER              DW  45 DUP(?)
+    ROADUNDERPOWER            DB  405 DUP(?)
+    ISVISIBLEPOWER            DB  45 DUP(?)
+    ; TOPLEFTPOWER            DW      45 DUP(?)
+    ; ROADUNDERPOWER          DB      40 DUP(2)
+    POWERUPCOUNTER            DW  0
+    CURPOWERINDEX             DW  0
+    POWERTOPLEFTBYTE          DW  ?
+    INDEXSTARTSHOWING         DW  0                                                                                                                                                                                                      ; INDEX TO START SHOWING THE HIDDEN POWER FROM
+
+    ;CURRENT SECOND
+    CURSECOND                 DB  61
+    DURATIONTOSHOWPOWER       EQU 2
+
+    ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
+    POWERPROBABILITY          DB  100
+    OBSTPROBABILITY           DB  70
+    POWERVISIBPROBABILITY     DB  100
 
 
-;CAR
-CARIMGW                 EQU     6
-CARIMGH                 EQU     6
-CARIMG                  DB      142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
+    ;CAR
+    CARIMGW                   EQU 6
+    CARIMGH                   EQU 6
+    CARIMG                    DB  142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
 
-;START FLAG
-STARTFLAGIMGW           EQU     4
-STARTFLAGIMGH           EQU     20
-STARTFLAGIMG            DB      16, 16, 29, 29, 16, 16, 29, 29, 29, 29, 16, 16, 29, 29, 16, 16, 16, 16, 29, 29, 16, 16, 29, 29, 29, 29, 16, 16, 29, 29, 16, 16, 16, 16, 29, 29, 16, 16, 29, 29
- DB 29, 29, 16, 16, 29, 29, 16, 16, 16, 16, 29, 29, 16, 16, 29, 29, 29, 29, 16, 16, 29, 29, 16, 16, 16, 16, 29, 29, 16, 16, 29, 29, 29, 29, 16, 16, 29, 29, 16, 16
+    ;START FLAG
+    STARTFLAGIMGW             EQU 4
+    STARTFLAGIMGH             EQU 20
+    STARTFLAGIMG              DB  16, 16, 29, 29, 16, 16, 29, 29, 29, 29, 16, 16, 29, 29, 16, 16, 16, 16, 29, 29, 16, 16, 29, 29, 29, 29, 16, 16, 29, 29, 16, 16, 16, 16, 29, 29, 16, 16, 29, 29
+                              DB  29, 29, 16, 16, 29, 29, 16, 16, 16, 16, 29, 29, 16, 16, 29, 29, 29, 29, 16, 16, 29, 29, 16, 16, 16, 16, 29, 29, 16, 16, 29, 29, 29, 29, 16, 16, 29, 29, 16, 16
 
-;END FLAG
-HORENDFLAGIMGW          EQU     20
-HORENDFLAGIMGH          EQU     6
-HORENDFLAGIMG           DB      31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40
- DB 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31
- DB 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31
-VERENDFLAGIMGW          EQU     6
-VERENDFLAGIMGH          EQU     20
-VERENDFLAGIMG           DB      40, 40, 40, 31, 31, 31, 40, 40, 40, 31, 31, 31, 31, 31, 31, 40, 40, 40, 31, 31, 31, 40, 40, 40, 40, 40, 40, 31, 31, 31, 40, 40, 40, 31, 31, 31, 31, 31, 31, 40 
- DB 40, 40, 31, 31, 31, 40, 40, 40, 40, 40, 40, 31, 31, 31, 40, 40, 40, 31, 31, 31, 31, 31, 31, 40, 40, 40, 31, 31, 31, 40, 40, 40, 40, 40, 40, 31, 31, 31, 40, 40 
- DB 40, 31, 31, 31, 31, 31, 31, 40, 40, 40, 31, 31, 31, 40, 40, 40, 40, 40, 40, 31, 31, 31, 40, 40, 40, 31, 31, 31, 31, 31, 31, 40, 40, 40, 31, 31, 31, 40, 40, 40
+    ;END FLAG
+    HORENDFLAGIMGW            EQU 20
+    HORENDFLAGIMGH            EQU 6
+    HORENDFLAGIMG             DB  31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40
+                              DB  31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31
+                              DB  40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31, 40, 40, 31, 31
+    VERENDFLAGIMGW            EQU 6
+    VERENDFLAGIMGH            EQU 20
+    VERENDFLAGIMG             DB  40, 40, 40, 31, 31, 31, 40, 40, 40, 31, 31, 31, 31, 31, 31, 40, 40, 40, 31, 31, 31, 40, 40, 40, 40, 40, 40, 31, 31, 31, 40, 40, 40, 31, 31, 31, 31, 31, 31, 40
+                              DB  40, 40, 31, 31, 31, 40, 40, 40, 40, 40, 40, 31, 31, 31, 40, 40, 40, 31, 31, 31, 31, 31, 31, 40, 40, 40, 31, 31, 31, 40, 40, 40, 40, 40, 40, 31, 31, 31, 40, 40
+                              DB  40, 31, 31, 31, 31, 31, 31, 40, 40, 40, 31, 31, 31, 40, 40, 40, 40, 40, 40, 31, 31, 31, 40, 40, 40, 31, 31, 31, 31, 31, 31, 40, 40, 40, 31, 31, 31, 40, 40, 40
 
-;TEMPORARY X AND Y
-TEMPX                   DW      ?
-TEMPY                   DW      ?
+    ;TEMPORARY X AND Y
+    TEMPX                     DW  ?
+    TEMPY                     DW  ?
 
-;WE SAVE LAST DIRECTION TO PRINT THE END RACE LINE 
-LASTDIR                 DW      ?
-LASTDI                  DW      ?
+    ;WE SAVE LAST DIRECTION TO PRINT THE END RACE LINE
+    LASTDIR                   DW  ?
+    LASTDI                    DW  ?
 
-;TEMPORARY VARIABLE
-TMP                     DW      ?
-TMP1                    DW      ?
-TMP2                    DW      ?
-TMP3                    DW      ?
-TMP4                    DW      ?
-TMP5                    DW      ?
-TMP6                    DW      ?
+    ;TEMPORARY VARIABLE
+    TMP                       DW  ?
+    TMP1                      DW  ?
+    TMP2                      DW  ?
+    TMP3                      DW  ?
+    TMP4                      DW  ?
+    TMP5                      DW  ?
+    TMP6                      DW  ?
 
-;INFINITELOOP RANDOMIZATIONS STORAGE
-CANTUP                  DW      0
-CANTRIGHT               DW      0
-CANTDOWN                DW      0
-CANTLEFT                DW      0
+    ;INFINITELOOP RANDOMIZATIONS STORAGE
+    CANTUP                    DW  0
+    CANTRIGHT                 DW  0
+    CANTDOWN                  DW  0
+    CANTLEFT                  DW  0
 
-;COUNTERS FOR CHECKDRAW
-OUTCOUNTER              DW      ?
-INCOUNTER               DW      ?
-FIRSTBYTEINROW          DW      ?
+    ;COUNTERS FOR CHECKDRAW
+    OUTCOUNTER                DW  ?
+    INCOUNTER                 DW  ?
+    FIRSTBYTEINROW            DW  ?
 
-;RANGEOFRAND
-RANGEOFRAND             DB      ?
+    ;RANGEOFRAND
+    RANGEOFRAND               DB  ?
 
-;STARTdd
-STARTROADX              EQU     2
-STARTROADY              EQU     2
-NUMBEROFPARTS           EQU     6
-MINNUMOFPARTS           EQU     5
+    ;STARTdd
+    STARTROADX                EQU 2
+    STARTROADY                EQU 2
+    NUMBEROFPARTS             EQU 100
+    MINNUMOFPARTS             EQU 5
 
-;VARIABLES FOR DRAWIMAGE PROCEDURE
-IMGTODRAW               DW      ?
-WIDTODRAW               DW      ?
-HEITODRAW               DW      ?
-STARXTODRAW             DW      ?
-STARYTODRAW             DW      ?
+    ;VARIABLES FOR DrawImage PROCEDURE
+    IMGTODRAW                 DW  ?
+    WIDTODRAW                 DW  ?
+    HEITODRAW                 DW  ?
+    STARXTODRAW               DW  ?
+    STARYTODRAW               DW  ?
 
-;CONSTRAINTS          ;;;; 10 GAB IS LET
-XNOLEFT                 EQU     22
-XNORIGHT                EQU     268
-YNOUP                   EQU     22
-YNODOWN                 EQU     124
+    ;CONSTRAINTS          ;;;; 10 GAB IS LET
+    XNOLEFT                   EQU 22
+    XNORIGHT                  EQU 268
+    YNOUP                     EQU 22
+    YNODOWN                   EQU 124
 
-;DIRECTIONS
-UPDIR                   DW      ?
-RIGHTDIR                DW      ?
-DOWNDIR                 DW      ?
-LEFTDIR                 DW      ?
+    ;DIRECTIONS
+    UPDIR                     DW  ?
+    RIGHTDIR                  DW  ?
+    DOWNDIR                   DW  ?
+    LEFTDIR                   DW  ?
 
-;ROAD IMAGES
-VERROADIMGW             EQU     20
-VERROADIMGH             EQU     30
-VERROADIMG              DB      20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
-HORROADIMGW             EQU     30
-HORROADIMGH             EQU     20
-HORROADIMG              DB      20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 31
- DB 31, 20, 20, 31, 31, 31, 31, 20, 20, 31, 31, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 31, 31, 20, 20, 31, 31, 31, 31, 20, 20, 31
- DB 31, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
- DB 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+    ;ROAD IMAGES
+    VERROADIMGW               EQU 20
+    VERROADIMGH               EQU 30
+    VERROADIMG                DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+    HORROADIMGW               EQU 30
+    HORROADIMGH               EQU 20
+    HORROADIMG                DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 31
+                              DB  31, 20, 20, 31, 31, 31, 31, 20, 20, 31, 31, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 31, 31, 20, 20, 31, 31, 31, 31, 20, 20, 31
+                              DB  31, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+                              DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
 .CODE
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;     car procedures      ;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;     car procedures      ;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-SearchForLeftVertex PROC FAR 
+SearchForLeftVertex PROC FAR
                         
-; ROWS_POWER:         
-;                     CMP BYTE PTR DS:[BX], 121       ; 121 is the color degree for the increasing speed powerup
-;                     JE THE_END
-;                     CMP BYTE PTR ES:[BX] , 20       ; 20 is the GREY color degree of the road
-;                     JE PREWORKOUT
-;                     CMP BYTE PTR ES:[BX] , 31       ; 31 is the WHITE color degree of the road
-;                     JE PREWORKOUT
-;                     CMP BYTE PTR ES:[BX] , 0     ; 46 is the transparent color degree of the CAR
-;                     JE PREWORKOUT
-;                     CMP BYTE PTR ES:[BX] , 142      ; 46 is the transparent color degree of the CAR
-;                     JE CAR_DETECTED
-;                     DEC BX
-;                     JMP ROWS_POWER
+    ; ROWS_POWER:
+    ;                     CMP BYTE PTR DS:[BX], 121       ; 121 is the color degree for the increasing speed powerup
+    ;                     JE THE_END
+    ;                     CMP BYTE PTR ES:[BX] , 20       ; 20 is the GREY color degree of the road
+    ;                     JE PREWORKOUT
+    ;                     CMP BYTE PTR ES:[BX] , 31       ; 31 is the WHITE color degree of the road
+    ;                     JE PREWORKOUT
+    ;                     CMP BYTE PTR ES:[BX] , 0     ; 46 is the transparent color degree of the CAR
+    ;                     JE PREWORKOUT
+    ;                     CMP BYTE PTR ES:[BX] , 142      ; 46 is the transparent color degree of the CAR
+    ;                     JE CAR_DETECTED
+    ;                     DEC BX
+    ;                     JMP ROWS_POWER
 
-; CAR_DETECTED:
-;                     INC BX
-; PREWORKOUT:
-;                     SUB BX , SCREEN_WIDTH
-; COL_POWER:
-;                     CMP BYTE PTR DS:[BX], 121
-;                     JE THE_END
-;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
-;                     JE CATCHED
-;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
-;                     JE CATCHED
-;                     CMP BYTE PTR ES:[BX] , 0    ; 31 is the WHITE color degree of the road
-;                     JE CATCHED
-;                     CMP BYTE PTR ES:[BX] , 142    ; 31 is the WHITE color degree of the road
-;                     JE CAR_DETECTED_FROM_UP
-;                     SUB BX , SCREEN_WIDTH
-;                     JMP COL_POWER
-; CAR_DETECTED_FROM_UP:
-;                     ADD BX , SCREEN_WIDTH
-; CATCHED:
-;                     INC BX
-;                     ADD BX , SCREEN_WIDTH
-; THE_END:
-;                     RET
+    ; CAR_DETECTED:
+    ;                     INC BX
+    ; PREWORKOUT:
+    ;                     SUB BX , SCREEN_WIDTH
+    ; COL_POWER:
+    ;                     CMP BYTE PTR DS:[BX], 121
+    ;                     JE THE_END
+    ;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+    ;                     JE CATCHED
+    ;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+    ;                     JE CATCHED
+    ;                     CMP BYTE PTR ES:[BX] , 0    ; 31 is the WHITE color degree of the road
+    ;                     JE CATCHED
+    ;                     CMP BYTE PTR ES:[BX] , 142    ; 31 is the WHITE color degree of the road
+    ;                     JE CAR_DETECTED_FROM_UP
+    ;                     SUB BX , SCREEN_WIDTH
+    ;                     JMP COL_POWER
+    ; CAR_DETECTED_FROM_UP:
+    ;                     ADD BX , SCREEN_WIDTH
+    ; CATCHED:
+    ;                     INC BX
+    ;                     ADD BX , SCREEN_WIDTH
+    ; THE_END:
+    ;                     RET
 
 
-;                     CMP horizontalFlag , 1
-;                     JE HORIZONTAL_COLLIDE
-;                     CMP verticalFlag , 1
-;                     JE VERTICAL_COLLIDE
-;                     JMP END_POWER
-; VERTICAL_COLLIDE:
-;                     PUSH BX
-;                     SUB BX , 1    ;CHECKING whether the collided bit of the powerup is the left one
-;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
-;                     JE LEFT_CHECKED
-;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
-;                     JE LEFT_CHECKED
-;                     CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
-;                     JE LEFT_CHECKED
-;                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
-;                     JE LEFT_CHECKED
-;                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-;                     JE LEFT_CHECKED
-;                     POP BX
+    ;                     CMP horizontalFlag , 1
+    ;                     JE HORIZONTAL_COLLIDE
+    ;                     CMP verticalFlag , 1
+    ;                     JE VERTICAL_COLLIDE
+    ;                     JMP END_POWER
+    ; VERTICAL_COLLIDE:
+    ;                     PUSH BX
+    ;                     SUB BX , 1    ;CHECKING whether the collided bit of the powerup is the left one
+    ;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+    ;                     JE LEFT_CHECKED
+    ;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+    ;                     JE LEFT_CHECKED
+    ;                     CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+    ;                     JE LEFT_CHECKED
+    ;                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+    ;                     JE LEFT_CHECKED
+    ;                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+    ;                     JE LEFT_CHECKED
+    ;                     POP BX
 
-;                     PUSH BX
-;                     INC BX                   ; CHECKING whether the collided bit of the powerup is the right one
-;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
-;                     JE RIGHT_CHECKED
-;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
-;                     JE RIGHT_CHECKED
-;                     CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
-;                     JE RIGHT_CHECKED
-;                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
-;                     JE RIGHT_CHECKED
-;                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-;                     JE RIGHT_CHECKED
-;                     POP BX
+    ;                     PUSH BX
+    ;                     INC BX                   ; CHECKING whether the collided bit of the powerup is the right one
+    ;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+    ;                     JE RIGHT_CHECKED
+    ;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+    ;                     JE RIGHT_CHECKED
+    ;                     CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+    ;                     JE RIGHT_CHECKED
+    ;                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+    ;                     JE RIGHT_CHECKED
+    ;                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+    ;                     JE RIGHT_CHECKED
+    ;                     POP BX
 
-;                     CMP YMovement , 1           ; if the car is moving up to the bottom of the powerup                    
-;                     JE TO_UP
-;                     JMP END_POWER
+    ;                     CMP YMovement , 1           ; if the car is moving up to the bottom of the powerup
+    ;                     JE TO_UP
+    ;                     JMP END_POWER
 
-; TO_UP:
-;                     SUB BX , SCREEN_WIDTH
-;                     JMP GET_ME_OUT_OF_HERE
+    ; TO_UP:
+    ;                     SUB BX , SCREEN_WIDTH
+    ;                     JMP GET_ME_OUT_OF_HERE
 
-; RIGHT_CHECKED:
-;                     SUB BX , 2
-;                     CMP YMovement , 1           ; if the car is moving up to the bottom of the powerup                    
-;                     JE TO_UP
-;                     JMP END_POWER 
+    ; RIGHT_CHECKED:
+    ;                     SUB BX , 2
+    ;                     CMP YMovement , 1           ; if the car is moving up to the bottom of the powerup
+    ;                     JE TO_UP
+    ;                     JMP END_POWER
 
-; LEFT_CHECKED:            
-;                     ADD BX ,2
-;                     CMP YMovement , 1           ; if the car is moving up to the bottom of the powerup                    
-;                     JE TO_UP
-;                     JMP END_POWER
+    ; LEFT_CHECKED:
+    ;                     ADD BX ,2
+    ;                     CMP YMovement , 1           ; if the car is moving up to the bottom of the powerup
+    ;                     JE TO_UP
+    ;                     JMP END_POWER
 
-; HORIZONTAL_COLLIDE:                    
-;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
-;                     JE CATCHED
-;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
-;                     JE CATCHED
-;                     CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
-;                     JE CATCHED
-;                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
-;                     JE CATCHED
-;                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-;                     JE CATCHED
-;                     SUB BX , SCREEN_WIDTH
-;                     JMP HORIZONTAL_COLLIDE
+    ; HORIZONTAL_COLLIDE:
+    ;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+    ;                     JE CATCHED
+    ;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+    ;                     JE CATCHED
+    ;                     CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+    ;                     JE CATCHED
+    ;                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+    ;                     JE CATCHED
+    ;                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+    ;                     JE CATCHED
+    ;                     SUB BX , SCREEN_WIDTH
+    ;                     JMP HORIZONTAL_COLLIDE
 
-; CATCHED:
-;                     ADD BX , SCREEN_WIDTH
-;                     CMP XMovement , 0           ; if the car is moving left to the right of the powerup
-;                     JE TOLEFT
-;                     INC BX
-;                     JMP END_POWER
-; TOLEFT:
-;                     DEC BX
+    ; CATCHED:
+    ;                     ADD BX , SCREEN_WIDTH
+    ;                     CMP XMovement , 0           ; if the car is moving left to the right of the powerup
+    ;                     JE TOLEFT
+    ;                     INC BX
+    ;                     JMP END_POWER
+    ; TOLEFT:
+    ;                     DEC BX
 
-; END_POWER:
-;                     ADD BX , SCREEN_WIDTH
+    ; END_POWER:
+    ;                     ADD BX , SCREEN_WIDTH
 
-; GET_ME_OUT_OF_HERE:                    
-;                     RET
-                    MOV DX,BX
-                    ; PUSH BX
-                    ; MOV BX,DX
-                    SUB BX , 1    ;CHECKING whether the collided bit of the powerup is the left one
-                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
-                    JE LEFT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
-                    JE LEFT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
-                    JE LEFT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
-                    JE LEFT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE LEFT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE LEFT_CHECKED
-                    MOV BX ,DX
+    ; GET_ME_OUT_OF_HERE:
+    ;                     RET
+                                MOV                DX,BX
+    ; PUSH BX
+    ; MOV BX,DX
+                                SUB                BX , 1                                                                                  ;CHECKING whether the collided bit of the powerup is the left one
+                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                JE                 LEFT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                JE                 LEFT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                JE                 LEFT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                JE                 LEFT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 LEFT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 LEFT_CHECKED
+                                MOV                BX ,DX
 
-                    ; MOV DX,BX
-                    ; PUSH BX
-                    ; MOV BX,DX
-                    INC BX                   ; CHECKING whether the collided bit of the powerup is the right one
-                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
-                    JE RIGHT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
-                    JE RIGHT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
-                    JE RIGHT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
-                    JE RIGHT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE RIGHT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE RIGHT_CHECKED
-                    ; POP BX
-                    MOV BX ,DX
+    ; MOV DX,BX
+    ; PUSH BX
+    ; MOV BX,DX
+                                INC                BX                                                                                      ; CHECKING whether the collided bit of the powerup is the right one
+                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                JE                 RIGHT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                JE                 RIGHT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                JE                 RIGHT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                JE                 RIGHT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 RIGHT_CHECKED
+                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 RIGHT_CHECKED
+    ; POP BX
+                                MOV                BX ,DX
 
-                    JMP MIDDLE_CHECKED
+                                JMP                MIDDLE_CHECKED
 
-LEFT_CHECKED:
-                    ADD BX ,2
-                    SUB BX , SCREEN_WIDTH
-                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    RET
+    LEFT_CHECKED:               
+                                ADD                BX ,2
+                                SUB                BX , SCREEN_WIDTH
+                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                RET
 
-IAM_AT_TOP:
-                    ADD BX , SCREEN_WIDTH
-                    ADD BX , SCREEN_WIDTH
-                    RET
+    IAM_AT_TOP:                 
+                                ADD                BX , SCREEN_WIDTH
+                                ADD                BX , SCREEN_WIDTH
+                                RET
 
-RIGHT_CHECKED:
-                    SUB BX ,2
-                    SUB BX , SCREEN_WIDTH
-                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    RET
+    RIGHT_CHECKED:              
+                                SUB                BX ,2
+                                SUB                BX , SCREEN_WIDTH
+                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                RET
 
-MIDDLE_CHECKED:
-                    SUB BX , SCREEN_WIDTH
-                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    RET
+    MIDDLE_CHECKED:             
+                                SUB                BX , SCREEN_WIDTH
+                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                JE                 IAM_AT_TOP
+                                RET
 
 
 SearchForLeftVertex ENDP
 
 CalculatePowerupVertex PROC FAR
-                       MOV   DI , 0
-                       MOV   AX , TEMPY
-                       MOV   BX , SCREEN_WIDTH
-                       MUL   BX
-                       ADD   AX , TEMPX
-                       MOV   DI , AX
-                       RET
+                                MOV                DI , 0
+                                MOV                AX , TEMPY
+                                MOV                BX , SCREEN_WIDTH
+                                MUL                BX
+                                ADD                AX , TEMPX
+                                MOV                DI , AX
+                                RET
 CalculatePowerupVertex ENDP
 
 
 CalculateBoxVertex PROC FAR
-                       MOV   DI , 0
-                       MOV   AX , CarToDrawY
-                       MOV   BX , SCREEN_WIDTH
-                       MUL   BX
-                       ADD   AX , CarToDrawX
-                       MOV   DI , AX
-                       RET
+                                MOV                DI , 0
+                                MOV                AX , CarToDrawY
+                                MOV                BX , SCREEN_WIDTH
+                                MUL                BX
+                                ADD                AX , CarToDrawX
+                                MOV                DI , AX
+                                RET
 CalculateBoxVertex ENDP
 
 
-;Moves the background of the car to be drawn in BX
+    ;Moves the background of the car to be drawn in BX
 CheckCarToDraw PROC FAR
-                MOV DX , OFFSET CarImg1
-                CMP CarToDraw , DX
-                JNE Car2Draw
-                MOV BX ,OFFSET BackgroundBuffer1
-                RET
-Car2Draw:
-                MOV BX ,OFFSET BackgroundBuffer2
-                RET
+                                MOV                DX , OFFSET CarImg1
+                                CMP                CarToDraw , DX
+                                JNE                Car2Draw
+                                MOV                BX ,OFFSET BackgroundBuffer1
+                                RET
+    Car2Draw:                   
+                                MOV                BX ,OFFSET BackgroundBuffer2
+                                RET
 CheckCarToDraw ENDP
 
 
 DrawCar PROC FAR
-                MOV  ax , 0A000H
-                MOV  es , ax
-                MOV  DI , 0
-                MOV  cx , CarToDrawSize
-                MOV  SI ,  CarToDraw
-                MOV  DL , 0
-                CALL CalculateBoxVertex
+                                MOV                ax , 0A000H
+                                MOV                es , ax
+                                MOV                DI , 0
+                                MOV                cx , CarToDrawSize
+                                MOV                SI ,  CarToDraw
+                                MOV                DL , 0
+                                CALL               CalculateBoxVertex
                 
-                CALL CheckCarToDraw               ;Get Background offset in BX
+                                CALL               CheckCarToDraw                                                                          ;Get Background offset in BX
 
-ROWS_DRAW:        
-                PUSH CX
-                PUSH DI
+    ROWS_DRAW:                  
+                                PUSH               CX
+                                PUSH               DI
 
-                MOV  CX , CarToDrawSize
-COLS_DRAW:         
-                MOV  DH , BYTE PTR ES:[DI]          ;Moving the byte of the road to DH to be stored in buffer
-                MOV  BYTE PTR DS:[BX] , DH          ;Moving DH -> the memory with offset BX
-                MOV  DL , BYTE PTR [SI]             ;Car byte to be drawn this iteration
-                CMP DL, 0
-                JE DONTDRAWBYTECAR
-                MOV  BYTE PTR ES:[DI] , DL          ;Drawing the car bit
-                DONTDRAWBYTECAR: 
-;Updates        
-                INC  SI
-                INC  DI
-                INC  BX
-                LOOP COLS_DRAW
+                                MOV                CX , CarToDrawSize
+    COLS_DRAW:                  
+                                MOV                DH , BYTE PTR ES:[DI]                                                                   ;Moving the byte of the road to DH to be stored in buffer
+                                MOV                BYTE PTR DS:[BX] , DH                                                                   ;Moving DH -> the memory with offset BX
+                                MOV                DL , BYTE PTR [SI]                                                                      ;Car byte to be drawn this iteration
+                                CMP                DL, 0
+                                JE                 DONTDRAWBYTECAR
+                                MOV                BYTE PTR ES:[DI] , DL                                                                   ;Drawing the car bit
+    DONTDRAWBYTECAR:            
+    ;Updates
+                                INC                SI
+                                INC                DI
+                                INC                BX
+                                LOOP               COLS_DRAW
 
-                POP  DI
-                POP  CX
-                ADD  DI, SCREEN_WIDTH
-                LOOP ROWS_DRAW
-                RET
+                                POP                DI
+                                POP                CX
+                                ADD                DI, SCREEN_WIDTH
+                                LOOP               ROWS_DRAW
+                                RET
 DrawCar ENDP
 
 
 
-;clear the car's image from the screen
+    ;clear the car's image from the screen
 ClearCarArea PROC FAR
-                       MOV   ax , 0A000H
-                       MOV   es , ax
-                       MOV   cx , CarToDrawSize
-                       CALL  CalculateBoxVertex
+                                MOV                ax , 0A000H
+                                MOV                es , ax
+                                MOV                cx , CarToDrawSize
+                                CALL               CalculateBoxVertex
 
-                      CALL CheckCarToDraw               ;Get Background offset in BX
+                                CALL               CheckCarToDraw                                                                          ;Get Background offset in BX
 
-    ROWS_CLEAR:        
-                       PUSH  CX
-                       PUSH  DI
-                       MOV   CX , CarToDrawSize
-    COLS_CLEAR:        
-                       MOV   DL, BYTE PTR DS:[BX]        ;Moving road byte in dl
-                       MOV   BYTE PTR ES:[DI] , DL      ;Moving the road byte to be printed
-                       INC   DI
-                       INC   BX
-                       LOOP  COLS_CLEAR
+    ROWS_CLEAR:                 
+                                PUSH               CX
+                                PUSH               DI
+                                MOV                CX , CarToDrawSize
+    COLS_CLEAR:                 
+                                MOV                DL, BYTE PTR DS:[BX]                                                                    ;Moving road byte in dl
+                                MOV                BYTE PTR ES:[DI] , DL                                                                   ;Moving the road byte to be printed
+                                INC                DI
+                                INC                BX
+                                LOOP               COLS_CLEAR
 
-                       POP   DI
-                       POP   CX
-                       ADD   DI, SCREEN_WIDTH
-                       LOOP  ROWS_CLEAR
-                       RET
+                                POP                DI
+                                POP                CX
+                                ADD                DI, SCREEN_WIDTH
+                                LOOP               ROWS_CLEAR
+                                RET
 ClearCarArea ENDP
 
 ClearPowerup PROC FAR
-                        MOV AX,0A000H
-                        MOV ES,AX
-                        MOV DI ,0
-                        MOV CX , POWERH
-                        CALL CalculatePowerupVertex
-ROWS_CLEAR_POWER:
-                        PUSH CX
-                        PUSH DI
-                        MOV CX , POWERW
-COLS_CLEAR_POWER:
-                        MOV BYTE PTR ES:[DI] , 0ffh
-                        INC DI
-                        LOOP COLS_CLEAR_POWER
-                        POP DI
-                        POP CX
-                        ADD DI , SCREEN_WIDTH
-                        LOOP ROWS_CLEAR_POWER
-                        RET
+                                MOV                AX,0A000H
+                                MOV                ES,AX
+                                MOV                DI ,0
+                                MOV                CX , POWERH
+                                CALL               CalculatePowerupVertex
+    ROWS_CLEAR_POWER:           
+                                PUSH               CX
+                                PUSH               DI
+                                MOV                CX , POWERW
+    COLS_CLEAR_POWER:           
+                                MOV                BYTE PTR ES:[DI] , 0ffh
+                                INC                DI
+                                LOOP               COLS_CLEAR_POWER
+                                POP                DI
+                                POP                CX
+                                ADD                DI , SCREEN_WIDTH
+                                LOOP               ROWS_CLEAR_POWER
+                                RET
 ClearPowerup ENDP
 
 
 InputButtonSwitchCase PROC  FAR
                  
-                       cmp   al, 01h
-                       jne   bridge
+                                cmp                al, 01h
+                                jne                bridge
     ;esc logic
-                       jmp   exit
-    bridge:            
+                                jmp                exit
+    bridge:                     
 
     ; up arrow
-                       cmp   al, UpKeyCode
-                       JNE   NotPressed1
-                       MOV   UpFlag , 1
-                       JMP   Default
-    NotPressed1:       
-                       MOV   BL , UpKeyCode 
-                       ADD   BL, 80H
-                       CMP   AL ,  BL
-                       JNE   CarCheckLeft
-                       MOV   UpFlag , 0
-                       JMP   Default
-    CarCheckLeft:         
+                                cmp                al, UpKeyCode
+                                JNE                NotPressed1
+                                MOV                UpFlag , 1
+                                JMP                Default
+    NotPressed1:                
+                                MOV                BL , UpKeyCode
+                                ADD                BL, 80H
+                                CMP                AL ,  BL
+                                JNE                CarCheckLeft
+                                MOV                UpFlag , 0
+                                JMP                Default
+    CarCheckLeft:               
     ; left arrow
-                       CMP   AL, LeftKeyCode
-                       JNE   NotPressed2
-                       MOV   LeftFlag , 1
-                       JMP   Default
-    NotPressed2:       
-                       MOV   BL , LeftKeyCode
-                       ADD   BL, 80H
-                       CMP   AL , BL
-                       JNE   CarCheckDown
-                       MOV   LeftFlag , 0
-                       JMP   Default
+                                CMP                AL, LeftKeyCode
+                                JNE                NotPressed2
+                                MOV                LeftFlag , 1
+                                JMP                Default
+    NotPressed2:                
+                                MOV                BL , LeftKeyCode
+                                ADD                BL, 80H
+                                CMP                AL , BL
+                                JNE                CarCheckDown
+                                MOV                LeftFlag , 0
+                                JMP                Default
 
-    CarCheckDown:         
+    CarCheckDown:               
     ; down arrow
-                       cmp   AL, DownKeyCode
-                       JNE   NotPressed3
-                       MOV   DownFlag , 1
-                       JMP   Default
-    NotPressed3:       
-                       MOV   BL , DownKeyCode
-                       ADD   BL, 80H
-                       CMP   AL , BL
-                       JNE   CarCheckRight
-                       MOV   DownFlag , 0
-                       JMP   Default
+                                cmp                AL, DownKeyCode
+                                JNE                NotPressed3
+                                MOV                DownFlag , 1
+                                JMP                Default
+    NotPressed3:                
+                                MOV                BL , DownKeyCode
+                                ADD                BL, 80H
+                                CMP                AL , BL
+                                JNE                CarCheckRight
+                                MOV                DownFlag , 0
+                                JMP                Default
     
-    CarCheckRight:        
+    CarCheckRight:              
     ; right arrow
-                       CMP   AL , RightKeyCode
-                       JNE   NotPressed4
-                       MOV   RightFlag , 1
-                       JMP   Default
-    NotPressed4:       
-                       MOV   BL , RightKeyCode
-                       ADD   BL, 80H
-                       CMP   AL , BL
-                       JNE   CheckLetterK
-                       MOV   RightFlag , 0
-                       JMP   Default
+                                CMP                AL , RightKeyCode
+                                JNE                NotPressed4
+                                MOV                RightFlag , 1
+                                JMP                Default
+    NotPressed4:                
+                                MOV                BL , RightKeyCode
+                                ADD                BL, 80H
+                                CMP                AL , BL
+                                JNE                CheckLetterK
+                                MOV                RightFlag , 0
+                                JMP                Default
 
-    CheckLetterK:     
-                       CMP AL , DeletePower1Key
-                       JNE NotPressed5
-                       MOV KFlag , 1
-                       MOV powerupParent , 1
-                       ClearPower
-                       JMP Default
+    CheckLetterK:               
+                                CMP                AL , DeletePower1Key
+                                JNE                NotPressed5
+                                MOV                KFlag , 1
+                                MOV                powerupParent , 1
+                                ClearPower
+                                JMP                Default
 
-    NOTPRESSED5:
-                          MOV BL , DeletePower1Key
-                          ADD BL , 80H
-                          CMP AL , BL
-                          JNE CheckLetterM
-                          MOV KFlag , 0
-                          JMP Default
+    NOTPRESSED5:                
+                                MOV                BL , DeletePower1Key
+                                ADD                BL , 80H
+                                CMP                AL , BL
+                                JNE                CheckLetterM
+                                MOV                KFlag , 0
+                                JMP                Default
     
-    CheckLetterM:
-                          CMP AL , DeletePower2Key
-                          JNE NotPressed6
-                          MOV MFlag , 1
-                          MOV powerupParent , 2
-                          ClearPower
-                          JMP Default
+    CheckLetterM:               
+                                CMP                AL , DeletePower2Key
+                                JNE                NotPressed6
+                                MOV                MFlag , 1
+                                MOV                powerupParent , 2
+                                ClearPower
+                                JMP                Default
 
-    NOTPRESSED6:
+    NOTPRESSED6:                
 
-                            MOV BL , DeletePower2Key
-                            ADD BL , 80H
-                            CMP AL , BL
-                            JNE Default
-                            MOV MFlag , 0
+                                MOV                BL , DeletePower2Key
+                                ADD                BL , 80H
+                                CMP                AL , BL
+                                JNE                Default
+                                MOV                MFlag , 0
 
-    Default:              
+    Default:                    
     
-                        RET
+                                RET
 InputButtonSwitchCase ENDP
     
 CheckArrowFlags PROC FAR
 
     ;------- checking Flags -------
 	
-                          CMP      ArrowUpFlag , 1
-                          JNE      CmpLeft
+                                CMP                ArrowUpFlag , 1
+                                JNE                CmpLeft
                           
-                          ScanY PosXfirst, PosYfirst , 1 , 1, Car1Speed
-                          CALL ScanYmovement
-                          CALL UpdateCarPos
-                          INC PosYfirst  
-    CmpLeft:              
-                          CMP      ArrowLeftFlag , 1
-                          JNE      CmpDown
+                                ScanY              PosXfirst, PosYfirst , 1 , 1, Car1Speed
+                                CALL               ScanYmovement
+                                CALL               UpdateCarPos
+                                INC                PosYfirst
+    CmpLeft:                    
+                                CMP                ArrowLeftFlag , 1
+                                JNE                CmpDown
                         
-                          ScanX PosXfirst, PosYfirst , 1 , 0, Car1Speed
-                          CALL ScanXmovement
-                          CALL UpdateCarPos
-                          INC PosXfirst
+                                ScanX              PosXfirst, PosYfirst , 1 , 0, Car1Speed
+                                CALL               ScanXmovement
+                                CALL               UpdateCarPos
+                                INC                PosXfirst
 
-    CmpDown:              
-                          CMP      ArrowDownFlag , 1
-                          JNE      CmpRight
+    CmpDown:                    
+                                CMP                ArrowDownFlag , 1
+                                JNE                CmpRight
                         
-                          ScanY PosXfirst, PosYfirst , 1 , 0, Car1Speed
-                          CALL ScanYmovement
-                          CALL UpdateCarPos
-                          DEC PosYfirst  
+                                ScanY              PosXfirst, PosYfirst , 1 , 0, Car1Speed
+                                CALL               ScanYmovement
+                                CALL               UpdateCarPos
+                                DEC                PosYfirst
 
-    CmpRight:             
-                          CMP      ArrowRightFlag, 1
-                          JNE      CmpFinish
+    CmpRight:                   
+                                CMP                ArrowRightFlag, 1
+                                JNE                CmpFinish
                          
-                          ScanX PosXfirst, PosYfirst , 1 ,1, Car1Speed
-                          CALL ScanXmovement
-                          CALL UpdateCarPos
-                          DEC PosXfirst
-    CmpFinish:            
-                         RET
+                                ScanX              PosXfirst, PosYfirst , 1 ,1, Car1Speed
+                                CALL               ScanXmovement
+                                CALL               UpdateCarPos
+                                DEC                PosXfirst
+    CmpFinish:                  
+                                RET
 CheckArrowFlags ENDP
 
 CheckWASDFlags PROC FAR
 
     ;------- checking Flags -------
 	
-                CMP      WFlag , 1
-                JNE      CmpLeft2
+                                CMP                WFlag , 1
+                                JNE                CmpLeft2
 
-                ScanY PosXsecond, PosYsecond , 0 , 1, Car2Speed
-                CALL ScanYmovement
-                CALL UpdateCarPos
-                INC PosYsecond  
+                                ScanY              PosXsecond, PosYsecond , 0 , 1, Car2Speed
+                                CALL               ScanYmovement
+                                CALL               UpdateCarPos
+                                INC                PosYsecond
 
-    CmpLeft2:              
-                CMP      AFlag , 1
-                JNE      CmpDown2
+    CmpLeft2:                   
+                                CMP                AFlag , 1
+                                JNE                CmpDown2
 
-                ScanX PosXsecond, PosYsecond , 0 , 0, Car2Speed
-                CALL ScanXmovement
-                CALL UpdateCarPos
-                INC PosXsecond
+                                ScanX              PosXsecond, PosYsecond , 0 , 0, Car2Speed
+                                CALL               ScanXmovement
+                                CALL               UpdateCarPos
+                                INC                PosXsecond
 
-    CmpDown2:              
-                CMP      SFlag , 1
-                JNE      CmpRight2
+    CmpDown2:                   
+                                CMP                SFlag , 1
+                                JNE                CmpRight2
 
-                ScanY PosXsecond, PosYsecond , 0 , 0, Car2Speed
-                CALL ScanYmovement
-                CALL UpdateCarPos
-                DEC PosYsecond 
+                                ScanY              PosXsecond, PosYsecond , 0 , 0, Car2Speed
+                                CALL               ScanYmovement
+                                CALL               UpdateCarPos
+                                DEC                PosYsecond
 
-    CmpRight2:             
-                CMP      DFlag, 1
-                JNE      CmpFinish2
+    CmpRight2:                  
+                                CMP                DFlag, 1
+                                JNE                CmpFinish2
 
-                ScanX PosXsecond, PosYsecond , 0 ,1, Car2Speed
-                CALL ScanXmovement
-                CALL UpdateCarPos
-                DEC PosXsecond
+                                ScanX              PosXsecond, PosYsecond , 0 ,1, Car2Speed
+                                CALL               ScanXmovement
+                                CALL               UpdateCarPos
+                                DEC                PosXsecond
 
-    CmpFinish2:            
-                RET
+    CmpFinish2:                 
+                                RET
                 
 CheckWASDFlags ENDP
 
 
-;Update Flags after each game loop 
- UpdateArrowFlags PROC FAR
+    ;Update Flags after each game loop
+UpdateArrowFlags PROC FAR
    
-                MOV BL , UpFlag
-                MOV ArrowUpFlag, BL
+                                MOV                BL , UpFlag
+                                MOV                ArrowUpFlag, BL
 
-                MOV BL , DownFlag
-                MOV ArrowDownFlag ,  BL
+                                MOV                BL , DownFlag
+                                MOV                ArrowDownFlag ,  BL
 
-                MOV BL , LeftFlag
-                MOV ArrowLeftFlag, BL
+                                MOV                BL , LeftFlag
+                                MOV                ArrowLeftFlag, BL
 
-                MOV BL , RightFlag
-                MOV ArrowRightFlag , BL
+                                MOV                BL , RightFlag
+                                MOV                ArrowRightFlag , BL
 
-                MOV BL , KFlag
-                MOV LetterKFlag , BL
+                                MOV                BL , KFlag
+                                MOV                LetterKFlag , BL
 
-                MOV BL , MFlag
-                MOV LetterMFlag , BL
+                                MOV                BL , MFlag
+                                MOV                LetterMFlag , BL
 
-                RET
+                                RET
 
- UpdateArrowFlags ENDP
+UpdateArrowFlags ENDP
 
-;description
+    ;description
 UpdateWASDFlags PROC FAR
-                MOV BL , UpFlag
-                MOV WFlag, BL
+                                MOV                BL , UpFlag
+                                MOV                WFlag, BL
 
-                MOV BL , DownFlag
-                MOV SFlag ,  BL
+                                MOV                BL , DownFlag
+                                MOV                SFlag ,  BL
 
-                MOV BL , LeftFlag
-                MOV AFlag, BL
+                                MOV                BL , LeftFlag
+                                MOV                AFlag, BL
 
-                MOV BL , RightFlag
-                MOV DFlag , BL
+                                MOV                BL , RightFlag
+                                MOV                DFlag , BL
 
-                MOV BL , KFlag
-                MOV LetterKFlag , BL
+                                MOV                BL , KFlag
+                                MOV                LetterKFlag , BL
 
-                MOV BL , MFlag
-                MOV LetterMFlag , BL
+                                MOV                BL , MFlag
+                                MOV                LetterMFlag , BL
 
-                RET
+                                RET
 UpdateWASDFlags ENDP
 
-;description
+    ;description
 
-;procedure calls all arrow keys functions
+    ;procedure calls all arrow keys functions
 CheckArrowKeys PROC FAR
-                SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM
-                SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag
-                CALL InputButtonSwitchCase
-                CALL UpdateArrowFlags
-                RET
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM
+                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag
+                                CALL               InputButtonSwitchCase
+                                CALL               UpdateArrowFlags
+                                RET
 CheckArrowKeys ENDP
 
-;procedure calls all WASD keys functions
+    ;procedure calls all WASD keys functions
 CheckWASDKeys PROC FAR
-                SETKEYS WKey, SKey, AKey, DKey , LetterK , LetterM
-                SetFlags WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag
-                CALL InputButtonSwitchCase
-                CALL UpdateWASDFlags
-                RET
+                                SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM
+                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag
+                                CALL               InputButtonSwitchCase
+                                CALL               UpdateWASDFlags
+                                RET
 CheckWASDKeys ENDP
 
 Update1 PROC FAR
-                CLEAR CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
-                Draw_Car  CarImg1, CAR_SIZE, Posxfirst , PosYfirst
-    CannotDraw:                
-                RET
+                                CLEAR              CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
+                                Draw_Car           CarImg1, CAR_SIZE, Posxfirst , PosYfirst
+    CannotDraw:                 
+                                RET
 Update1 ENDP
 
 
 Update2 PROC FAR
-                CLEAR CarImg2, CAR_SIZE, PrevPosXsecond, PrevPosYsecond
-                Draw_Car CarImg2, CAR_SIZE, PosXsecond , PosYsecond
-                RET
+                                CLEAR              CarImg2, CAR_SIZE, PrevPosXsecond, PrevPosYsecond
+                                Draw_Car           CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+                                RET
 Update2 ENDP
 
-;Before Calling, Set the carToScan with the car you want to scan
+    ;Before Calling, Set the carToScan with the car you want to scan
 UpdateCarPos PROC FAR
-    ;Checking that the car that it is scanning      
-                CMP CarToScan , 0                   
-                JE Car2
-    ;Changing car1 position to the previous position  
-                MOV DX , CarToDrawY    
-                MOV PosYfirst , DX
+    ;Checking that the car that it is scanning
+                                CMP                CarToScan , 0
+                                JE                 Car2
+    ;Changing car1 position to the previous position
+                                MOV                DX , CarToDrawY
+                                MOV                PosYfirst , DX
 
-                MOV DX , CarToDrawX    
-                MOV PosXfirst , DX
-                RET
+                                MOV                DX , CarToDrawX
+                                MOV                PosXfirst , DX
+                                RET
                 
-    ;Changing car2 position to the previous position            
-    Car2:       
-                MOV DX , CarToDrawY
-                MOV PosYsecond , DX
+    ;Changing car2 position to the previous position
+    Car2:                       
+                                MOV                DX , CarToDrawY
+                                MOV                PosYsecond , DX
 
-                MOV DX , CarToDrawX
-                MOV PosXsecond , DX
+                                MOV                DX , CarToDrawX
+                                MOV                PosXsecond , DX
     ;No matching found, continue looping
-                RET
+                                RET
 UpdateCarPos ENDP
 
-;description
+    ;description
 ScanYmovement PROC FAR
     
-                MOV AX , 0A000H
-                MOV ES , AX
+                                MOV                AX , 0A000H
+                                MOV                ES , AX
                 
-                MOV DI , 0
-                MOV verticalFlag ,1
+                                MOV                DI , 0
+                                MOV                verticalFlag ,1
 
-;Assume no addition or subtraction has occured to the positions in "checkFlags"   
+    ;Assume no addition or subtraction has occured to the positions in "checkFlags"
 
-                 CMP YMovement , 1              ; The car is moving up either car1 or car2
-                 JE UpMovement
+                                CMP                YMovement , 1                                                                           ; The car is moving up either car1 or car2
+                                JE                 UpMovement
 
-                 ADD CarToDrawY , CAR_SIZE
-                 CALL CalculateBoxVertex
-                 SUB CarToDrawY , CAR_SIZE-1
+                                ADD                CarToDrawY , CAR_SIZE
+                                CALL               CalculateBoxVertex
+                                SUB                CarToDrawY , CAR_SIZE-1
 
-                 JMP StartScanning
-     UpMovement:
-                 DEC CarToDrawY 
-                 CALL CalculateBoxVertex
-     StartScanning:
-                MOV CX , CurrentSpeed             ;# of rows to be checked
+                                JMP                StartScanning
+    UpMovement:                 
+                                DEC                CarToDrawY
+                                CALL               CalculateBoxVertex
+    StartScanning:              
+                                MOV                CX , CurrentSpeed                                                                       ;# of rows to be checked
 
-;Outer Loop Starts
-    NextRow:  
-                PUSH CX
-                PUSH DI
-                MOV CX , CAR_SIZE
-;Inner loop starts
-    CheckY:
-                ; CMP BYTE PTR ES:[DI] , 142
-                ; JNE NoObstacleDetected
-                CMP BYTE PTR ES:[DI], 36
-                JE POWERUPDETECTED
-                CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
-                JE NoObstacleDetected
-                CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
-                JE NoObstacleDetected
-                CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
-                JE NoObstacleDetected
-               
-                POP DI
-                POP CX
-                RET
-
-    POWERUPDETECTED:
-                PUSH CX
-                PUSH DI
-                CALL GETTOPLEFTPOWER
+    ;Outer Loop Starts
+    NextRow:                    
+                                PUSH               CX
+                                PUSH               DI
+                                MOV                CX , CAR_SIZE
+    ;Inner loop starts
+    CheckY:                     
+    ; CMP BYTE PTR ES:[DI] , 142
+    ; JNE NoObstacleDetected
+                                CMP                BYTE PTR ES:[DI], 36
+                                JE                 POWERUPDETECTED
+                                CMP                BYTE PTR ES:[DI] , 20                                                                   ; 20 is the GREY color degree of the road
+                                JE                 NoObstacleDetected
+                                CMP                BYTE PTR ES:[DI] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                JE                 NoObstacleDetected
+                                CMP                BYTE PTR ES:[DI] , 40                                                                   ; 40 is one of the color degrees for the end line
+                                JE                 NoObstacleDetected
                 
-                MOV BX,POWERTOPLEFTBYTE
-                INC BX
-                ADD BX , SCREEN_WIDTH
-                CMP BYTE PTR ES:[BX] , 121     ; 121 is the color degree of the increasing powerup
-                    JE INCPOWERUP_DETECTED
-                    CMP BYTE PTR ES:[BX] , 112     ; 112 is the color degree of the decreasing powerup
-                    JE DECPOWERUP_DETECTED
-                    CMP BYTE PTR ES:[BX] , 17
-                    JE CREATEOBSTPOWERUP_DETECTED
-                    CMP BYTE PTR ES:[BX] , 28
-                    JE PASSOBSTPOWER_DETECTED
+                                POP                DI
+                                POP                CX
+                                RET
 
-                INCPOWERUP_DETECTED:
-                    MOV AL , 1
-                    MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP
-DECPOWERUP_DETECTED:
-                    MOV AL , 2
-                    MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP
-CREATEOBSTPOWERUP_DETECTED:
-                    MOV AL , 3
-                    MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP
+    POWERUPDETECTED:            
+                                PUSH               CX
+                                PUSH               DI
+                                CALL               GetTopLeftPowerUp
+                
+                                MOV                BX,POWERTOPLEFTBYTE
+                                INC                BX
+                                ADD                BX , SCREEN_WIDTH
+                                CMP                BYTE PTR ES:[BX] , 121                                                                  ; 121 is the color degree of the increasing powerup
+                                JE                 INCPOWERUP_DETECTED
+                                CMP                BYTE PTR ES:[BX] , 112                                                                  ; 112 is the color degree of the decreasing powerup
+                                JE                 DECPOWERUP_DETECTED
+                                CMP                BYTE PTR ES:[BX] , 17
+                                JE                 CREATEOBSTPOWERUP_DETECTED
+                                CMP                BYTE PTR ES:[BX] , 28
+                                JE                 PASSOBSTPOWER_DETECTED
 
-PASSOBSTPOWER_DETECTED:
-                    MOV AL , 4
-                    MOV powerupType , AL
+    INCPOWERUP_DETECTED:        
+                                MOV                AL , 1
+                                MOV                powerupType , AL
+                                JMP                DRAWING_COLLECTED_POWERUP
+    DECPOWERUP_DETECTED:        
+                                MOV                AL , 2
+                                MOV                powerupType , AL
+                                JMP                DRAWING_COLLECTED_POWERUP
+    CREATEOBSTPOWERUP_DETECTED: 
+                                MOV                AL , 3
+                                MOV                powerupType , AL
+                                JMP                DRAWING_COLLECTED_POWERUP
 
-DRAWING_COLLECTED_POWERUP:
-                    CMP CarToScan , 0       ;Car1 is scanning
-                    JE Car2Powerup2
-                    ;Powerup for first player is collected
+    PASSOBSTPOWER_DETECTED:     
+                                MOV                AL , 4
+                                MOV                powerupType , AL
 
-                    MOV AX , powerup1Posx
-                    MOV TEMPX , AX
+    DRAWING_COLLECTED_POWERUP:  
+                                CMP                CarToScan , 0                                                                           ;Car1 is scanning
+                                JE                 Car2Powerup2
+    ;Powerup for first player is collected
 
-                    MOV AX , powerup1Posy
-                    MOV TEMPY , AX
+                                MOV                AX , powerup1Posx
+                                MOV                TEMPX , AX
 
-                    MOV AL , CarToScan
-                    MOV powerupParent , AL
+                                MOV                AX , powerup1Posy
+                                MOV                TEMPY , AX
 
-                    MOV TMP4 , 0
+                                MOV                AL , CarToScan
+                                MOV                powerupParent , AL
 
-                    DrawPower TEMPX,TEMPY,powerupType
-                    JMP COLLECTPOWER
-Car2Powerup:
-                    ;Powerup for second player is collected
+                                MOV                TMP4 , 0
 
-                    MOV AX , powerup2Posx
-                    MOV TEMPX , AX
+                                DrawPower          TEMPX,TEMPY,powerupType
+                                JMP                COLLECTPOWER
+    Car2Powerup:                
+    ;Powerup for second player is collected
 
-                    MOV AX , powerup2Posy
-                    MOV TEMPY , AX
+                                MOV                AX , powerup2Posx
+                                MOV                TEMPX , AX
 
-                    MOV AL , CarToScan
-                    MOV powerupParent , AL
+                                MOV                AX , powerup2Posy
+                                MOV                TEMPY , AX
 
-                    MOV TMP4 , 0
+                                MOV                AL , CarToScan
+                                MOV                powerupParent , AL
 
-                    DrawPower TEMPX,TEMPY, powerupType
+                                MOV                TMP4 , 0
+
+                                DrawPower          TEMPX,TEMPY, powerupType
 
 
-    COLLECTPOWER:
-                CALL SEARCHTORETRIEVE
-                POP DI
-                POP CX
-    NoObstacleDetected:
-                INC DI
-                DEC CX
-                CMP CX , 0
-                JNE CheckY
+    COLLECTPOWER:               
+                                CALL               SEARCHTORETRIEVE
+                                POP                DI
+                                POP                CX
+    NoObstacleDetected:         
+                                INC                DI
+                                DEC                CX
+                                CMP                CX , 0
+                                JNE                CheckY
     
-                POP DI
-                POP CX
- ;Incrementing DI & Y position of the car after each row is scanned             
+                                POP                DI
+                                POP                CX
+    ;Incrementing DI & Y position of the car after each row is scanned
 
-                CMP YMovement , 1
-                JE UpMovement2
-                ADD DI , SCREEN_WIDTH
-                INC CarToDrawY
-                JMP NextLoop
-    UpMovement2:
-                SUB DI , SCREEN_WIDTH
-                DEC CarToDrawY
-    NextLoop:
-                DEC CX
-                CMP CX , 0
-                JNE NextRow
+                                CMP                YMovement , 1
+                                JE                 UpMovement2
+                                ADD                DI , SCREEN_WIDTH
+                                INC                CarToDrawY
+                                JMP                NextLoop
+    UpMovement2:                
+                                SUB                DI , SCREEN_WIDTH
+                                DEC                CarToDrawY
+    NextLoop:                   
+                                DEC                CX
+                                CMP                CX , 0
+                                JE                 checkYFinish
+                                JMP                NextRow
 
-    checkYFinish:
-                MOV verticalFlag,0
-                RET
+    checkYFinish:               
+                                MOV                verticalFlag,0
+                                RET
 ScanYmovement ENDP
 
 ScanXmovement PROC FAR
-                MOV AX , 0A000H
-                MOV ES, AX
+                                MOV                AX , 0A000H
+                                MOV                ES, AX
 
-                MOV DI , 0
-                MOV horizontalFlag ,1
+                                MOV                DI , 0
+                                MOV                horizontalFlag ,1
 
-                CMP XMovement , 1   ; The car is moving right either car1 or car2
-                JNE LeftMovement
-    ;Moving right         
-                ADD CarToDrawX , CAR_SIZE
-                CALL CalculateBoxVertex
-                SUB CarToDrawX , CAR_SIZE-1
-                JMP StartScanning2
+                                CMP                XMovement , 1                                                                           ; The car is moving right either car1 or car2
+                                JNE                LeftMovement
+    ;Moving right
+                                ADD                CarToDrawX , CAR_SIZE
+                                CALL               CalculateBoxVertex
+                                SUB                CarToDrawX , CAR_SIZE-1
+                                JMP                StartScanning2
     ;Moving left
-    LeftMovement:
-                    DEC CarToDrawX
-                    CALL CalculateBoxVertex
-    StartScanning2:
-                    MOV CX , CurrentSpeed
+    LeftMovement:               
+                                DEC                CarToDrawX
+                                CALL               CalculateBoxVertex
+    StartScanning2:             
+                                MOV                CX , CurrentSpeed
     
-    NextRow2:
-                    PUSH CX
-                    PUSH DI
-                    MOV CX, CAR_SIZE
+    NextRow2:                   
+                                PUSH               CX
+                                PUSH               DI
+                                MOV                CX, CAR_SIZE
 
-    CheckX:
-                    ;CMP BYTE PTR ES:[DI] , 142
-                    ;JNE NoObstacleDetected2
-                CMP BYTE PTR ES:[DI], 36
-                JE POWERUPDETECTED2
-                CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
-                JE NoObstacleDetected2 
-                CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
-                JE NoObstacleDetected2 
-                CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
-                JE NoObstacleDetected2
-
-
-                    POP DI
-                    POP cx
-                    RET  
-
-    POWERUPDETECTED2:
-                PUSH CX
-                PUSH DI
-                CALL GETTOPLEFTPOWER
+    CheckX:                     
+    ;CMP BYTE PTR ES:[DI] , 142
+    ;JNE NoObstacleDetected2
+                                CMP                BYTE PTR ES:[DI], 36
+                                JE                 POWERUPDETECTED2
+                                CMP                BYTE PTR ES:[DI] , 20                                                                   ; 20 is the GREY color degree of the road
+                                JE                 NoObstacleDetected2
+                                CMP                BYTE PTR ES:[DI] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                JE                 NoObstacleDetected2
+                                CMP                BYTE PTR ES:[DI] , 40                                                                   ; 40 is one of the color degrees for the end line
+                                JE                 NoObstacleDetected2
                 
-                MOV BX,POWERTOPLEFTBYTE
-                INC BX
-                ADD BX , SCREEN_WIDTH
-                CMP BYTE PTR ES:[BX] , 121     ; 121 is the color degree of the increasing powerup
-                    JE INCPOWERUP_DETECTED2
-                    CMP BYTE PTR ES:[BX] , 112     ; 112 is the color degree of the decreasing powerup
-                    JE DECPOWERUP_DETECTED2
-                    CMP BYTE PTR ES:[BX] , 17
-                    JE CREATEOBSTPOWERUP_DETECTED2
-                    CMP BYTE PTR ES:[BX] , 28
-                    JE PASSOBSTPOWER_DETECTED2
+                
 
-                INCPOWERUP_DETECTED2:
-                    MOV AL , 1
-                    MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP2
-DECPOWERUP_DETECTED2:
-                    MOV AL , 2
-                    MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP2
-CREATEOBSTPOWERUP_DETECTED2:
-                    MOV AL , 3
-                    MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP2
+                                POP                DI
+                                POP                cx
+                    
+                                RET
 
-PASSOBSTPOWER_DETECTED2:
-                    MOV AL , 4
-                    MOV powerupType , AL
+    POWERUPDETECTED2:           
+                                PUSH               CX
+                                PUSH               DI
+                                CALL               GetTopLeftPowerUp
+                
+                                MOV                BX,POWERTOPLEFTBYTE
+                                INC                BX
+                                ADD                BX , SCREEN_WIDTH
+                                CMP                BYTE PTR ES:[BX] , 121                                                                  ; 121 is the color degree of the increasing powerup
+                                JE                 INCPOWERUP_DETECTED2
+                                CMP                BYTE PTR ES:[BX] , 112                                                                  ; 112 is the color degree of the decreasing powerup
+                                JE                 DECPOWERUP_DETECTED2
+                                CMP                BYTE PTR ES:[BX] , 17
+                                JE                 CREATEOBSTPOWERUP_DETECTED2
+                                CMP                BYTE PTR ES:[BX] , 28
+                                JE                 PASSOBSTPOWER_DETECTED2
 
-DRAWING_COLLECTED_POWERUP2:
-                    CMP CarToScan , 0       ;Car1 is scanning
-                    JE Car2Powerup2
-                    ;Powerup for first player is collected
+    INCPOWERUP_DETECTED2:       
+                                MOV                AL , 1
+                                MOV                powerupType , AL
+                                JMP                DRAWING_COLLECTED_POWERUP2
+    DECPOWERUP_DETECTED2:       
+                                MOV                AL , 2
+                                MOV                powerupType , AL
+                                JMP                DRAWING_COLLECTED_POWERUP2
+    CREATEOBSTPOWERUP_DETECTED2:
+                                MOV                AL , 3
+                                MOV                powerupType , AL
+                                JMP                DRAWING_COLLECTED_POWERUP2
 
-                    MOV AX , powerup1Posx
-                    MOV TEMPX , AX
+    PASSOBSTPOWER_DETECTED2:    
+                                MOV                AL , 4
+                                MOV                powerupType , AL
 
-                    MOV AX , powerup1Posy
-                    MOV TEMPY , AX
+    DRAWING_COLLECTED_POWERUP2: 
+                                CMP                CarToScan , 0                                                                           ;Car1 is scanning
+                                JE                 Car2Powerup2
+    ;Powerup for first player is collected
 
-                    MOV AL , CarToScan
-                    MOV powerupParent , AL
+                                MOV                AX , powerup1Posx
+                                MOV                TEMPX , AX
 
-                    MOV TMP4 , 0
+                                MOV                AX , powerup1Posy
+                                MOV                TEMPY , AX
 
-                    DrawPower TEMPX,TEMPY,powerupType
-                    JMP COLLECTPOWER2
-Car2Powerup2:
-                    ;Powerup for second player is collected
+                                MOV                AL , CarToScan
+                                MOV                powerupParent , AL
 
-                    MOV AX , powerup2Posx
-                    MOV TEMPX , AX
+                                MOV                TMP4 , 0
 
-                    MOV AX , powerup2Posy
-                    MOV TEMPY , AX
+                                DrawPower          TEMPX,TEMPY,powerupType
+                                JMP                COLLECTPOWER2
+    Car2Powerup2:               
+    ;Powerup for second player is collected
 
-                    MOV AL , CarToScan
-                    MOV powerupParent , AL
+                                MOV                AX , powerup2Posx
+                                MOV                TEMPX , AX
 
-                    MOV TMP4 , 0
+                                MOV                AX , powerup2Posy
+                                MOV                TEMPY , AX
 
-                    DrawPower TEMPX,TEMPY, powerupType
+                                MOV                AL , CarToScan
+                                MOV                powerupParent , AL
+
+                                MOV                TMP4 , 0
+
+                                DrawPower          TEMPX,TEMPY, powerupType
 
 
-    COLLECTPOWER2:
-                CALL SEARCHTORETRIEVE
-                POP DI
-                POP CX                
-    NoObstacleDetected2:
-                    ADD DI , SCREEN_WIDTH
-                    DEC CX
-                    CMP CX , 0
-                    JNE CheckX
+    COLLECTPOWER2:              
+                                CALL               SEARCHTORETRIEVE
+                                POP                DI
+                                POP                CX
+    NoObstacleDetected2:        
+                                ADD                DI , SCREEN_WIDTH
+                                DEC                CX
+                                CMP                CX , 0
+                                JNE                CheckX
 
-                    POP DI
-                    POP CX
+                                POP                DI
+                                POP                cx
 
-                    CMP XMovement , 1
-                    JNE LeftMovement2
+                                CMP                XMovement , 1
+                                JNE                LeftMovement2
 
-                    INC DI
-                    INC CarToDrawX
-                    JMP NextLoop2
-    LeftMovement2:
-                    DEC DI
-                    DEC CarToDrawX
+                                INC                DI
+                                INC                CarToDrawX
+                                JMP                NextLoop2
+    LeftMovement2:              
+                                DEC                DI
+                                DEC                CarToDrawX
 
-    NextLoop2:
-                    DEC CX
-                    CMP CX , 0
-                    JNE NextRow2
-    checkXFinish:
-                            MOV horizontalFlag ,0
-                            RET
+    NextLoop2:                  
+                                DEC                CX
+                                CMP                CX , 0
+                                JE                 checkXFinish
+                                JMP                NextRow2
+    checkXFinish:               
+                                MOV                horizontalFlag ,0
+                                RET
 ScanXmovement ENDP
 
-;description
+    ;description
 checkingPositionChange1 PROC FAR
              
-                MOV DX , PosXfirst
-                CMP PrevPosXfirst, DX
+                                MOV                DX , PosXfirst
+                                CMP                PrevPosXfirst, DX
 
-                JE bridge1
-                CALL Update1
-                JMP Car2Check
-    bridge1:
-                MOV DX , PosYfirst
-                CMP PrevPosYfirst , DX
-                JE Car2Check
-                CALL Update1
-    Car2Check:  
-                RET
+                                JE                 bridge1
+                                CALL               Update1
+                                JMP                Car2Check
+    bridge1:                    
+                                MOV                DX , PosYfirst
+                                CMP                PrevPosYfirst , DX
+                                JE                 Car2Check
+                                CALL               Update1
+    Car2Check:                  
+                                RET
 checkingPositionChange1 ENDP
 
-;description
+    ;description
 checkingPositionChange2 PROC FAR
-                MOV DX , PosXsecond
-                CMP PrevPosXsecond, DX
-                JE bridge2
-                CALL Update2
-                JMP ContinueLooping
-    bridge2:
-                MOV DX , PosYsecond
-                CMP PrevPosYsecond , DX
-                JE ContinueLooping
-                CALL Update2
+                                MOV                DX , PosXsecond
+                                CMP                PrevPosXsecond, DX
+                                JE                 bridge2
+                                CALL               Update2
+                                JMP                ContinueLooping
+    bridge2:                    
+                                MOV                DX , PosYsecond
+                                CMP                PrevPosYsecond , DX
+                                JE                 ContinueLooping
+                                CALL               Update2
 
-    ContinueLooping:
-                RET
+    ContinueLooping:            
+                                RET
 checkingPositionChange2 ENDP
 
 INT09H PROC FAR
-                IN     AL, 60H
+                                IN                 AL, 60H
                             
-                CALL CheckArrowKeys
-                CALL CheckWASDKeys
+                                CALL               CheckArrowKeys
+                                CALL               CheckWASDKeys
 
                                     
-                MOV AL , 20H
-                OUT 20H, AL
-                IRET
+                                MOV                AL , 20H
+                                OUT                20H, AL
+                                IRET
 INT09H ENDP
 
 
@@ -2116,154 +2177,154 @@ INT09H ENDP
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;INTERFACE PROCEDURES;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;INTERFACE PROCEDURES;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 INTERFACEBACKGROUND PROC
-    MOV TEMPX, 0
-    MOV TEMPY, 0
-    MOV DI, TEMPY
-    MOV AX, SCREENWIDTH
-    MUL DI
-    MOV DI, AX
-    ADD DI, TEMPX
+                                MOV                TEMPX, 0
+                                MOV                TEMPY, 0
+                                MOV                DI, TEMPY
+                                MOV                AX, SCREEN_WIDTH
+                                MUL                DI
+                                MOV                DI, AX
+                                ADD                DI, TEMPX
     
-    MOV CX, 200
-    INTERFACEOUTERLOOP:
-        PUSH CX
-        MOV CX, 320
-        INTERFACEINNERLOOP:
-            MOV BYTE PTR ES:[DI], 71H
-            INC DI    
-        LOOP INTERFACEINNERLOOP
-        MOV TEMPX, 0
-        ADD TEMPY, BACKGROUNDIMAGEPARTH
-        POP CX
-    LOOP INTERFACEOUTERLOOP
+                                MOV                CX, 200
+    INTERFACEOUTERLOOP:         
+                                PUSH               CX
+                                MOV                CX, 320
+    INTERFACEINNERLOOP:         
+                                MOV                BYTE PTR ES:[DI], 71H
+                                INC                DI
+                                LOOP               INTERFACEINNERLOOP
+                                MOV                TEMPX, 0
+                                ADD                TEMPY, BACKGROUNDIMAGEPARTH
+                                POP                CX
+                                LOOP               INTERFACEOUTERLOOP
 
-    MOV TEMPX, 80
-    MOV TEMPY, 20
-    MOV TMP, 0
-    DRAW LOGOIMG, LOGOIMGW, LOGOIMGH, TEMPX, TEMPY, TMP
-    RET
+                                MOV                TEMPX, 80
+                                MOV                TEMPY, 20
+                                MOV                TMP, 0
+                                DRAW               LOGOIMG, LOGOIMGW, LOGOIMGH, TEMPX, TEMPY, TMP
+                                RET
 INTERFACEBACKGROUND ENDP
 
 
 ENTERPLAYERNAME PROC
-    MOV CX, 14
-    FIRSTCHARLOOP:
-        MOV AH, 0
-        INT 16H
-        MOV DL, AL
-        MOV AH, 2 
-        INT 21H
-        CMP AL, 'A'
-        JB FIRSTCHARLOOP
-        CMP AL, 'Z'
-        JBE RESTOFCHARS
+                                MOV                CX, 14
+    FIRSTCHARLOOP:              
+                                MOV                AH, 0
+                                INT                16H
+                                MOV                DL, AL
+                                MOV                AH, 2
+                                INT                21H
+                                CMP                AL, 'A'
+                                JB                 FIRSTCHARLOOP
+                                CMP                AL, 'Z'
+                                JBE                RESTOFCHARS
 
-        CMP AL, 'a'
-        JB FIRSTCHARLOOP
-        CMP AL, 'z'
-        JBE RESTOFCHARS
+                                CMP                AL, 'a'
+                                JB                 FIRSTCHARLOOP
+                                CMP                AL, 'z'
+                                JBE                RESTOFCHARS
 
-    RESTOFCHARS:
-        MOV BYTE PTR DS:[SI], AL
-        INC SI
-        MOV AH, 0
-        INT 16H
-        CMP AH, 28
-        JE FINISHENTERNAME
-        MOV DL, AL
-        MOV AH, 2 
-        INT 21H
-    LOOP RESTOFCHARS
-    FINISHENTERNAME:
-    RET    
+    RESTOFCHARS:                
+                                MOV                BYTE PTR DS:[SI], AL
+                                INC                SI
+                                MOV                AH, 0
+                                INT                16H
+                                CMP                AH, 28
+                                JE                 FINISHENTERNAME
+                                MOV                DL, AL
+                                MOV                AH, 2
+                                INT                21H
+                                LOOP               RESTOFCHARS
+    FINISHENTERNAME:            
+                                RET
 ENTERPLAYERNAME ENDP
 
 
 
 INTERFACESTAGE PROC
-    CALL INTERFACEBACKGROUND
+                                CALL               INTERFACEBACKGROUND
 
 
-;DRAWING LOGO AND INPUT TEXTS AND NOTE
-MOV TEMPX, 5
-MOV TEMPY, 80
-MOV TMP, 0
-DRAW INPUTIMG, INPUTIMGW, INPUTIMGH, TEMPX, TEMPY, TMP
+    ;DRAWING LOGO AND INPUT TEXTS AND NOTE
+                                MOV                TEMPX, 5
+                                MOV                TEMPY, 80
+                                MOV                TMP, 0
+                                DRAW               INPUTIMG, INPUTIMGW, INPUTIMGH, TEMPX, TEMPY, TMP
 
-;FIRST NOTE
-MOV AH, 2H
-MOV DL, 0
-MOV DH, 17
-MOV BH, 0
-INT 10H
-MOV AH, 9
-MOV DX, OFFSET NOTE1
-INT 21H
+    ;FIRST NOTE
+                                MOV                AH, 2H
+                                MOV                DL, 0
+                                MOV                DH, 17
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET NOTE1
+                                INT                21H
 
-;SECOND NOTE
-MOV AH, 2H
-MOV DL, 0
-MOV DH, 19
-MOV BH, 0
-INT 10H
-MOV AH, 9
-MOV DX, OFFSET NOTE2
-INT 21H
-
-
-
-;X = 47 Y = 16
-
-;SETTING CURSOR FOR FIRST NAME
-MOV AH, 2H
-MOV DL, 16
-MOV DH, 36
-MOV BH, 0
-INT 10H
-
-MOV SI, OFFSET FIRSTNAME
-CALL ENTERPLAYERNAME
-
-
-;SETTING CURSOR FOR SECOND NAME
-MOV AH, 2H
-MOV DL, 16
-MOV DH, 38
-MOV BH, 0
-INT 10H
-MOV SI, OFFSET SECONDNAME
-CALL ENTERPLAYERNAME
+    ;SECOND NOTE
+                                MOV                AH, 2H
+                                MOV                DL, 0
+                                MOV                DH, 19
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET NOTE2
+                                INT                21H
 
 
 
-CALL INTERFACEBACKGROUND
+    ;X = 47 Y = 16
 
-;FIRST INSTRUCTION
-MOV AH, 2H
-MOV DL, 2
-MOV DH, 15
-MOV BH, 0
-INT 10H
-MOV AH, 9
-MOV DX, OFFSET INSTRUCTION1
-INT 21H
+    ;SETTING CURSOR FOR FIRST NAME
+                                MOV                AH, 2H
+                                MOV                DL, 16
+                                MOV                DH, 36
+                                MOV                BH, 0
+                                INT                10H
 
-;SECOND INSTRUCTION
-MOV AH, 2H
-MOV DL, 2
-MOV DH, 17
-MOV BH, 0
-INT 10H
-MOV AH, 9
-MOV DX, OFFSET INSTRUCTION2
-INT 21H
-    RET
+                                MOV                SI, OFFSET FIRSTNAME
+                                CALL               ENTERPLAYERNAME
+
+
+    ;SETTING CURSOR FOR SECOND NAME
+                                MOV                AH, 2H
+                                MOV                DL, 16
+                                MOV                DH, 38
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                SI, OFFSET SECONDNAME
+                                CALL               ENTERPLAYERNAME
+
+
+
+                                CALL               INTERFACEBACKGROUND
+
+    ;FIRST INSTRUCTION
+                                MOV                AH, 2H
+                                MOV                DL, 2
+                                MOV                DH, 15
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET INSTRUCTION1
+                                INT                21H
+
+    ;SECOND INSTRUCTION
+                                MOV                AH, 2H
+                                MOV                DL, 2
+                                MOV                DH, 17
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET INSTRUCTION2
+                                INT                21H
+                                RET
 INTERFACESTAGE ENDP
 
 
@@ -2275,1069 +2336,1150 @@ INTERFACESTAGE ENDP
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;     Road procedures      ;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;     Road procedures     ;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-;PROC TO DRAW AN IMAGE
-DRAWIMAGE PROC FAR 
-    PUSH CX
+    ;PROC TO DRAW AN IMAGE
+DrawImage PROC FAR
+                                PUSH               CX
     ;VIDEO MEMORY
-    MOV AX, 0A000H
-    MOV ES, AX
+                                MOV                AX, 0A000H
+                                MOV                ES, AX
 
-    MOV DI, STARYTODRAW
-    MOV AX, SCREENWIDTH
-    MUL DI
-    MOV DI, AX
-    ADD DI, STARXTODRAW
+                                MOV                DI, STARYTODRAW
+                                MOV                AX, SCREEN_WIDTH
+                                MUL                DI
+                                MOV                DI, AX
+                                ADD                DI, STARXTODRAW
     
-    MOV CX, HEITODRAW
-    MOV SI, IMGTODRAW
+                                MOV                CX, HEITODRAW
+                                MOV                SI, IMGTODRAW
 
-    ROWS:
-        PUSH CX
-        PUSH DI
-        MOV CX, WIDTODRAW
-        COLS:
-            MOV DL, BYTE PTR [SI]
-            CMP DL, 0
-            JE DONTDRAWBYTE
-            MOV ES:[DI], DL
-            DONTDRAWBYTE:
-            INC SI
-            INC DI
-        LOOP COLS
-        POP DI
-        POP CX
-        ADD DI, SCREENWIDTH
-    LOOP ROWS
-    MOV DI, STARYTODRAW
-    MOV AX, SCREENWIDTH
-    MUL DI
-    MOV DI, AX
-    ADD DI, STARXTODRAW
-    ADD DI, WIDTODRAW
-    POP CX
-    RET
-DRAWIMAGE ENDP
+    ROWS:                       
+                                PUSH               CX
+                                PUSH               DI
+                                MOV                CX, WIDTODRAW
+    COLS:                       
+                                MOV                DL, BYTE PTR [SI]
+                                CMP                DL, 0
+                                JE                 DONTDRAWBYTE
+                                MOV                ES:[DI], DL
+    DONTDRAWBYTE:               
+                                INC                SI
+                                INC                DI
+                                LOOP               COLS
+                                POP                DI
+                                POP                CX
+                                ADD                DI, SCREEN_WIDTH
+                                LOOP               ROWS
+                                MOV                DI, STARYTODRAW
+                                MOV                AX, SCREEN_WIDTH
+                                MUL                DI
+                                MOV                DI, AX
+                                ADD                DI, STARXTODRAW
+                                ADD                DI, WIDTODRAW
+                                POP                CX
+                                RET
+DrawImage ENDP
 
+    ;Called inside macro "SetVerticalLine"
+DrawVerticlLine PROC FAR
+                                CALL               CalculateBoxVertex
+                                MOV                CX , LineToDrawH
+    LineHeightLoop:             
+                                MOV                DX , DrawingColor
+                                MOV                BYTE PTR ES:[DI] , DL
+                                ADD                DI , SCREEN_WIDTH
+                                LOOP               LineHeightLoop
+                                RET
+DrawVerticlLine ENDP
 
+    ;Called inside macro "SetHorizontalLine"
+DrawHorizontalLine PROC FAR
+                                CALL               CalculateBoxVertex
+                                MOV                CX , LineToDrawW
+    LineWidthLoop:              
+                                MOV                DX , DrawingColor
+                                MOV                BYTE PTR ES:[DI] , DL
+                                INC                DI
+                                LOOP               LineWidthLoop
 
+                                RET
+DrawHorizontalLine ENDP
+    ;Uses stored variables to draw status Bar
+DrawStatBar PROC FAR
+ 
+    ;Setting starting posititons of the status bar to carToDraw varialbes as it's used in 'CalculateBoxVertix' proc
+                                MOV                DX , StatusBarStartX
+                                MOV                CarToDrawX , DX
 
+                                MOV                DX , StatusBarStartY
+                                MOV                CarToDrawY , DX
 
-;PROC TO RANDOMIZE
-
-GETSYSTEMTIME PROC FAR
-    MOV CX, 0
-    MOV DX, 59000 ;63997
-    MOV AH, 86H
-    INT 15H
-    MOV AH, 2CH  ; INTERRUPT to get system time
-    INT 21H
-    RET
-GETSYSTEMTIME ENDP
-
-
-GETSYSTEMTIME2 PROC FAR
-    MOV CX, 0
-    MOV DX, 53000 ;63997
-    MOV AH, 86H
-    INT 15H
-    MOV AH, 2CH  ; INTERRUPT to get system time
-    INT 21H
-    RET
-GETSYSTEMTIME2 ENDP
-
-RANDOMIZEPERCENTAGE PROC
-    CALL GETSYSTEMTIME2                        
-    MOV AL, 100
-    MOV RANGEOFRAND, AL 
-    CALL RANGINGRAND    ;DL NOW HAS A NUMBER FROM 0 TO 99           
-    RET
-RANDOMIZEPERCENTAGE ENDP
-
-
-;PROC TO GET THE POSIBLE POINTS AFTER DRAWING UP
-POINTSAFTERUP PROC
-    CALL CALCXY ; AS WE NEED IT IN THE LEFT DIR
-
-    MOV UPDIR, DI
-    CMP UPDIR, VERROADIMGH*SCREENWIDTH + VERROADIMGW  ;CHECKING FOR OVERFLOWING THE SCREEN
-    JA FIRSTUP
-    MOV UPDIR, 0
-    JMP NOTFIRSTUP
-    FIRSTUP:
-    SUB UPDIR, VERROADIMGH*SCREENWIDTH + VERROADIMGW 
-    NOTFIRSTUP:
-
-    MOV RIGHTDIR, DI
-    SUB RIGHTDIR, HORROADIMGH*SCREENWIDTH + VERROADIMGW 
-    MOV DOWNDIR, 0
+                                CALL               CalculateBoxVertex
+                            
+    ; Setting CX by the remaining number of bytes in the screen
+                                MOV                AX , StatusBarTotalheight
+                                MOV                BX , SCREEN_WIDTH
+                                MUL                BX
+                                MOV                CX , AX
+    ;Drawing status Bar background
+    DrawStatusBg:               
+                                MOV                BYTE PTR ES:[DI], STATUS_BAR_COLOR
+                                INC                DI
+                                LOOP               DrawStatusBg
     
-    CMP TEMPX, HORROADIMGW
-    JA FIRSTLEFT
-    MOV LEFTDIR, 0
-    JMP NOTFIRSTLEFT
-    FIRSTLEFT:
-    MOV LEFTDIR, DI
-    SUB LEFTDIR, HORROADIMGH*SCREENWIDTH + HORROADIMGW
-    NOTFIRSTLEFT:
-    RET
-POINTSAFTERUP ENDP
+    ;Drawing horizontal line to leave space to powerups
 
-;PROC TO GET THE POSIBLE POINTS AFTER DRAWING RIGHT
-POINTSAFTERRIGHT PROC
-    MOV UPDIR, DI
-    CMP UPDIR, (VERROADIMGH-HORROADIMGH)*SCREENWIDTH
-    JA SECONDUP
-    MOV UPDIR, 0
-    JMP NOTSECONDUP
-    SECONDUP:
-    SUB UPDIR, (VERROADIMGH-HORROADIMGH)*SCREENWIDTH  ;VERROADIMGH-HORROADIMGH = 30
-    NOTSECONDUP:
+    ;-- Calculate Ypos of the line:
+                                MOV                AX , StatusBarTotalheight
+                                MOV                BX , 2D
+                                DIV                BX
+                                ADD                AX , StatusBarStartY
+    ;--Drawing Lines
+                                SetHorizontalLine  0, AX, SCREEN_WIDTH, STATUS_BAR_COLOR2
+                                SetVerticalLine    SCREEN_WIDTH/2, StatusBarStartY, StatusBarTotalheight, STATUS_BAR_COLOR2
+    
+    ;Writing User names to be passed from interface
+                            
 
-    MOV RIGHTDIR, DI
-    MOV DOWNDIR, DI
-    MOV LEFTDIR, 0
-    RET
-POINTSAFTERRIGHT ENDP
+    ;printing  FirstName
+                                MOV                SI , OFFSET FirstName
+                                MOV                DL , 4
+                                MOV                DH , 22
+                                CALL               PrintStringWithColor
+    ;printing  SecondName
+                                MOV                SI , OFFSET SecondName
+                                MOV                DL , 25
+                                MOV                DH , 22
+                                CALL               PrintStringWithColor
 
-;PROC TO GET THE POSIBLE POINTS AFTER DRAWING DOWN
-POINTSAFTERDOWN PROC
-    CALL CALCXY
-    MOV UPDIR, 0
-    MOV RIGHTDIR, DI
-    SUB RIGHTDIR, VERROADIMGW
-    ADD RIGHTDIR, VERROADIMGH * SCREENWIDTH
-    MOV DOWNDIR, DI
-    SUB DOWNDIR, VERROADIMGW
-    ADD DOWNDIR, VERROADIMGH * SCREENWIDTH
+                                RET
+DrawStatBar ENDP
 
-    CMP TEMPX, HORROADIMGW
-    JA THIRDLEFT
-    MOV LEFTDIR, 0
-    JMP NOTTHIRDLEFT
-    THIRDLEFT:
-    MOV LEFTDIR, DI
-    SUB LEFTDIR, HORROADIMGW
-    ADD LEFTDIR, VERROADIMGH * SCREENWIDTH
-    NOTTHIRDLEFT:
-    RET
-POINTSAFTERDOWN ENDP
+    ;Set the Offset of the string you want to print in SI before calling
+PrintStringWithColor PROC FAR
+    printOneByOne:              
+    ;--Setting Cursor position
+                                MOV                AH , 2
+                                MOV                BH, 0
+                                INT                10H
+    ;--Start printing
+                                MOV                AL , [SI]
+                                CMP                AL , '$'
+                                JE                 PrintFinish
+                                CALL               char_display
+                                INC                SI
+                                INC                DL
+                                JMP                printOneByOne
+    PrintFinish:                
+                                RET
+PrintStringWithColor ENDP
 
-;PROC TO GET THE POSIBLE POINTS AFTER DRAWING LEFT
-POINTSAFTERLEFT PROC
-    CALL CALCXY
-    MOV UPDIR, DI
-    CMP UPDIR, HORROADIMGW + VERROADIMGW + (VERROADIMGH - HORROADIMGH) * SCREENWIDTH
-    JA FOURTHUP
-    MOV UPDIR, 0
-    JMP NOTFOURTHUP
-    FOURTHUP:
-    SUB UPDIR, HORROADIMGW + VERROADIMGW + (VERROADIMGH - HORROADIMGH) * SCREENWIDTH 
-    NOTFOURTHUP:
-    MOV RIGHTDIR, 0
-    MOV DOWNDIR, DI
-    SUB DOWNDIR, HORROADIMGW + VERROADIMGW
+    ;PROC TO RANDOMIZE
 
-    CMP TEMPX, 2 * HORROADIMGW
-    JA FOURTHLEFT
-    MOV LEFTDIR, 0
-    JMP NOTFOURTHLEFT
-    FOURTHLEFT:
-    MOV LEFTDIR, DI
-    SUB LEFTDIR, 2 * HORROADIMGW
-    NOTFOURTHLEFT:
-    RET
-POINTSAFTERLEFT ENDP
+GetSystemTime PROC FAR
+                                MOV                CX, 0
+                                MOV                DX, 59000                                                                               ;63997
+                                MOV                AH, 86H
+                                INT                15H
+                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                INT                21H
+                                RET
+GetSystemTime ENDP
 
 
+GetSystemTime2 PROC FAR
+                                MOV                CX, 0
+                                MOV                DX, 53000                                                                               ;63997
+                                MOV                AH, 86H
+                                INT                15H
+                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                INT                21H
+                                RET
+GetSystemTime2 ENDP
 
-;PROCEDURE TO CALCULATE X AND Y FROM THE LOCATION OF THE BYTE
-CALCXY PROC  
-    MOV AX, DI
-    MOV DX, 0
-    MOV BX, SCREENWIDTH
-    DIV BX
-    MOV TEMPX, DX
+RandomizePercentage PROC
+                                CALL               GetSystemTime2
+                                MOV                AL, 100
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand                                                                            ;DL NOW HAS A NUMBER FROM 0 TO 99
+                                RET
+RandomizePercentage ENDP
 
-    MOV TEMPY, AX
-    RET
+
+    ;PROC TO GET THE POSIBLE POINTS AFTER DRAWING UP
+PointsAfterUp PROC
+                                CALL               CalcXY                                                                                  ; AS WE NEED IT IN THE LEFT DIR
+
+                                MOV                UPDIR, DI
+                                CMP                UPDIR, VERROADIMGH*SCREEN_WIDTH + VERROADIMGW                                           ;CHECKING FOR OVERFLOWING THE SCREEN
+                                JA                 FIRSTUP
+                                MOV                UPDIR, 0
+                                JMP                NOTFIRSTUP
+    FIRSTUP:                    
+                                SUB                UPDIR, VERROADIMGH*SCREEN_WIDTH + VERROADIMGW
+    NOTFIRSTUP:                 
+
+                                MOV                RIGHTDIR, DI
+                                SUB                RIGHTDIR, HORROADIMGH*SCREEN_WIDTH + VERROADIMGW
+                                MOV                DOWNDIR, 0
+    
+                                CMP                TEMPX, HORROADIMGW
+                                JA                 FIRSTLEFT
+                                MOV                LEFTDIR, 0
+                                JMP                NOTFIRSTLEFT
+    FIRSTLEFT:                  
+                                MOV                LEFTDIR, DI
+                                SUB                LEFTDIR, HORROADIMGH*SCREEN_WIDTH + HORROADIMGW
+    NOTFIRSTLEFT:               
+                                RET
+PointsAfterUp ENDP
+
+    ;PROC TO GET THE POSIBLE POINTS AFTER DRAWING RIGHT
+PointsAfterRight PROC
+                                MOV                UPDIR, DI
+                                CMP                UPDIR, (VERROADIMGH-HORROADIMGH)*SCREEN_WIDTH
+                                JA                 SECONDUP
+                                MOV                UPDIR, 0
+                                JMP                NOTSECONDUP
+    SECONDUP:                   
+                                SUB                UPDIR, (VERROADIMGH-HORROADIMGH)*SCREEN_WIDTH                                           ;VERROADIMGH-HORROADIMGH = 30
+    NOTSECONDUP:                
+
+                                MOV                RIGHTDIR, DI
+                                MOV                DOWNDIR, DI
+                                MOV                LEFTDIR, 0
+                                RET
+PointsAfterRight ENDP
+
+    ;PROC TO GET THE POSIBLE POINTS AFTER DRAWING DOWN
+PointsAfterDown PROC
+                                CALL               CalcXY
+                                MOV                UPDIR, 0
+                                MOV                RIGHTDIR, DI
+                                SUB                RIGHTDIR, VERROADIMGW
+                                ADD                RIGHTDIR, VERROADIMGH * SCREEN_WIDTH
+                                MOV                DOWNDIR, DI
+                                SUB                DOWNDIR, VERROADIMGW
+                                ADD                DOWNDIR, VERROADIMGH * SCREEN_WIDTH
+
+                                CMP                TEMPX, HORROADIMGW
+                                JA                 THIRDLEFT
+                                MOV                LEFTDIR, 0
+                                JMP                NOTTHIRDLEFT
+    THIRDLEFT:                  
+                                MOV                LEFTDIR, DI
+                                SUB                LEFTDIR, HORROADIMGW
+                                ADD                LEFTDIR, VERROADIMGH * SCREEN_WIDTH
+    NOTTHIRDLEFT:               
+                                RET
+PointsAfterDown ENDP
+
+    ;PROC TO GET THE POSIBLE POINTS AFTER DRAWING LEFT
+PointsAfterLeft PROC
+                                CALL               CalcXY
+                                MOV                UPDIR, DI
+                                CMP                UPDIR, HORROADIMGW + VERROADIMGW + (VERROADIMGH - HORROADIMGH) * SCREEN_WIDTH
+                                JA                 FOURTHUP
+                                MOV                UPDIR, 0
+                                JMP                NOTFOURTHUP
+    FOURTHUP:                   
+                                SUB                UPDIR, HORROADIMGW + VERROADIMGW + (VERROADIMGH - HORROADIMGH) * SCREEN_WIDTH
+    NOTFOURTHUP:                
+                                MOV                RIGHTDIR, 0
+                                MOV                DOWNDIR, DI
+                                SUB                DOWNDIR, HORROADIMGW + VERROADIMGW
+
+                                CMP                TEMPX, 2 * HORROADIMGW
+                                JA                 FOURTHLEFT
+                                MOV                LEFTDIR, 0
+                                JMP                NOTFOURTHLEFT
+    FOURTHLEFT:                 
+                                MOV                LEFTDIR, DI
+                                SUB                LEFTDIR, 2 * HORROADIMGW
+    NOTFOURTHLEFT:              
+                                RET
+PointsAfterLeft ENDP
+
+
+
+    ;PROCEDURE TO CALCULATE X AND Y FROM THE LOCATION OF THE BYTE
+CALCXY PROC
+                                MOV                AX, DI
+                                MOV                DX, 0
+                                MOV                BX, SCREEN_WIDTH
+                                DIV                BX
+                                MOV                TEMPX, DX
+                                MOV                TEMPY, AX
+                                RET
 CALCXY ENDP
 
-GETTOPLEFTPOWER PROC
-    GOLEFTBYTE:
-        MOV BX, DI
-        DEC BX
-        CMP BYTE PTR ES:[BX], 36
-        JE STILLLEFT
-        CMP BYTE PTR ES:[BX], 112
-        JE STILLLEFT
-        CMP BYTE PTR ES:[BX], 121
-        JE STILLLEFT
-        CMP BYTE PTR ES:[BX], 17
-        JE STILLLEFT
-        CMP BYTE PTR ES:[BX], 28
-        JE STILLLEFT
-        JMP GOUPBYTE
+GetTopLeftPowerUp PROC
+    GOLEFTBYTE:                 
+                                MOV                BX, DI
+                                DEC                BX
+                                CMP                BYTE PTR ES:[BX], 36
+                                JE                 STILLLEFT
+                                CMP                BYTE PTR ES:[BX], 112
+                                JE                 STILLLEFT
+                                CMP                BYTE PTR ES:[BX], 121
+                                JE                 STILLLEFT
+                                CMP                BYTE PTR ES:[BX], 17
+                                JE                 STILLLEFT
+                                CMP                BYTE PTR ES:[BX], 28
+                                JE                 STILLLEFT
+                                JMP                GOUPBYTE
 
-        STILLLEFT:
-        DEC DI
-        JMP GOLEFTBYTE
-    GOUPBYTE:
-        MOV BX, DI
-        SUB BX, SCREEN_WIDTH
-        CMP BYTE PTR ES:[BX], 36
-        JE STILLUP
-        CMP BYTE PTR ES:[BX], 112
-        JE STILLUP
-        CMP BYTE PTR ES:[BX], 121
-        JE STILLUP
-        CMP BYTE PTR ES:[BX], 17
-        JE STILLUP
-        CMP BYTE PTR ES:[BX], 28
-        JE STILLUP
-        JMP FINISHGETTOPLEFT
+    STILLLEFT:                  
+                                DEC                DI
+                                JMP                GOLEFTBYTE
+    GOUPBYTE:                   
+                                MOV                BX, DI
+                                SUB                BX, SCREEN_WIDTH
+                                CMP                BYTE PTR ES:[BX], 36
+                                JE                 STILLUP
+                                CMP                BYTE PTR ES:[BX], 112
+                                JE                 STILLUP
+                                CMP                BYTE PTR ES:[BX], 121
+                                JE                 STILLUP
+                                CMP                BYTE PTR ES:[BX], 17
+                                JE                 STILLUP
+                                CMP                BYTE PTR ES:[BX], 28
+                                JE                 STILLUP
+                                JMP                FINISHGETTOPLEFT
         
-        STILLUP:        
-        SUB DI, SCREEN_WIDTH
-        JMP GOUPBYTE
+    STILLUP:                    
+                                SUB                DI, SCREEN_WIDTH
+                                JMP                GOUPBYTE
 
-    FINISHGETTOPLEFT:
-        MOV POWERTOPLEFTBYTE, DI
-    RET
-GETTOPLEFTPOWER ENDP
+    FINISHGETTOPLEFT:           
+                                MOV                POWERTOPLEFTBYTE, DI
+                                RET
+GetTopLeftPowerUp ENDP
 
-STORINGROADUNDERPOWER PROC
-    MOV AX, POWERH 
-    MOV OUTCOUNTER, AX
+StoringRoadUnderPowerUp PROC
+                                MOV                AX, POWERH
+                                MOV                OUTCOUNTER, AX
 
-    POWERROWS:
-        MOV FIRSTBYTEINROW, DI
-        MOV AX, POWERW
-        MOV INCOUNTER, AX
-        POWERCOLS:
-            MOV AL, BYTE PTR ES:[DI]
-            MOV BYTE PTR DS:[SI], AL
+    POWERROWS:                  
+                                MOV                FIRSTBYTEINROW, DI
+                                MOV                AX, POWERW
+                                MOV                INCOUNTER, AX
+    POWERCOLS:                  
+                                MOV                AL, BYTE PTR ES:[DI]
+                                MOV                BYTE PTR DS:[SI], AL
 
-            INC DI
-            INC SI
-            DEC INCOUNTER
-        JNZ POWERCOLS
-        MOV DI, FIRSTBYTEINROW
-        ADD DI, SCREENWIDTH
-    DEC OUTCOUNTER
-    JNZ POWERROWS   
-    RET
-STORINGROADUNDERPOWER ENDP
+                                INC                DI
+                                INC                SI
+                                DEC                INCOUNTER
+                                JNZ                POWERCOLS
+                                MOV                DI, FIRSTBYTEINROW
+                                ADD                DI, SCREEN_WIDTH
+                                DEC                OUTCOUNTER
+                                JNZ                POWERROWS
+                                RET
+StoringRoadUnderPowerUp ENDP
 
-RETRIEVEROAD PROC
-    MOV AL, POWERW * POWERH
-    MOV BX, CURPOWERINDEX
-    MOV BH, 0
-    MUL BL   ; NOW AX HAS THE INDEX OF STARTING BYTE
+RetrieveRoad PROC
+                                MOV                AL, POWERW * POWERH
+                                MOV                BX, CURPOWERINDEX
+                                MOV                BH, 0
+                                MUL                BL                                                                                      ; NOW AX HAS THE INDEX OF STARTING BYTE
 
-    MOV SI, OFFSET ROADUNDERPOWER
-    ADD SI, AX
+                                MOV                SI, OFFSET ROADUNDERPOWER
+                                ADD                SI, AX
 
-    MOV BX, OFFSET TOPLEFTPOWER
-    MOV AL, 2
-    MOV DX, CURPOWERINDEX
-    MOV DH, 0
-    MUL DL
-    ADD BX, AX
-    MOV DI, WORD PTR DS:[BX]
+                                MOV                BX, OFFSET TOPLEFTPOWER
+                                MOV                AL, 2
+                                MOV                DX, CURPOWERINDEX
+                                MOV                DH, 0
+                                MUL                DL
+                                ADD                BX, AX
+                                MOV                DI, WORD PTR DS:[BX]
 
-    MOV CX, POWERH
-    RETRIEVEROWS:
-        PUSH CX
-        PUSH DI
-        MOV CX, POWERW
-        RETRIEVECOLS:
-            MOV DL, BYTE PTR DS:[SI]
-            MOV BYTE PTR ES:[DI], DL
-            INC SI
-            INC DI
-        LOOP RETRIEVECOLS
-        POP DI
-        POP CX
-        ADD DI, SCREENWIDTH
-    LOOP RETRIEVEROWS
-    RET
-RETRIEVEROAD ENDP
+                                MOV                CX, POWERH
+    RETRIEVEROWS:               
+                                PUSH               CX
+                                PUSH               DI
+                                MOV                CX, POWERW
+    RETRIEVECOLS:               
+                                MOV                DL, BYTE PTR DS:[SI]
+                                MOV                BYTE PTR ES:[DI], DL
+                                INC                SI
+                                INC                DI
+                                LOOP               RETRIEVECOLS
+                                POP                DI
+                                POP                CX
+                                ADD                DI, SCREEN_WIDTH
+                                LOOP               RETRIEVEROWS
+                                RET
+RetrieveRoad ENDP
 
 
 
-SEARCHTORETRIEVE PROC
-    MOV DX, POWERTOPLEFTBYTE
-    MOV SI, OFFSET TOPLEFTPOWER
-    MOV CX, POWERUPCOUNTER
-    SEARCH:
-    CMP WORD PTR DS:[SI], DX
-    JE GOTORETRIEVE
-    ADD SI, 2
-    LOOP SEARCH
+SearchToRetrieve PROC
+                                MOV                DX, POWERTOPLEFTBYTE
+                                MOV                SI, OFFSET TOPLEFTPOWER
+                                MOV                CX, POWERUPCOUNTER
+    SEARCH:                     
+                                CMP                WORD PTR DS:[SI], DX
+                                JE                 GOTORETRIEVE
+                                ADD                SI, 2
+                                LOOP               SEARCH
 
-    GOTORETRIEVE:
-    MOV AX, POWERUPCOUNTER
-    SUB AX, CX
-    MOV CURPOWERINDEX, AX
-    CALL RETRIEVEROAD
-    RET
-SEARCHTORETRIEVE ENDP
+    GOTORETRIEVE:               
+                                MOV                AX, POWERUPCOUNTER
+                                SUB                AX, CX
+                                MOV                CURPOWERINDEX, AX
+                                CALL               RetrieveRoad
+                                RET
+SearchToRetrieve ENDP
 
-SHOWHIDDENPOWER PROC
-    MOV AX, INDEXSTARTSHOWING
-    DEC AX
-    MOV BL, 2
-    MOV BH, 0
-    MUL BL ;NOW WE HAVE THE SHIFTING IN AX
-    MOV SI, OFFSET TOPLEFTPOWER
-    ADD SI, AX
-    MOV DI, WORD PTR DS:[SI]
-    CALL CALCXY
-    MOV TMP4, 0
+ShowHiddenPowerUp PROC
+                                MOV                AX, INDEXSTARTSHOWING
+                                DEC                AX
+                                MOV                BL, 2
+                                MOV                BH, 0
+                                MUL                BL                                                                                      ;NOW WE HAVE THE SHIFTING IN AX
+                                MOV                SI, OFFSET TOPLEFTPOWER
+                                ADD                SI, AX
+                                MOV                DI, WORD PTR DS:[SI]
+                                CALL               CalcXY
+                                MOV                TMP4, 0
 
     ;DECIDING WHICH POWERUP TO DRAW
-    CALL GETSYSTEMTIME
+                                CALL               GetSystemTime
     ;AND DL, 3
-    MOV AL, 4
-    MOV RANGEOFRAND, AL
-    CALL RANGINGRAND
-    CMP DL, 0
-    JNE HIDNODECSPEED
+                                MOV                AL, 4
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                CMP                DL, 0
+                                JNE                HIDNODECSPEED
 
-    DRAW DECSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-    JMP HIDFINISHPOWER
-    HIDNODECSPEED:
+                                DRAW               DECSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                JMP                HIDFINISHPOWER
+    HIDNODECSPEED:              
 
-    CMP DL, 1
-    JNE HIDNOINCSPEED
-    DRAW INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-    JMP HIDFINISHPOWER
-    HIDNOINCSPEED:
+                                CMP                DL, 1
+                                JNE                HIDNOINCSPEED
+                                DRAW               INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                JMP                HIDFINISHPOWER
+    HIDNOINCSPEED:              
 
-    CMP DL, 2
-    JNE HIDNOPASSOBST
-    DRAW PASSOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-    JMP HIDFINISHPOWER
-    HIDNOPASSOBST:
+                                CMP                DL, 2
+                                JNE                HIDNOPASSOBST
+                                DRAW               PASSOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                JMP                HIDFINISHPOWER
+    HIDNOPASSOBST:              
 
-    CMP DL, 3
-    JNE HIDFINISHPOWER
-    DRAW CREATEOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                CMP                DL, 3
+                                JNE                HIDFINISHPOWER
+                                DRAW               CREATEOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
 
-    HIDFINISHPOWER:
+    HIDFINISHPOWER:             
             
-    RET
-SHOWHIDDENPOWER ENDP
+                                RET
+ShowHiddenPowerUp ENDP
 
-WHICHPOWERIMG PROC
-    CHECKCANDRAWPOWER POWERW, POWERH, TEMPX, TEMPY ;IF IT WILL BE DRAWN ON THE OBST IT WILL NOT BE DRAWN AT ALL (SKIPPED)
+GetCertainPowerImage PROC
+                                CHECKCANDRAWPOWER  POWERW, POWERH, TEMPX, TEMPY                                                            ;IF IT WILL BE DRAWN ON THE OBST IT WILL NOT BE DRAWN AT ALL (SKIPPED)
     
-    CALL RANDOMIZEPERCENTAGE
-    CMP DL, POWERPROBABILITY
-    JA FINISHPOWER
+                                CALL               RandomizePercentage
+                                CMP                DL, POWERPROBABILITY
+                                JA                 FINISHPOWER
 
-    MOV DI, TEMPY
-    MOV AX, SCREENWIDTH
-    MUL DI
-    MOV DI, AX
-    ADD DI, TEMPX
+                                MOV                DI, TEMPY
+                                MOV                AX, SCREEN_WIDTH
+                                MUL                DI
+                                MOV                DI, AX
+                                ADD                DI, TEMPX
 
     ;STORING THE TOP LEFT CORNER AND THE ROAD UNDER THE POWER UP
-    MOV SI, OFFSET TOPLEFTPOWER
-    MOV AL, 2
-    MOV BX, POWERUPCOUNTER
-    MOV BH, 0
-    MUL BL
-    ADD SI, AX
-    MOV WORD PTR DS:[SI], DI
+                                MOV                SI, OFFSET TOPLEFTPOWER
+                                MOV                AL, 2
+                                MOV                BX, POWERUPCOUNTER
+                                MOV                BH, 0
+                                MUL                BL
+                                ADD                SI, AX
+                                MOV                WORD PTR DS:[SI], DI
 
-    MOV SI, OFFSET ROADUNDERPOWER
-    MOV AL, POWERW * POWERH
-    MOV BX, POWERUPCOUNTER
-    MOV BH, 0
-    MUL BL
-    ADD SI, AX
-    CALL STORINGROADUNDERPOWER
+                                MOV                SI, OFFSET ROADUNDERPOWER
+                                MOV                AL, POWERW * POWERH
+                                MOV                BX, POWERUPCOUNTER
+                                MOV                BH, 0
+                                MUL                BL
+                                ADD                SI, AX
+                                CALL               StoringRoadUnderPowerUp
     
-    ;RANDOMIZING WHETHER TO DRAW OR MAKE IT HIDDEN UNTIL WE SHOW IT DURING THE GAME 
-    CALL RANDOMIZEPERCENTAGE
-    MOV SI, OFFSET ISVISIBLEPOWER
-    ADD SI, POWERUPCOUNTER
-    INC POWERUPCOUNTER ; WE MOVE THAT LINE HERE AS WE NEEDED IT IN THE PREVIOUS LINE
-    CMP DL, POWERVISIBPROBABILITY
-    JBE VISIBLE
-    MOV BYTE PTR DS:[SI], 0
-    JMP FINISHPOWER
+    ;RANDOMIZING WHETHER TO DRAW OR MAKE IT HIDDEN UNTIL WE SHOW IT DURING THE GAME
+                                CALL               RandomizePercentage
+                                MOV                SI, OFFSET ISVISIBLEPOWER
+                                ADD                SI, POWERUPCOUNTER
+                                INC                POWERUPCOUNTER                                                                          ; WE MOVE THAT LINE HERE AS WE NEEDED IT IN THE PREVIOUS LINE
+                                CMP                DL, POWERVISIBPROBABILITY
+                                JBE                VISIBLE
+                                MOV                BYTE PTR DS:[SI], 0
+                                JMP                FINISHPOWER
     
-    VISIBLE:
-    MOV BYTE PTR DS:[SI], 1
-    CALL GETSYSTEMTIME
+    VISIBLE:                    
+                                MOV                BYTE PTR DS:[SI], 1
+                                CALL               GetSystemTime
     ;AND DL, 3
-    MOV AL, 4
-    MOV RANGEOFRAND, AL
-    CALL RANGINGRAND
-    CMP DL, 0
-    JNE NODECSPEED
+                                MOV                AL, 4
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                CMP                DL, 0
+                                JNE                NODECSPEED
 
-    DRAW DECSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-    JMP FINISHPOWER
-    NODECSPEED:
+                                DRAW               DECSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                JMP                FINISHPOWER
+    NODECSPEED:                 
 
-    CMP DL, 1
-    JNE NOINCSPEED
-    DRAW INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-    JMP FINISHPOWER
-    NOINCSPEED:
+                                CMP                DL, 1
+                                JNE                NOINCSPEED
+                                DRAW               INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                JMP                FINISHPOWER
+    NOINCSPEED:                 
 
-    CMP DL, 2
-    JNE NOPASSOBST
-    DRAW PASSOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-    JMP FINISHPOWER
-    NOPASSOBST:
+                                CMP                DL, 2
+                                JNE                NOPASSOBST
+                                DRAW               PASSOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                JMP                FINISHPOWER
+    NOPASSOBST:                 
 
-    CMP DL, 3
-    JNE FINISHPOWER
-    DRAW CREATEOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                CMP                DL, 3
+                                JNE                FINISHPOWER
+                                DRAW               CREATEOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
 
-    FINISHPOWER:
+    FINISHPOWER:                
 
-    RET
-WHICHPOWERIMG ENDP
-
-
-
-OBSTRANDANDDRAW PROC
-    CALL RANDOMIZEPERCENTAGE
-    CMP DL, OBSTPROBABILITY
-    JA FINISHOBST
-    DRAW OBSTACLE, OBSTACLEW, OBSTACLEH, TEMPX, TEMPY, TMP4
-    FINISHOBST:
-    RET
-OBSTRANDANDDRAW ENDP
-
-RANGINGRAND PROC
-    MOV AL, DL
-    MOV AH, 0
-    MOV BL, RANGEOFRAND
-    DIV BL
-    MOV DL, AH
-    MOV DH, 0
-    RET
-RANGINGRAND ENDP
+                                RET
+GetCertainPowerImage ENDP
 
 
-;PROC TO DRAW THE END RACE LINE
-DRAWENDLINE PROC
-    ;THIS CAN BE EDITED INTO THE PROC CALCXY(OPTIMIZATION)
-    MOV AX, LASTDI
-    MOV DX, 0
-    MOV BX, SCREENWIDTH
-    DIV BX
-    MOV TEMPX, DX
-    MOV TEMPY, AX
-    MOV TMP4, 0
 
-    CMP LASTDIR, 0
-    JNE NOTLASTUP
-    SUB TEMPX, VERROADIMGW
-    SUB TEMPY, HORENDFLAGIMGH 
-    DRAW HORENDFLAGIMG, HORENDFLAGIMGW, HORENDFLAGIMGH, TEMPX, TEMPY, TMP4
-    JMP FINISHDRAWENDLINE
-    NOTLASTUP:
+ObstRandAndDraw PROC
+                                CALL               RandomizePercentage
+                                CMP                DL, OBSTPROBABILITY
+                                JA                 FINISHOBST
+                                DRAW               OBSTACLE, OBSTACLEW, OBSTACLEH, TEMPX, TEMPY, TMP4
+    FINISHOBST:                 
+                                RET
+ObstRandAndDraw ENDP
 
-    CMP LASTDIR, 1
-    JNE NOTLASTRIGHT
-    DRAW VERENDFLAGIMG, VERENDFLAGIMGW, VERENDFLAGIMGH, TEMPX, TEMPY, TMP4
-    JMP FINISHDRAWENDLINE
-    NOTLASTRIGHT:
+RaingingRand PROC
+                                MOV                AL, DL
+                                MOV                AH, 0
+                                MOV                BL, RANGEOFRAND
+                                DIV                BL
+                                MOV                DL, AH
+                                MOV                DH, 0
+                                RET
+RaingingRand ENDP
 
-    CMP LASTDIR, 2
-    JNE NOTLASTDOWN
-    SUB TEMPX, VERROADIMGW
-    ADD TEMPY, VERROADIMGH
-    DRAW HORENDFLAGIMG, HORENDFLAGIMGW, HORENDFLAGIMGH, TEMPX, TEMPY, TMP4
-    JMP FINISHDRAWENDLINE
-    NOTLASTDOWN:
+
+    ;PROC TO DRAW THE END RACE LINE
+DrawEndLine PROC
+    ;THIS CAN BE EDITED INTO THE PROC CalcXY(OPTIMIZATION)
+                                MOV                AX, LASTDI
+                                MOV                DX, 0
+                                MOV                BX, SCREEN_WIDTH
+                                DIV                BX
+                                MOV                TEMPX, DX
+                                MOV                TEMPY, AX
+                                MOV                TMP4, 0
+
+                                CMP                LASTDIR, 0
+                                JNE                NOTLASTUP
+                                SUB                TEMPX, VERROADIMGW
+                                SUB                TEMPY, HORENDFLAGIMGH
+                                DRAW               HORENDFLAGIMG, HORENDFLAGIMGW, HORENDFLAGIMGH, TEMPX, TEMPY, TMP4
+                                JMP                FINISHDrawEndLine
+    NOTLASTUP:                  
+
+                                CMP                LASTDIR, 1
+                                JNE                NOTLASTRIGHT
+                                DRAW               VERENDFLAGIMG, VERENDFLAGIMGW, VERENDFLAGIMGH, TEMPX, TEMPY, TMP4
+                                JMP                FINISHDrawEndLine
+    NOTLASTRIGHT:               
+
+                                CMP                LASTDIR, 2
+                                JNE                NOTLASTDOWN
+                                SUB                TEMPX, VERROADIMGW
+                                ADD                TEMPY, VERROADIMGH
+                                DRAW               HORENDFLAGIMG, HORENDFLAGIMGW, HORENDFLAGIMGH, TEMPX, TEMPY, TMP4
+                                JMP                FINISHDrawEndLine
+    NOTLASTDOWN:                
     
-    SUB TEMPX, HORROADIMGW + VERENDFLAGIMGW
-    DRAW VERENDFLAGIMG, VERENDFLAGIMGW, VERENDFLAGIMGH, TEMPX, TEMPY, TMP4
+                                SUB                TEMPX, HORROADIMGW + VERENDFLAGIMGW
+                                DRAW               VERENDFLAGIMG, VERENDFLAGIMGW, VERENDFLAGIMGH, TEMPX, TEMPY, TMP4
     
-    FINISHDRAWENDLINE:
-    RET
-DRAWENDLINE ENDP
+    FINISHDrawEndLine:          
+                                RET
+DrawEndLine ENDP
+
+    ;prints character by character in video game mode in order to display string with font
+char_display proc  FAR
+                                mov                ah, 9
+                                mov                bh, 0
+                                mov                bl, 93H                                                                                 ;ANY COLOR.
+                                mov                cx, 1                                                                                   ;HOW MANY TIMES TO DISPLAY CHAR.
+                                int                10h
+                                ret
+char_display endp
 
 
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 MAIN PROC FAR
-MOV AX, @DATA
-MOV DS, AX
+                                MOV                AX, @DATA
+                                MOV                DS, AX
 
 
-MOV AH,0
-MOV AL,13H
-INT 10H
+                                MOV                AH,0
+                                MOV                AL,13H
+                                INT                10H
 
-MOV AX, 0A000H
-MOV ES, AX
+                                MOV                AX, 0A000H
+                                MOV                ES, AX
 
-CALL INTERFACESTAGE
+                                CALL               INTERFACESTAGE
 
-;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
-TAKINGNEXTSTAGE:
-MOV AH, 0
-INT 16H
-CMP AH, 28
-JE STARTPROGRAM
-CMP AH, 1
-JE exit
-JMP TAKINGNEXTSTAGE
-
-
-STARTPROGRAM:
-                ;Multiplayers' Names
-                MOV AH,2
-                MOV DH , player1PosY
-                MOV DL , player1PosX
-                INT 10H
-
-                MOV AH ,9
-                LEA DX , player1Name
-                INT 21H
-
-                MOV AH ,2
-                MOV DH , player2PosY
-                MOV DL , player2PosX
-                INT 10H
-
-                MOV AH ,9
-                LEA DX , player2Name
-                INT 21H
-
-                MOV AH ,2 
-                MOV DH , player1PosY
-                ADD DH ,1
-                MOV DL , player1PosX
-                INT 10H
-
-                MOV AH , 09
-                LEA DX , powerupMessage
-                INT 21H
-
-                MOV AH ,2 
-                MOV DH , player2PosY
-                ADD dh , 1
-                MOV DL , player2PosX
-                INT 10H
-
-                MOV AH , 09
-                LEA DX , powerupMessage
-                INT 21H
-
-;;;;;;;;;; DRAWING ROAD ;;;;;;;;;;;;
+    ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
+    TAKINGNEXTSTAGE:            
+                                MOV                AH, 0
+                                INT                16H
+                                CMP                AH, 28
+                                JE                 STARTPROGRAM
+                                CMP                AH, 1
+                                JE                 exit
+                                JMP                TAKINGNEXTSTAGE
 
 
-;DRAWING PART OF ROAD 
-;DRAW BACKGROUNDIMAGE, SCREENWIDTH, SCREENHEIGHT, 0, 0
+    STARTPROGRAM:               
+    ;Multiplayers' Names
+                                MOV                AH,2
+                                MOV                DH , player1PosY
+                                MOV                DL , player1PosX
+                                INT                10H
+
+                                MOV                AH ,9
+                                LEA                DX , player1Name
+                                INT                21H
+
+                                MOV                AH ,2
+                                MOV                DH , player2PosY
+                                MOV                DL , player2PosX
+                                INT                10H
+
+                                MOV                AH ,9
+                                LEA                DX , player2Name
+                                INT                21H
+
+                                MOV                AH ,2
+                                MOV                DH , player1PosY
+                                ADD                DH ,1
+                                MOV                DL , player1PosX
+                                INT                10H
+
+                                MOV                AH , 09
+                                LEA                DX , powerupMessage
+                                INT                21H
+
+                                MOV                AH ,2
+                                MOV                DH , player2PosY
+                                ADD                dh , 1
+                                MOV                DL , player2PosX
+                                INT                10H
+
+                                MOV                AH , 09
+                                LEA                DX , powerupMessage
+                                INT                21H
+
+    ;;;;;;;;;; DRAWING ROAD ;;;;;;;;;;;;
+
+    ;DRAWING PART OF ROAD
+    ;DRAW BACKGROUNDIMAGE, SCREEN_WIDTH, SCREENHEIGHT, 0, 0
+    STARTROAD:                  
+                                MOV                CANTUP, 0
+                                MOV                CANTRIGHT, 0
+                                MOV                CANTDOWN, 0
+                                MOV                CANTLEFT, 0
+                                MOV                POWERUPCOUNTER, 0                                                                       ;ADDED THAT WHEN ADDED START PROGRAM
+                                MOV                CURPOWERINDEX, 0
+                                MOV                CX, 11
+                                MOV                TEMPX, 0
+                                MOV                TEMPY, 0
+    OUTERLOOP:                  
+                                PUSH               CX
+                                MOV                CX, 20
+    INNERLOOP:                  
+                                MOV                TMP4, 0
+                                DRAW               BACKGROUNDIMAGEPART , BACKGROUNDIMAGEPARTW, BACKGROUNDIMAGEPARTH, TEMPX, TEMPY, TMP4
+                                ADD                TEMPX, BACKGROUNDIMAGEPARTW
+                                LOOP               INNERLOOP
+                                MOV                TEMPX, 0
+                                ADD                TEMPY, BACKGROUNDIMAGEPARTH
+                                POP                CX
+                                LOOP               OUTERLOOP
+    ;CALL DRAWBCKGROUND
+
+                                MOV                TMP4, 0
+                                MOV                CX, 0
+                                DRAW               HORROADIMG , HORROADIMGW, HORROADIMGH, STARTROADX, STARTROADY, TMP4
+                                CALL               PointsAfterRight
+                                DRAW               STARTFLAGIMG, STARTFLAGIMGW, STARTFLAGIMGH, STARTROADX, STARTROADY, TMP4
 
 
-STARTROAD:
-    MOV CANTUP, 0
-    MOV CANTRIGHT, 0
-    MOV CANTDOWN, 0
-    MOV CANTLEFT, 0
-    MOV POWERUPCOUNTER, 0 ;ADDED THAT WHEN ADDED START PROGRAM
-    MOV CURPOWERINDEX, 0
-    MOV CX, 11
-    MOV TEMPX, 0
-    MOV TEMPY, 0
-    OUTERLOOP:
-    PUSH CX
-    MOV CX, 20
-    INNERLOOP:
-        MOV TMP4, 0
-        DRAW BACKGROUNDIMAGEPART , BACKGROUNDIMAGEPARTW, BACKGROUNDIMAGEPARTH, TEMPX, TEMPY, TMP4
-        ADD TEMPX, BACKGROUNDIMAGEPARTW
-    LOOP INNERLOOP
-    MOV TEMPX, 0
-    ADD TEMPY, BACKGROUNDIMAGEPARTH
-    POP CX
-    LOOP OUTERLOOP
-;CALL DRAWBCKGROUND
+    ;Drawing Status Bar
+                                CalcStatBarStPts
+                                CALL               DrawStatBar
+    ;THIS IS TO RANDOMIZE NUMBER FROM 0 TO 3 TO SPECIFY THE DIRECTON
+                                MOV                CX, NUMBEROFPARTS
+    RANDOMIZEPART:              
+                                CHECKPOSSIBILITIES
+    START:                      
+                                PUSH               CX
+                                CALL               GetSystemTime
+                                POP                CX
+                                AND                DL, 3
+                                CMP                DL, 0                                                                                   ;UP
+                                JE                 CHECKUP
+                                CMP                DL, 1                                                                                   ;RIGHT
+                                JE                 CHECKRIGHT
+                                CMP                DL, 2                                                                                   ;DOWN
+                                JE                 CHECKDOWN
+                                JMP                CHECKLEFT                                                                               ;left
 
-MOV TMP4, 0
-MOV CX, 0
-DRAW HORROADIMG , HORROADIMGW, HORROADIMGH, STARTROADX, STARTROADY, TMP4
-CALL POINTSAFTERRIGHT
-DRAW STARTFLAGIMG, STARTFLAGIMGW, STARTFLAGIMGH, STARTROADX, STARTROADY, TMP4
+    CHECKUP:                    
+                                CMP                UPDIR, 0
+                                JNE                CONTUP
+                                MOV                CANTUP, 1
+                                JMP                RANDOMIZEPART
+    CONTUP:                     
 
-
-;THIS IS TO RANDOMIZE NUMBER FROM 0 TO 3 TO SPECIFY THE DIRECTON
-MOV CX, NUMBEROFPARTS
-RANDOMIZEPART:
-    CHECKPOSSIBILITIES
-    START:
-    PUSH CX
-    CALL GETSYSTEMTIME
-    POP CX
-    AND DL, 3
-    CMP DL, 0  ;UP
-    JE CHECKUP
-    CMP DL, 1  ;RIGHT
-    JE CHECKRIGHT
-    CMP DL, 2  ;DOWN
-    JE CHECKDOWN
-    JMP CHECKLEFT ;left
-
-    CHECKUP:
-    CMP UPDIR, 0
-    JNE CONTUP
-    MOV CANTUP, 1
-    JMP RANDOMIZEPART
-    CONTUP:
-
-    MOV AX, UPDIR
-    MOV DX, 0
-    MOV BX, SCREENWIDTH
-    DIV BX
-    MOV TEMPX, DX
-    MOV TEMPY, AX
-    CMP TEMPY, YNOUP
-    JB NOTHANDLEUP
-    JMP HANDLEUP
-    NOTHANDLEUP:
-    MOV CANTUP, 1
-    JMP RANDOMIZEPART
+                                MOV                AX, UPDIR
+                                MOV                DX, 0
+                                MOV                BX, SCREEN_WIDTH
+                                DIV                BX
+                                MOV                TEMPX, DX
+                                MOV                TEMPY, AX
+                                CMP                TEMPY, YNOUP
+                                JB                 NOTHANDLEUP
+                                JMP                HANDLEUP
+    NOTHANDLEUP:                
+                                MOV                CANTUP, 1
+                                JMP                RANDOMIZEPART
 
 
-    CHECKRIGHT:
-    CMP RIGHTDIR, 0
-    JNE CONTRIGHT
-    MOV CANTRIGHT, 1
-    JMP RANDOMIZEPART
-    CONTRIGHT:
+    CHECKRIGHT:                 
+                                CMP                RIGHTDIR, 0
+                                JNE                CONTRIGHT
+                                MOV                CANTRIGHT, 1
+                                JMP                RANDOMIZEPART
+    CONTRIGHT:                  
 
-    MOV AX, RIGHTDIR
-    MOV DX, 0
-    MOV BX, SCREENWIDTH
-    DIV BX
-    MOV TEMPX, DX
-    MOV TEMPY, AX
-    CMP TEMPX, XNORIGHT
-    JA NOTHANDLERIGHT
-    JMP HANDLERIGHT
-    NOTHANDLERIGHT:
-    MOV CANTRIGHT, 1
-    JMP RANDOMIZEPART 
+                                MOV                AX, RIGHTDIR
+                                MOV                DX, 0
+                                MOV                BX, SCREEN_WIDTH
+                                DIV                BX
+                                MOV                TEMPX, DX
+                                MOV                TEMPY, AX
+                                CMP                TEMPX, XNORIGHT
+                                JA                 NOTHANDLERIGHT
+                                JMP                HANDLERIGHT
+    NOTHANDLERIGHT:             
+                                MOV                CANTRIGHT, 1
+                                JMP                RANDOMIZEPART
     
-    CHECKDOWN:
-    CMP DOWNDIR, 0
-    JNE CONTDOWN
-    MOV CANTDOWN, 1
-    JMP RANDOMIZEPART
-    CONTDOWN:
+    CHECKDOWN:                  
+                                CMP                DOWNDIR, 0
+                                JNE                CONTDOWN
+                                MOV                CANTDOWN, 1
+                                JMP                RANDOMIZEPART
+    CONTDOWN:                   
 
-    MOV AX, DOWNDIR
-    MOV DX, 0
-    MOV BX, SCREENWIDTH
-    DIV BX
-    MOV TEMPX, DX
-    MOV TEMPY, AX
-    CMP TEMPY, YNODOWN
-    JA NOTHANDLEDOWN
-    JMP HANDLEDOWN
-    NOTHANDLEDOWN:
-    MOV CANTDOWN, 1
-    JMP RANDOMIZEPART
+                                MOV                AX, DOWNDIR
+                                MOV                DX, 0
+                                MOV                BX, SCREEN_WIDTH
+                                DIV                BX
+                                MOV                TEMPX, DX
+                                MOV                TEMPY, AX
+                                CMP                TEMPY, YNODOWN
+                                JA                 NOTHANDLEDOWN
+                                JMP                HANDLEDOWN
+    NOTHANDLEDOWN:              
+                                MOV                CANTDOWN, 1
+                                JMP                RANDOMIZEPART
     
-    CHECKLEFT:
-    CMP LEFTDIR, 0
-    JNE CONTLEFT
-    MOV CANTLEFT, 1
-    JMP RANDOMIZEPART
-    CONTLEFT:
+    CHECKLEFT:                  
+                                CMP                LEFTDIR, 0
+                                JNE                CONTLEFT
+                                MOV                CANTLEFT, 1
+                                JMP                RANDOMIZEPART
+    CONTLEFT:                   
 
-    MOV AX, LEFTDIR
-    MOV DX, 0
-    MOV BX, SCREENWIDTH
-    DIV BX
-    MOV TEMPX, DX
-    MOV TEMPY, AX
-    CMP TEMPX, XNOLEFT
-    JB NOTHANDLELEFT
-    JMP HANDLELEFT
-    NOTHANDLELEFT:
-    MOV CANTLEFT, 1
-    JMP RANDOMIZEPART
-
-
+                                MOV                AX, LEFTDIR
+                                MOV                DX, 0
+                                MOV                BX, SCREEN_WIDTH
+                                DIV                BX
+                                MOV                TEMPX, DX
+                                MOV                TEMPY, AX
+                                CMP                TEMPX, XNOLEFT
+                                JB                 NOTHANDLELEFT
+                                JMP                HANDLELEFT
+    NOTHANDLELEFT:              
+                                MOV                CANTLEFT, 1
+                                JMP                RANDOMIZEPART
 
 
 
-;THIS PART OF HANDLES WAS REVISED
-    ;WE CHECK AGAIN HERE FOR THE SCREEN EDGES 
-    HANDLEUP:
-    MOV TMP, 0
+
+
+    ;THIS PART OF HANDLES WAS REVISED
+    ;WE CHECK AGAIN HERE FOR THE SCREEN EDGES
+    HANDLEUP:                   
+                                MOV                TMP, 0
     ;THIS IS TO LEAVE SOME SPACE FOR A ORTHOGONAL PART TO BE DRAWN
-    MOV TMP1, VERROADIMGH + HORROADIMGH + 2
-    SUB TEMPY, HORROADIMGH + 2
-    CHECKCANDRAW VERROADIMGW, TMP1, TEMPX, TEMPY, TMP
-    ADD TEMPY, HORROADIMGH + 2
-    MOV TMP4, 1
-    DRAW VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
-    CALL POINTSAFTERUP
-    MOV LASTDIR, 0
+                                MOV                TMP1, VERROADIMGH + HORROADIMGH + 2
+                                SUB                TEMPY, HORROADIMGH + 2
+                                CHECKCANDRAW       VERROADIMGW, TMP1, TEMPX, TEMPY, TMP
+                                ADD                TEMPY, HORROADIMGH + 2
+                                MOV                TMP4, 1
+                                DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
+                                CALL               PointsAfterUp
+                                MOV                LASTDIR, 0
 
     ;OBSTACLE RANDOMIZATION
-    PUSH CX
-    PUSH TEMPX
-    PUSH TEMPY
-    CALL GETSYSTEMTIME
-    AND DL, VERROADIMGW - OBSTACLEW
-    MOV DH, 0
-    SUB TEMPX, OBSTACLEW
-    SUB TEMPX, DX
-    CALL GETSYSTEMTIME
-    AND DL, VERROADIMGH - OBSTACLEH - THRESHOLD ; THIS THRESHOLD TO START FROM 10 TO 40 TO NOT MAKE TWO OBSTACLES IN THE CORNER TOGETHER
-    MOV DH, 0
-    ADD TEMPY, THRESHOLD / 2 ;AS THRESHOLD IS 20 TO START FROM 10
-    ADD TEMPY, DX
-    MOV TMP4, 0
-    CALL OBSTRANDANDDRAW
+                                PUSH               CX
+                                PUSH               TEMPX
+                                PUSH               TEMPY
+                                CALL               GetSystemTime
+                                AND                DL, VERROADIMGW - OBSTACLEW
+                                MOV                DH, 0
+                                SUB                TEMPX, OBSTACLEW
+                                SUB                TEMPX, DX
+                                CALL               GetSystemTime
+                                AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD                                                 ; THIS THRESHOLD TO START FROM 10 TO 40 TO NOT MAKE TWO OBSTACLES IN THE CORNER TOGETHER
+                                MOV                DH, 0
+                                ADD                TEMPY, THRESHOLD / 2                                                                    ;AS THRESHOLD IS 20 TO START FROM 10
+                                ADD                TEMPY, DX
+                                MOV                TMP4, 0
+                                CALL               ObstRandAndDraw
     
     ;POWERUPRANDOMIZATION
-    POP TEMPY
-    POP TEMPX
-    CALL GETSYSTEMTIME
-    MOV AL, VERROADIMGW - POWERW
-    MOV RANGEOFRAND, AL 
-    CALL RANGINGRAND
-    SUB TEMPX, POWERW
-    SUB TEMPX, DX
-    CALL GETSYSTEMTIME
-    MOV AL, VERROADIMGH - POWERH - THRESHOLD
-    MOV RANGEOFRAND, AL
-    CALL RANGINGRAND
-    ADD TEMPY, THRESHOLD / 2 ;AS THRESHOLD IS 20 TO START FROM 10
-    ADD TEMPY, DX
-    MOV TMP4, 0
+                                POP                TEMPY
+                                POP                TEMPX
+                                CALL               GetSystemTime
+                                MOV                AL, VERROADIMGW - POWERW
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                SUB                TEMPX, POWERW
+                                SUB                TEMPX, DX
+                                CALL               GetSystemTime
+                                MOV                AL, VERROADIMGH - POWERH - THRESHOLD
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                ADD                TEMPY, THRESHOLD / 2                                                                    ;AS THRESHOLD IS 20 TO START FROM 10
+                                ADD                TEMPY, DX
+                                MOV                TMP4, 0
 
     ;WHICH POWERUP
-    CALL WHICHPOWERIMG
+                                CALL               GetCertainPowerImage
     
-    POP CX
-    JMP FINISH
+                                POP                CX
+                                JMP                FINISH
 
 
 
     
 
 
-    ;THIS THE ONLY DIRECTION WE DONT CALL XY IN IT SO THE DI IS STILL ON TOP LEFT AFTER FINISH DRAWING 
-    HANDLERIGHT:
-    MOV TMP, 1
-    MOV TMP1, HORROADIMGW + VERROADIMGW + 2  
-    CHECKCANDRAW TMP1, HORROADIMGH, TEMPX, TEMPY, TMP
-    MOV TMP4, 1
-    DRAW HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
-    CALL POINTSAFTERRIGHT
-    MOV LASTDIR, 1
+    ;THIS THE ONLY DIRECTION WE DONT CALL XY IN IT SO THE DI IS STILL ON TOP LEFT AFTER FINISH DRAWING
+    HANDLERIGHT:                
+                                MOV                TMP, 1
+                                MOV                TMP1, HORROADIMGW + VERROADIMGW + 2
+                                CHECKCANDRAW       TMP1, HORROADIMGH, TEMPX, TEMPY, TMP
+                                MOV                TMP4, 1
+                                DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
+                                CALL               PointsAfterRight
+                                MOV                LASTDIR, 1
 
-    CMP CX, 0 ;HANDLING FIRST SEGMENT NO OBSTACLES
-    JNE NOTFIRSTSEGMENT
-    JMP FIRSTSEGMENT
-    NOTFIRSTSEGMENT:
+                                CMP                CX, 0                                                                                   ;HANDLING FIRST SEGMENT NO OBSTACLES
+                                JNE                NOTFIRSTSEGMENT
+                                JMP                FIRSTSEGMENT
+    NOTFIRSTSEGMENT:            
 
     ;OBSTACLE RANDOMIZATION
-    PUSH CX
-    PUSH TEMPX
-    PUSH TEMPY
-    CALL GETSYSTEMTIME                         
-    AND DL, HORROADIMGW - OBSTACLEW - THRESHOLD
-    MOV DH, 0
-    ADD TEMPX, THRESHOLD / 2
-    ADD TEMPX, DX
-    CALL GETSYSTEMTIME                         
-    AND DL, HORROADIMGH - OBSTACLEH
-    MOV DH, 0
-    ADD TEMPY, DX
-    MOV TMP4, 0
-    CALL OBSTRANDANDDRAW
-
-
-    ;POWERUPRANDOMIZATION
-    POP TEMPY
-    POP TEMPX
-    CALL GETSYSTEMTIME                         
-    MOV AL, HORROADIMGW - POWERW - THRESHOLD
-    MOV RANGEOFRAND, AL 
-    CALL RANGINGRAND
-    ADD TEMPX, THRESHOLD / 2
-    ADD TEMPX, DX
-    CALL GETSYSTEMTIME
-    MOV AL, HORROADIMGH - POWERH
-    MOV RANGEOFRAND, AL 
-    CALL RANGINGRAND   
-    ADD TEMPY, DX
-    MOV TMP4, 0
-
-    ;WHICH POWERUP
-    CALL WHICHPOWERIMG
-
-
-    POP CX
-
-    FIRSTSEGMENT:
-    JMP FINISH
-    
-
-
-
-
-
-    HANDLEDOWN:
-    MOV TMP, 2
-    MOV TMP1, VERROADIMGH + HORROADIMGH + 2
-    CHECKCANDRAW VERROADIMGW, TMP1, TEMPX, TEMPY, TMP
-    MOV TMP4, 1
-    DRAW VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
-    MOV LASTDIR, 2
-    CALL POINTSAFTERDOWN
-
-    ;OBSTACLE RANDOMIZATION
-    PUSH CX
-    PUSH TEMPX
-    PUSH TEMPY
-    CALL GETSYSTEMTIME
-    AND DL, VERROADIMGW - OBSTACLEW
-    MOV DH, 0
-    SUB TEMPX, OBSTACLEW
-    SUB TEMPX, DX
-    CALL GETSYSTEMTIME
-    AND DL, VERROADIMGH - OBSTACLEH - THRESHOLD
-    MOV DH, 0
-    ADD TEMPY, THRESHOLD / 2
-    ADD TEMPY, DX
-    MOV TMP4, 0
-    CALL OBSTRANDANDDRAW
-
-    ;POWERUPRANDOMIZATION
-    POP TEMPY
-    POP TEMPX
-    CALL GETSYSTEMTIME
-    MOV AL, VERROADIMGW - POWERW
-    MOV RANGEOFRAND, AL 
-    CALL RANGINGRAND
-    SUB TEMPX, POWERW
-    SUB TEMPX, DX
-    CALL GETSYSTEMTIME
-    MOV AL, VERROADIMGH - POWERH - THRESHOLD
-    MOV RANGEOFRAND, AL 
-    CALL RANGINGRAND
-    ADD TEMPY, THRESHOLD / 2
-    ADD TEMPY, DX
-    MOV TMP4, 0
-
-    ;WHICH POWERUP
-    CALL WHICHPOWERIMG
-
-
-    POP CX
-    JMP FINISH
-
-
-
-    
-    HANDLELEFT:
-    MOV TMP, 3
-    MOV TMP1, HORROADIMGW + VERROADIMGW + 2
-    SUB TEMPX, VERROADIMGW + 2
-    CHECKCANDRAW TMP1, HORROADIMGH, TEMPX, TEMPY, TMP
-    ADD TEMPX, VERROADIMGW + 2
-    MOV TMP4, 1
-    DRAW HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
-    MOV LASTDIR, 3
-    CALL POINTSAFTERLEFT
-
-    ;OBSTACLE RANDOMIZATION
-    PUSH CX
-    PUSH TEMPX
-    PUSH TEMPY
-    CALL GETSYSTEMTIME
-    AND DL, HORROADIMGW - OBSTACLEW - THRESHOLD
-    MOV DH, 0
-    SUB TEMPX, OBSTACLEW  + THRESHOLD / 2
-    SUB TEMPX, DX
-    CALL GETSYSTEMTIME
-    AND DL, HORROADIMGH - OBSTACLEH
-    MOV DH, 0
-    ADD TEMPY, DX
-    MOV TMP4, 0
-    CALL OBSTRANDANDDRAW
+                                PUSH               CX
+                                PUSH               TEMPX
+                                PUSH               TEMPY
+                                CALL               GetSystemTime
+                                AND                DL, HORROADIMGW - OBSTACLEW - THRESHOLD
+                                MOV                DH, 0
+                                ADD                TEMPX, THRESHOLD / 2
+                                ADD                TEMPX, DX
+                                CALL               GetSystemTime
+                                AND                DL, HORROADIMGH - OBSTACLEH
+                                MOV                DH, 0
+                                ADD                TEMPY, DX
+                                MOV                TMP4, 0
+                                CALL               ObstRandAndDraw
 
 
     ;POWERUPRANDOMIZATION
-    POP TEMPY
-    POP TEMPX
-    CALL GETSYSTEMTIME
-    MOV AL, HORROADIMGW - POWERW - THRESHOLD
-    MOV RANGEOFRAND, AL 
-    CALL RANGINGRAND
-    SUB TEMPX, POWERW  + THRESHOLD / 2
-    SUB TEMPX, DX
-    CALL GETSYSTEMTIME
-    MOV AL, HORROADIMGH - POWERH
-    MOV RANGEOFRAND, AL 
-    CALL RANGINGRAND
-    ADD TEMPY, DX
-    MOV TMP4, 0
+                                POP                TEMPY
+                                POP                TEMPX
+                                CALL               GetSystemTime
+                                MOV                AL, HORROADIMGW - POWERW - THRESHOLD
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                ADD                TEMPX, THRESHOLD / 2
+                                ADD                TEMPX, DX
+                                CALL               GetSystemTime
+                                MOV                AL, HORROADIMGH - POWERH
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                ADD                TEMPY, DX
+                                MOV                TMP4, 0
 
     ;WHICH POWERUP
-    CALL WHICHPOWERIMG
+                                CALL               GetCertainPowerImage
 
 
-    POP CX
+                                POP                CX
 
-    FINISH:
-;INITIALIZING CANT DRAW ARRAY
-MOV CANTUP, 0
-MOV CANTRIGHT, 0
-MOV CANTDOWN, 0
-MOV CANTLEFT, 0
-
-DEC CX
-JNZ GOUP
-JMP LAST
-GOUP:
-JMP FAR PTR RANDOMIZEPART
-
-
-LAST:
-CMP CX, NUMBEROFPARTS - MINNUMOFPARTS
-JBE NOTSTARTPROGRAM
-CALL GETSYSTEMTIME2
-JMP STARTROAD
-NOTSTARTPROGRAM:
-CALL DRAWENDLINE
-
-; MOV CURPOWERINDEX, 4
-; CALL RETRIEVEROAD
-
-     ; set initial pos of first car in the game
-                MOV  PosXfirst , STARTROADX
-                MOV  PosYfirst , STARTROADY + 1
-                Draw_Car CarImg1, CAR_SIZE, PosXfirst , PosYfirst
-
-                ; set initial pos of second car in the game
-                MOV  PosXsecond , STARTROADX 
-                MOV  PosYsecond , STARTROADY + HORROADIMGH - Car_Size - 1
-                Draw_Car CarImg2, CAR_SIZE, PosXsecond , PosYsecond
-
-                MOV DX , PosXfirst
-                MOV PosX, DX
-
-                MOV DX , PosYfirst
-                MOV PosY, DX
+    FIRSTSEGMENT:               
+                                JMP                FINISH
+    
 
 
 
-        
-
-                    ; MOV TMP4 , 0
-                    ; MOV TEMPX , 71
-                    ; MOV TEMPY , 187
-                    ; DRAW INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-
-                    ; MOV powerupParent , 1
-                    ; ClearPower
- 
-
-     mainLoop:          
-                MOV AX, POWERUPCOUNTER
-                CMP INDEXSTARTSHOWING, AX
-                JAE DONTSHOWPOWER
-
-                MOV AH, 2CH  ; INTERRUPT to get system time
-                INT 21H
-
-                CMP DH, CURSECOND
-                JE DONTSHOWPOWER
-                MOV CURSECOND, DH
-
-                MOV AL, DH
-                MOV AH, 0
-                MOV BL, DURATIONTOSHOWPOWER
-                DIV BL
-                CMP AH, 0
-                JNE DONTSHOWPOWER
-                MOV SI, OFFSET ISVISIBLEPOWER
-                ADD SI, INDEXSTARTSHOWING
-                INC INDEXSTARTSHOWING
-                CMP BYTE PTR DS:[SI], 0
-                JNE DONTSHOWPOWER
-                CALL SHOWHIDDENPOWER
 
 
-                DONTSHOWPOWER:
+    HANDLEDOWN:                 
+                                MOV                TMP, 2
+                                MOV                TMP1, VERROADIMGH + HORROADIMGH + 2
+                                CHECKCANDRAW       VERROADIMGW, TMP1, TEMPX, TEMPY, TMP
+                                MOV                TMP4, 1
+                                DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
+                                MOV                LASTDIR, 2
+                                CALL               PointsAfterDown
 
-                MOV DX , PosXfirst
-                MOV PrevPosXfirst, DX
+    ;OBSTACLE RANDOMIZATION
+                                PUSH               CX
+                                PUSH               TEMPX
+                                PUSH               TEMPY
+                                CALL               GetSystemTime
+                                AND                DL, VERROADIMGW - OBSTACLEW
+                                MOV                DH, 0
+                                SUB                TEMPX, OBSTACLEW
+                                SUB                TEMPX, DX
+                                CALL               GetSystemTime
+                                AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD
+                                MOV                DH, 0
+                                ADD                TEMPY, THRESHOLD / 2
+                                ADD                TEMPY, DX
+                                MOV                TMP4, 0
+                                CALL               ObstRandAndDraw
 
-                MOV DX, PosYfirst
-                MOV PrevPosYfirst, DX
+    ;POWERUPRANDOMIZATION
+                                POP                TEMPY
+                                POP                TEMPX
+                                CALL               GetSystemTime
+                                MOV                AL, VERROADIMGW - POWERW
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                SUB                TEMPX, POWERW
+                                SUB                TEMPX, DX
+                                CALL               GetSystemTime
+                                MOV                AL, VERROADIMGH - POWERH - THRESHOLD
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                ADD                TEMPY, THRESHOLD / 2
+                                ADD                TEMPY, DX
+                                MOV                TMP4, 0
 
-                MOV DX , PosXsecond
-                MOV PrevPosXsecond, DX
-
-                MOV DX , PosYsecond
-                MOV PrevPosYsecond ,DX
+    ;WHICH POWERUP
+                                CALL               GetCertainPowerImage
 
 
-     ;--------------    Overriding INT 9H   ---------------
+                                POP                CX
+                                JMP                FINISH
+
+
+
+    
+    HANDLELEFT:                 
+                                MOV                TMP, 3
+                                MOV                TMP1, HORROADIMGW + VERROADIMGW + 2
+                                SUB                TEMPX, VERROADIMGW + 2
+                                CHECKCANDRAW       TMP1, HORROADIMGH, TEMPX, TEMPY, TMP
+                                ADD                TEMPX, VERROADIMGW + 2
+                                MOV                TMP4, 1
+                                DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
+                                MOV                LASTDIR, 3
+                                CALL               PointsAfterLeft
+
+    ;OBSTACLE RANDOMIZATION
+                                PUSH               CX
+                                PUSH               TEMPX
+                                PUSH               TEMPY
+                                CALL               GetSystemTime
+                                AND                DL, HORROADIMGW - OBSTACLEW - THRESHOLD
+                                MOV                DH, 0
+                                SUB                TEMPX, OBSTACLEW  + THRESHOLD / 2
+                                SUB                TEMPX, DX
+                                CALL               GetSystemTime
+                                AND                DL, HORROADIMGH - OBSTACLEH
+                                MOV                DH, 0
+                                ADD                TEMPY, DX
+                                MOV                TMP4, 0
+                                CALL               ObstRandAndDraw
+
+
+    ;POWERUPRANDOMIZATION
+                                POP                TEMPY
+                                POP                TEMPX
+                                CALL               GetSystemTime
+                                MOV                AL, HORROADIMGW - POWERW - THRESHOLD
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                SUB                TEMPX, POWERW  + THRESHOLD / 2
+                                SUB                TEMPX, DX
+                                CALL               GetSystemTime
+                                MOV                AL, HORROADIMGH - POWERH
+                                MOV                RANGEOFRAND, AL
+                                CALL               RaingingRand
+                                ADD                TEMPY, DX
+                                MOV                TMP4, 0
+
+    ;WHICH POWERUP
+                                CALL               GetCertainPowerImage
+
+
+                                POP                CX
+
+    FINISH:                     
+    ;INITIALIZING CANT DRAW ARRAY
+                                MOV                CANTUP, 0
+                                MOV                CANTRIGHT, 0
+                                MOV                CANTDOWN, 0
+                                MOV                CANTLEFT, 0
+
+                                DEC                CX
+                                JNZ                GOUP
+                                JMP                LAST
+    GOUP:                       
+                                JMP                FAR PTR RANDOMIZEPART
+
+
+    LAST:                       
+                                CMP                CX, NUMBEROFPARTS - MINNUMOFPARTS
+                                JBE                NOTSTARTPROGRAM
+                                CALL               GETSYSTEMTIME2
+                                JMP                STARTROAD
+    NOTSTARTPROGRAM:            
+                                CALL               DRAWENDLINE
+
+    ; MOV CURPOWERINDEX, 4
+    ; CALL RetrieveRoad
+
+    ; set initial pos of first car in the game
+                                MOV                PosXfirst , STARTROADX
+                                MOV                PosYfirst , STARTROADY + 1
+                                Draw_Car           CarImg1, CAR_SIZE, PosXfirst , PosYfirst
+
+    ; set initial pos of second car in the game
+                                MOV                PosXsecond , STARTROADX
+                                MOV                PosYsecond , STARTROADY + HORROADIMGH - Car_Size - 1
+                                Draw_Car           CarImg2, CAR_SIZE, PosXsecond , PosYsecond
+
+
+                                MOV                DX , PosXfirst
+                                MOV                PosX, DX
+
+                                MOV                DX , PosYfirst
+                                MOV                PosY, DX
+    mainLoop:                   
+                                MOV                AX, POWERUPCOUNTER
+                                CMP                INDEXSTARTSHOWING, AX
+                                JAE                DONTSHOWPOWER
+
+                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                INT                21H
+
+                                CMP                DH, CURSECOND
+                                JE                 DONTSHOWPOWER
+                                MOV                CURSECOND, DH
+
+                                MOV                AL, DH
+                                MOV                AH, 0
+                                MOV                BL, DURATIONTOSHOWPOWER
+                                DIV                BL
+                                CMP                AH, 0
+                                JNE                DONTSHOWPOWER
+                                MOV                SI, OFFSET ISVISIBLEPOWER
+                                ADD                SI, INDEXSTARTSHOWING
+                                INC                INDEXSTARTSHOWING
+                                CMP                BYTE PTR DS:[SI], 0
+                                JNE                DONTSHOWPOWER
+                                CALL               ShowHiddenPowerUp
+
+
+    DONTSHOWPOWER:              
+
+                                MOV                DX , PosXfirst
+                                MOV                PrevPosXfirst, DX
+
+                                MOV                DX, PosYfirst
+                                MOV                PrevPosYfirst, DX
+
+                                MOV                DX , PosXsecond
+                                MOV                PrevPosXsecond, DX
+
+                                MOV                DX , PosYsecond
+                                MOV                PrevPosYsecond ,DX
+
+
+    ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
-                CLI
+                                CLI
                        
     ;Saving DS it will be the base of the addressing mode inside the interrupt
-                PUSH     DS
-                MOV      AX , CS
-                MOV      DS , AX
+                                PUSH               DS
+                                MOV                AX , CS
+                                MOV                DS , AX
 
     ;changing interrup vector
-                MOV AX , 2509H
-                LEA DX , INT09H
-                INT 21H
+                                MOV                AX , 2509H
+                                LEA                DX , INT09H
+                                INT                21H
                 
     ;re-enabling interrupts
-                POP DS
-                STI
+                                POP                DS
+                                STI
             
                 
-                CALL CheckArrowFlags
-                CALL checkingPositionChange1
+                                CALL               CheckArrowFlags
+                                CALL               checkingPositionChange1
 
-                CALL CheckWASDFlags
-                CALL checkingPositionChange2
-
+                                CALL               CheckWASDFlags
+                                CALL               checkingPositionChange2
  
-    ;Delay  
-                MOV CX , 0
-                MOV DX , 64000D
-                MOV AH , 86H
-                INT 15H
+    ;Delay
+                                MOV                CX , 0
+                                MOV                DX , 64000D
+                                MOV                AH , 86H
+                                INT                15H
 
-                JMP  mainLoop                             ; keep looping
-    exit:              
-                HLT
+                                JMP                mainLoop                                                                                ; keep looping
+    exit:                       
+                                HLT
 
 MAIN ENDP
 
