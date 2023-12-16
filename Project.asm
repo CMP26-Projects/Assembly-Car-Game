@@ -1012,7 +1012,7 @@ ENDM
     ;STARTdd
     STARTROADX            EQU 2
     STARTROADY            EQU 2
-    NUMBEROFPARTS         EQU 6
+    NUMBEROFPARTS         EQU 20
     MINNUMOFPARTS         EQU 5
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
@@ -1033,6 +1033,14 @@ ENDM
     RIGHTDIR              DW  ?
     DOWNDIR               DW  ?
     LEFTDIR               DW  ?
+
+
+    ;CHECKLINE IMAGES
+    VERCHECKLINEIMGW      EQU 1
+    VERCHECKLINEIMGH      EQU 20
+    HORCHECKLINEIMGW      EQU 20
+    HORCHECKLINEIMGH      EQU 1
+    CHECKLINEIMG          DB  19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
 
     ;ROAD IMAGES
     VERROADIMGW           EQU 20
@@ -2653,7 +2661,41 @@ DRAWENDLINE PROC
                                 RET
 DRAWENDLINE ENDP
 
+DRAWCHECKLINE PROC
+                                PUSH               TEMPX
+                                PUSH               TEMPY
+                                MOV                TMP4, 0
 
+                                CMP                LASTDIR, 0
+                                JNE                NOTLASTUPCHECK
+                                SUB                TEMPX, VERROADIMGW
+                                DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                JMP                FINISHDRAWCHECKLINE
+    NOTLASTUPCHECK:                  
+
+                                CMP                LASTDIR, 1
+                                JNE                NOTLASTRIGHTCHECK
+                                ADD                TEMPX, HORROADIMGW - 1
+                                DRAW               CHECKLINEIMG, VERCHECKLINEIMGW, VERCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                JMP                FINISHDRAWCHECKLINE
+    NOTLASTRIGHTCHECK:               
+
+                                CMP                LASTDIR, 2
+                                JNE                NOTLASTDOWNCHECK
+                                SUB                TEMPX, VERROADIMGW
+                                ADD                TEMPY, VERROADIMGH - 1
+                                DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                JMP                FINISHDRAWCHECKLINE
+    NOTLASTDOWNCHECK:                
+    
+                                SUB                TEMPX, HORROADIMGW
+                                DRAW               CHECKLINEIMG, VERCHECKLINEIMGW, VERCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+    
+    FINISHDRAWCHECKLINE:          
+                                POP                TEMPY
+                                POP                TEMPX
+                                RET
+DRAWCHECKLINE ENDP
 
 
 
@@ -2879,6 +2921,7 @@ MAIN PROC FAR
                                 DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
                                 CALL               POINTSAFTERUP
                                 MOV                LASTDIR, 0
+                                CALL               DRAWCHECKLINE
 
     ;OBSTACLE RANDOMIZATION
                                 PUSH               CX
@@ -2934,6 +2977,7 @@ MAIN PROC FAR
                                 DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
                                 CALL               POINTSAFTERRIGHT
                                 MOV                LASTDIR, 1
+                                CALL               DRAWCHECKLINE
 
                                 CMP                CX, 0                                                                                   ;HANDLING FIRST SEGMENT NO OBSTACLES
                                 JNE                NOTFIRSTSEGMENT
@@ -2995,6 +3039,7 @@ MAIN PROC FAR
                                 DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
                                 MOV                LASTDIR, 2
                                 CALL               POINTSAFTERDOWN
+                                CALL               DRAWCHECKLINE
 
     ;OBSTACLE RANDOMIZATION
                                 PUSH               CX
@@ -3050,6 +3095,7 @@ MAIN PROC FAR
                                 DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
                                 MOV                LASTDIR, 3
                                 CALL               POINTSAFTERLEFT
+                                CALL               DRAWCHECKLINE
 
     ;OBSTACLE RANDOMIZATION
                                 PUSH               CX
