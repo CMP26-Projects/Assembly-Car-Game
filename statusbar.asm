@@ -10,7 +10,7 @@ DrawPower MACRO powerX , powerY , PType
 
             CMP AH,1       ;Increase Speed Powerup
             JNE DECSPEED
-            DRAW BIGINCSPEEDPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
+            DRAW INCSPEEDPOWER, POWERW, POWERH, powerX, powerY, TMP4
             JMP FINISH_DRAWING_POWER
             ; MOV AX ,OFFSET INCSPEEDPOWER
             ; MOV powerupToDraw , AX
@@ -21,7 +21,7 @@ DrawPower MACRO powerX , powerY , PType
 DECSPEED:
             CMP AH,2       ;Decrease Speed Powerup   
             JNE SETOBSTACLE
-            DRAW BIGDECSPEEDPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
+            DRAW DECSPEEDPOWER, POWERW, POWERH, powerX, powerY, TMP4
             JMP FINISH_DRAWING_POWER
             ; MOV AX , OFFSET DECSPEEDPOWER
             ; MOV powerupToDraw , AX
@@ -32,7 +32,7 @@ DECSPEED:
 SETOBSTACLE:
             CMP AH,3       ;Create Obstacle Powerup
             JNE PASSOBSTACLE
-            DRAW BIGCREATEOBSTPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
+            DRAW CREATEOBSTPOWER, POWERW, POWERH, powerX, powerY, TMP4
             JMP FINISH_DRAWING_POWER
             ; MOV AX , OFFSET CREATEOBSTPOWER
             ; MOV powerupToDraw , AX
@@ -43,7 +43,7 @@ SETOBSTACLE:
 PASSOBSTACLE:
             CMP AH,4       ;Pass Obstacle Powerup
             JNE FINISHPOWER
-            DRAW BIGPASSOBSTPOWER , BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
+            DRAW PASSOBSTPOWER , POWERW, POWERH, powerX, powerY, TMP4
             ; MOV AX , OFFSET PASSOBSTPOWER
             ; MOV powerupToDraw , AX
 
@@ -424,35 +424,14 @@ ENDM
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
         ;CarImage
-        CarImg1                 DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
-                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
-        CarImg2                 DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
-                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
-
-        CarImg1Up               DB   0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 122, 122, 122
-                                DB   122, 192, 17, 17, 0, 0, 0, 17, 17
-        CarImg1Right            DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
-                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
-        CarImg1Down             DB   17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 42, 42, 42, 122, 17, 192, 122, 42, 192, 42, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
-                                DB   192, 192, 0, 0, 0, 17, 0, 0, 0
-        CarImg1Left             DB   0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 9, 9, 122, 0, 17, 192, 192, 192, 9, 122, 0, 0, 0, 122, 9, 9, 122, 0, 0, 192, 122, 122, 122
-                                DB   122, 17, 0, 192, 17, 192, 17, 192, 17
-
-        CarImg2Up               DB   0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 122, 122, 122
-                                DB   122, 192, 17, 17, 0, 0, 0, 17, 17
-        CarImg2Right            DB   17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
-                                DB   192, 0, 17, 192, 17, 192, 17, 192, 0
-        CarImg2Down             DB   17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
-                                DB   192, 192, 0, 0, 0, 17, 0, 0, 0 
-        CarImg2Left             DB   0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 43, 43, 122, 0, 17, 192, 192, 192, 43, 122, 0, 0, 0, 122, 43, 43, 122, 0, 0, 192, 122, 122, 122
-                                DB   122, 17, 0, 192, 17, 192, 17, 192, 17
-        
+        CarImg1                 DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
+        CarImg2                 DB   142, 142, 0, 0, 142, 142, 142, 46, 46, 46, 46, 142, 0, 46, 16, 112, 46, 0, 0, 46, 112, 16, 46, 0, 142, 46, 46, 46, 46, 142, 142, 142, 0, 0, 142, 142
         Car1Speed               DW   2
         Car2Speed               DW   2
         CurrentSpeed            DW   ?      ;Stores the speed of the currently updating car 
 
         ;CarDimensions
-        CAR_SIZE                EQU  7
+        CAR_SIZE                EQU  6
         PosXfirst               DW   ?
         PosYfirst               DW   ?
         PosXsecond              DW   ?
@@ -560,10 +539,10 @@ ENDM
     powerupMessage      DB  'Powerup :', '$'
 
     powerup1Posx        EQU  71
-    powerup1Posy        EQU  184
+    powerup1Posy        EQU  187
 
     powerup2Posx        EQU  271
-    powerup2Posy        EQU  184
+    powerup2Posy        EQU  187
 
     powerupToDraw       DW   ?
     powerupToDrawPosX   DW   ?
@@ -600,7 +579,7 @@ SCREENSIZE              EQU     32*32
 
 
 ;OBSTACLE
-THRESHOLD               EQU     14
+THRESHOLD               EQU     10
 OBSTACLEW               EQU     5
 OBSTACLEH               EQU     5
 OBSTACLE                DB      16, 16, 16, 16, 16, 16, 28, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
@@ -615,20 +594,6 @@ PASSOBSTPOWER           DB      36, 36, 36, 36, 28, 36, 36, 36, 36
 DECSPEEDPOWER           DB      36, 36, 36, 112, 112, 112, 36, 36, 36
 INCSPEEDPOWER           DB      36, 121, 36, 121, 121, 121, 36, 121, 36
 
-BIGPOWERW               EQU     9
-BIGPOWERH               EQU     9
-BIGCREATEOBSTPOWER      DB 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 17, 17, 17, 36, 36, 36, 36, 36, 36, 17
- DB 17, 17, 36, 36, 36, 36, 36, 36, 17, 17, 17, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
- DB 36
-BIGPASSOBSTPOWER        DB 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 28, 28, 28, 36, 36, 36, 36, 36, 36, 28
- DB 28, 28, 36, 36, 36, 36, 36, 36, 28, 28, 28, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
- DB 36
-BIGDECSPEEDPOWER        DB 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112
- DB 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
- DB 36    
-BIGINCSPEEDPOWER        DB 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121
- DB 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36
- DB 36
 ;STORING ROAD UNDER POWERUPS TO DRAW IT AGAIN WHEN IT'S COLLECTED
 TOPLEFTPOWER            DW      45 DUP(?)  
 ROADUNDERPOWER          DB      405 DUP(?)
@@ -638,16 +603,12 @@ ISVISIBLEPOWER          DB      45 DUP(?)
 POWERUPCOUNTER          DW      0
 CURPOWERINDEX           DW      0
 POWERTOPLEFTBYTE        DW      ?
-INDEXSTARTSHOWING       DW      0  ; INDEX TO START SHOWING THE HIDDEN POWER FROM
-
-;CURRENT SECOND
-CURSECOND               DB      61
-DURATIONTOSHOWPOWER     EQU     2
+INDEXSTARTSHOWING       DW      5  ; INDEX TO START SHOWING THE HIDDEN POWER FROM
 
 ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
-POWERPROBABILITY        DB      100
+POWERPROBABILITY        DB      30
 OBSTPROBABILITY         DB      70
-POWERVISIBPROBABILITY   DB      100
+POWERVISIBPROBABILITY   DB      60
 
 
 ;CAR
@@ -707,7 +668,7 @@ RANGEOFRAND             DB      ?
 ;STARTdd
 STARTROADX              EQU     2
 STARTROADY              EQU     2
-NUMBEROFPARTS           EQU     6
+NUMBEROFPARTS           EQU     5
 MINNUMOFPARTS           EQU     5
 
 ;VARIABLES FOR DRAWIMAGE PROCEDURE
@@ -907,8 +868,6 @@ SearchForLeftVertex PROC FAR
                     JE LEFT_CHECKED
                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
                     JE LEFT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE LEFT_CHECKED
                     MOV BX ,DX
 
                     ; MOV DX,BX
@@ -924,8 +883,6 @@ SearchForLeftVertex PROC FAR
                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
                     JE RIGHT_CHECKED
                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE RIGHT_CHECKED
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
                     JE RIGHT_CHECKED
                     ; POP BX
                     MOV BX ,DX
@@ -944,8 +901,6 @@ LEFT_CHECKED:
                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
                     JE IAM_AT_TOP
                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
                     JE IAM_AT_TOP
                     RET
 
@@ -967,8 +922,6 @@ RIGHT_CHECKED:
                     JE IAM_AT_TOP
                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
                     JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
                     RET
 
 MIDDLE_CHECKED:
@@ -982,8 +935,6 @@ MIDDLE_CHECKED:
                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
                     JE IAM_AT_TOP
                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
-                    JE IAM_AT_TOP
-                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
                     JE IAM_AT_TOP
                     RET
 
@@ -1438,54 +1389,52 @@ ScanYmovement PROC FAR
     CheckY:
                 ; CMP BYTE PTR ES:[DI] , 142
                 ; JNE NoObstacleDetected
-                CMP BYTE PTR ES:[DI], 36
-                JE POWERUPDETECTED
+
                 CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
                 JE NoObstacleDetected
                 CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
                 JE NoObstacleDetected
                 CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
                 JE NoObstacleDetected
-               
-                POP DI
-                POP CX
-                RET
+                ;Checking if it is the increasing speed powerup
 
-    POWERUPDETECTED:
-                PUSH CX
-                PUSH DI
-                CALL GETTOPLEFTPOWER
-                
-                MOV BX,POWERTOPLEFTBYTE
-                INC BX
-                ADD BX , SCREEN_WIDTH
-                CMP BYTE PTR ES:[BX] , 121     ; 121 is the color degree of the increasing powerup
-                    JE INCPOWERUP_DETECTED
+                    CMP BYTE PTR ES:[DI] , 121     ; 121 is the color degree of the increasing powerup
+                    JE INCPOWERUP_DETECTED2
+                    CMP BYTE PTR ES:[DI] , 36       ; 36 is the color degree of any powerup
+                    JNE TERMINATE2
+
+                    MOV BX,DI
+                    CALL SearchForLeftVertex
+                    CMP BYTE PTR ES:[BX] , 121     ; 121 is the color degree of the increasing powerup
+                    JE INCPOWERUP_DETECTED2
                     CMP BYTE PTR ES:[BX] , 112     ; 112 is the color degree of the decreasing powerup
-                    JE DECPOWERUP_DETECTED
+                    JE DECPOWERUP_DETECTED2
                     CMP BYTE PTR ES:[BX] , 17
-                    JE CREATEOBSTPOWERUP_DETECTED
+                    JE CREATEOBSTPOWERUP_DETECTED2
                     CMP BYTE PTR ES:[BX] , 28
-                    JE PASSOBSTPOWER_DETECTED
-
-                INCPOWERUP_DETECTED:
+                    JE PASSOBSTPOWER_DETECTED2
+TERMINATE2:
+                    POP DI
+                    POP CX
+                    RET  
+INCPOWERUP_DETECTED2:
                     MOV AL , 1
                     MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP
-DECPOWERUP_DETECTED:
+                    JMP DRAWING_COLLECTED_POWERUP2
+DECPOWERUP_DETECTED2:
                     MOV AL , 2
                     MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP
-CREATEOBSTPOWERUP_DETECTED:
+                    JMP DRAWING_COLLECTED_POWERUP2
+CREATEOBSTPOWERUP_DETECTED2:
                     MOV AL , 3
                     MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP
+                    JMP DRAWING_COLLECTED_POWERUP2
 
-PASSOBSTPOWER_DETECTED:
+PASSOBSTPOWER_DETECTED2:
                     MOV AL , 4
                     MOV powerupType , AL
 
-DRAWING_COLLECTED_POWERUP:
+DRAWING_COLLECTED_POWERUP2:
                     CMP CarToScan , 0       ;Car1 is scanning
                     JE Car2Powerup2
                     ;Powerup for first player is collected
@@ -1502,8 +1451,8 @@ DRAWING_COLLECTED_POWERUP:
                     MOV TMP4 , 0
 
                     DrawPower TEMPX,TEMPY,powerupType
-                    JMP COLLECTPOWER
-Car2Powerup:
+                    JMP TERMINATE2
+Car2Powerup2:
                     ;Powerup for second player is collected
 
                     MOV AX , powerup2Posx
@@ -1518,13 +1467,8 @@ Car2Powerup:
                     MOV TMP4 , 0
 
                     DrawPower TEMPX,TEMPY, powerupType
-
-
-    COLLECTPOWER:
-                CALL SEARCHTORETRIEVE
-                POP DI
-                POP CX
-    NoObstacleDetected:
+                    JMP TERMINATE2
+NoObstacleDetected:
                 INC DI
                 DEC CX
                 CMP CX , 0
@@ -1579,59 +1523,55 @@ ScanXmovement PROC FAR
                     MOV CX, CAR_SIZE
 
     CheckX:
-                    ;CMP BYTE PTR ES:[DI] , 142
-                    ;JNE NoObstacleDetected2
-                CMP BYTE PTR ES:[DI], 36
-                JE POWERUPDETECTED2
-                CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
-                JE NoObstacleDetected2 
-                CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
-                JE NoObstacleDetected2 
-                CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
-                JE NoObstacleDetected2
 
 
-                    POP DI
-                    POP cx
-                    RET  
+                    CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
+                    JE NoObstacleDetected2 
+                    CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
+                    JE NoObstacleDetected2 
+                    CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
+                    JE NoObstacleDetected2
+                    ;Checking if it is the increasing speed powerup
 
-    POWERUPDETECTED2:
-                PUSH CX
-                PUSH DI
-                CALL GETTOPLEFTPOWER
-                
-                MOV BX,POWERTOPLEFTBYTE
-                INC BX
-                ADD BX , SCREEN_WIDTH
-                CMP BYTE PTR ES:[BX] , 121     ; 121 is the color degree of the increasing powerup
-                    JE INCPOWERUP_DETECTED2
+                    CMP BYTE PTR ES:[DI] , 121     ; 121 is the color degree of the increasing powerup
+                    JE INCPOWERUP_DETECTED
+                    CMP BYTE PTR ES:[DI] , 36       ; 36 is the color degree of any powerup
+                    JNE TERMINATE
+
+                    MOV BX,DI
+                    CALL SearchForLeftVertex
+                    CMP BYTE PTR ES:[BX] , 121     ; 121 is the color degree of the increasing powerup
+                    JE INCPOWERUP_DETECTED
                     CMP BYTE PTR ES:[BX] , 112     ; 112 is the color degree of the decreasing powerup
-                    JE DECPOWERUP_DETECTED2
+                    JE DECPOWERUP_DETECTED
                     CMP BYTE PTR ES:[BX] , 17
-                    JE CREATEOBSTPOWERUP_DETECTED2
+                    JE CREATEOBSTPOWERUP_DETECTED
                     CMP BYTE PTR ES:[BX] , 28
-                    JE PASSOBSTPOWER_DETECTED2
-
-                INCPOWERUP_DETECTED2:
+                    JE PASSOBSTPOWER_DETECTED
+TERMINATE:
+                    POP DI
+                    POP CX
+                    RET  
+INCPOWERUP_DETECTED:
                     MOV AL , 1
                     MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP2
-DECPOWERUP_DETECTED2:
+                    JMP DRAWING_COLLECTED_POWERUP
+DECPOWERUP_DETECTED:
                     MOV AL , 2
                     MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP2
-CREATEOBSTPOWERUP_DETECTED2:
+                    JMP DRAWING_COLLECTED_POWERUP
+CREATEOBSTPOWERUP_DETECTED:
                     MOV AL , 3
                     MOV powerupType , AL
-                    JMP DRAWING_COLLECTED_POWERUP2
+                    JMP DRAWING_COLLECTED_POWERUP
 
-PASSOBSTPOWER_DETECTED2:
+PASSOBSTPOWER_DETECTED:
                     MOV AL , 4
                     MOV powerupType , AL
 
-DRAWING_COLLECTED_POWERUP2:
+DRAWING_COLLECTED_POWERUP:
                     CMP CarToScan , 0       ;Car1 is scanning
-                    JE Car2Powerup2
+                    JE Car2Powerup
                     ;Powerup for first player is collected
 
                     MOV AX , powerup1Posx
@@ -1646,8 +1586,8 @@ DRAWING_COLLECTED_POWERUP2:
                     MOV TMP4 , 0
 
                     DrawPower TEMPX,TEMPY,powerupType
-                    JMP COLLECTPOWER2
-Car2Powerup2:
+                    JMP TERMINATE
+Car2Powerup:
                     ;Powerup for second player is collected
 
                     MOV AX , powerup2Posx
@@ -1662,13 +1602,9 @@ Car2Powerup2:
                     MOV TMP4 , 0
 
                     DrawPower TEMPX,TEMPY, powerupType
+                    JMP TERMINATE
 
-
-    COLLECTPOWER2:
-                CALL SEARCHTORETRIEVE
-                POP DI
-                POP CX                
-    NoObstacleDetected2:
+NoObstacleDetected2:
                     ADD DI , SCREEN_WIDTH
                     DEC CX
                     CMP CX , 0
@@ -1935,49 +1871,6 @@ CALCXY PROC
     RET
 CALCXY ENDP
 
-GETTOPLEFTPOWER PROC
-    GOLEFTBYTE:
-        MOV BX, DI
-        DEC BX
-        CMP BYTE PTR ES:[BX], 36
-        JE STILLLEFT
-        CMP BYTE PTR ES:[BX], 112
-        JE STILLLEFT
-        CMP BYTE PTR ES:[BX], 121
-        JE STILLLEFT
-        CMP BYTE PTR ES:[BX], 17
-        JE STILLLEFT
-        CMP BYTE PTR ES:[BX], 28
-        JE STILLLEFT
-        JMP GOUPBYTE
-
-        STILLLEFT:
-        DEC DI
-        JMP GOLEFTBYTE
-    GOUPBYTE:
-        MOV BX, DI
-        SUB BX, SCREEN_WIDTH
-        CMP BYTE PTR ES:[BX], 36
-        JE STILLUP
-        CMP BYTE PTR ES:[BX], 112
-        JE STILLUP
-        CMP BYTE PTR ES:[BX], 121
-        JE STILLUP
-        CMP BYTE PTR ES:[BX], 17
-        JE STILLUP
-        CMP BYTE PTR ES:[BX], 28
-        JE STILLUP
-        JMP FINISHGETTOPLEFT
-        
-        STILLUP:        
-        SUB DI, SCREEN_WIDTH
-        JMP GOUPBYTE
-
-    FINISHGETTOPLEFT:
-        MOV POWERTOPLEFTBYTE, DI
-    RET
-GETTOPLEFTPOWER ENDP
-
 STORINGROADUNDERPOWER PROC
     MOV AX, POWERH 
     MOV OUTCOUNTER, AX
@@ -2016,7 +1909,7 @@ RETRIEVEROAD PROC
     MOV DH, 0
     MUL DL
     ADD BX, AX
-    MOV DI, WORD PTR DS:[BX]
+    MOV DI, [BX]
 
     MOV CX, POWERH
     RETRIEVEROWS:
@@ -2066,7 +1959,6 @@ SHOWHIDDENPOWER PROC
     ADD SI, AX
     MOV DI, WORD PTR DS:[SI]
     CALL CALCXY
-    MOV TMP4, 0
 
     ;DECIDING WHICH POWERUP TO DRAW
     CALL GETSYSTEMTIME
@@ -2174,7 +2066,7 @@ WHICHPOWERIMG PROC
 
     FINISHPOWER:
 
-    RET
+RET
 WHICHPOWERIMG ENDP
 
 
@@ -2260,52 +2152,11 @@ MOV AX, 0A000H
 MOV ES, AX
 
 
-                ;Multiplayers' Names
-                MOV AH,2
-                MOV DH , player1PosY
-                MOV DL , player1PosX
-                INT 10H
-
-                MOV AH ,9
-                LEA DX , player1Name
-                INT 21H
-
-                MOV AH ,2
-                MOV DH , player2PosY
-                MOV DL , player2PosX
-                INT 10H
-
-                MOV AH ,9
-                LEA DX , player2Name
-                INT 21H
-
-                MOV AH ,2 
-                MOV DH , player1PosY
-                ADD DH ,1
-                MOV DL , player1PosX
-                INT 10H
-
-                MOV AH , 09
-                LEA DX , powerupMessage
-                INT 21H
-
-                MOV AH ,2 
-                MOV DH , player2PosY
-                ADD dh , 1
-                MOV DL , player2PosX
-                INT 10H
-
-                MOV AH , 09
-                LEA DX , powerupMessage
-                INT 21H
-
 ;;;;;;;;;; DRAWING ROAD ;;;;;;;;;;;;
 
 
 ;DRAWING PART OF ROAD 
 ;DRAW BACKGROUNDIMAGE, SCREENWIDTH, SCREENHEIGHT, 0, 0
-
-
 STARTPROGRAM:
     MOV CANTUP, 0
     MOV CANTRIGHT, 0
@@ -2704,7 +2555,44 @@ CALL DRAWENDLINE
                 MOV DX , PosYfirst
                 MOV PosY, DX
 
+                ;Multiplayers' Names
+                MOV AH,2
+                MOV DH , player1PosY
+                MOV DL , player1PosX
+                INT 10H
 
+                MOV AH ,9
+                LEA DX , player1Name
+                INT 21H
+
+                MOV AH ,2
+                MOV DH , player2PosY
+                MOV DL , player2PosX
+                INT 10H
+
+                MOV AH ,9
+                LEA DX , player2Name
+                INT 21H
+
+                MOV AH ,2 
+                MOV DH , player1PosY
+                ADD DH ,1
+                MOV DL , player1PosX
+                INT 10H
+
+                MOV AH , 09
+                LEA DX , powerupMessage
+                INT 21H
+
+                MOV AH ,2 
+                MOV DH , player2PosY
+                ADD dh , 1
+                MOV DL , player2PosX
+                INT 10H
+
+                MOV AH , 09
+                LEA DX , powerupMessage
+                INT 21H
 
         
 
@@ -2718,32 +2606,24 @@ CALL DRAWENDLINE
  
 
      mainLoop:          
-                MOV AX, POWERUPCOUNTER
-                CMP INDEXSTARTSHOWING, AX
-                JAE DONTSHOWPOWER
 
-                MOV AH, 2CH  ; INTERRUPT to get system time
-                INT 21H
-
-                CMP DH, CURSECOND
-                JE DONTSHOWPOWER
-                MOV CURSECOND, DH
-
-                MOV AL, DH
-                MOV AH, 0
-                MOV BL, DURATIONTOSHOWPOWER
-                DIV BL
-                CMP AH, 0
-                JNE DONTSHOWPOWER
-                MOV SI, OFFSET ISVISIBLEPOWER
-                ADD SI, INDEXSTARTSHOWING
-                INC INDEXSTARTSHOWING
-                CMP BYTE PTR DS:[SI], 0
-                JNE DONTSHOWPOWER
-                CALL SHOWHIDDENPOWER
+    ;             ; MOV AH, 2CH  ; INTERRUPT to get system time
+    ;             ; INT 21H
+    ;             ; MOV AL, DH
+    ;             ; MOV AH, 0
+    ;             ; MOV BL, 3
+    ;             ; DIV BL
+    ;             ; CMP AH, 0
+    ;             ; JNE DONTSHOWPOWER
+    ;             ; MOV SI, OFFSET ISVISIBLEPOWER
+    ;             ; ADD SI, INDEXSTARTSHOWING
+    ;             ; INC INDEXSTARTSHOWING
+    ;             ; CMP BYTE PTR DS:[SI], 0
+    ;             ; JNE DONTSHOWPOWER
+    ;             ; CALL SHOWHIDDENPOWER
 
 
-                DONTSHOWPOWER:
+    ;             ; DONTSHOWPOWER:
 
                 MOV DX , PosXfirst
                 MOV PrevPosXfirst, DX
@@ -2786,7 +2666,7 @@ CALL DRAWENDLINE
  
     ;Delay  
                 MOV CX , 0
-                MOV DX , 64000D
+                MOV DX , 40997D
                 MOV AH , 86H
                 INT 15H
 
