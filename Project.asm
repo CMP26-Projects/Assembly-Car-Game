@@ -1040,7 +1040,7 @@ ENDM
     VERCHECKLINEIMGH      EQU 20
     HORCHECKLINEIMGW      EQU 20
     HORCHECKLINEIMGH      EQU 1
-    CHECKLINEIMG          DB  19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19
+    CHECKLINEIMG          DB  0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0
 
     ;ROAD IMAGES
     VERROADIMGW           EQU 20
@@ -1838,6 +1838,8 @@ ScanXmovement PROC FAR
     CheckX:                     
     ;CMP BYTE PTR ES:[DI] , 142
     ;JNE NoObstacleDetected2
+                               ; CMP                BYTE PTR ES:[DI], 19 ; THIS IS TO CHECK FOR CHECKLINES
+                                ;JE                 UPDATESCORE
                                 CMP                BYTE PTR ES:[DI], 36
                                 JE                 POWERUPDETECTED2
                                 CMP                BYTE PTR ES:[DI] , 20                                                                   ; 20 is the GREY color degree of the road
@@ -1851,6 +1853,8 @@ ScanXmovement PROC FAR
                                 POP                DI
                                 POP                cx
                                 RET
+
+    ;UPDATESCORE:
 
     POWERUPDETECTED2:           
                                 PUSH               CX
