@@ -494,8 +494,8 @@ ENDM
     StatusBarStartX              DW  ?
     StatusBarStartY              DW  ?
     StatusBarTotalheight         DW  ?
-    STATUS_BAR_COLOR             EQU 3
-    STATUS_BAR_COLOR2            EQU 9
+    STATUS_BAR_COLOR             EQU 8
+    STATUS_BAR_COLOR2            EQU 7
 
     ;Drawing line variables
     LineToDrawH                  DW  ?
@@ -1803,7 +1803,7 @@ DrawEndLine ENDP
 char_display proc  FAR
                             mov                ah, 9
                             mov                bh, 0
-                            mov                bl, 93H                                                                                       ;ANY COLOR.
+                            mov                bl, 93H                                                                                      ;ANY COLOR.
                             mov                cx, 1                                                                                         ;HOW MANY TIMES TO DISPLAY CHAR.
                             int                10h
                             ret
