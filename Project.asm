@@ -1519,14 +1519,16 @@ ClearPowerup PROC FAR
                                 MOV                AX,0A000H
                                 MOV                ES,AX
                                 MOV                DI ,0
-                                MOV                CX , POWERH
+                                MOV                CX , BIGPOWERH
                                 CALL               CalculatePowerupVertex
     ROWS_CLEAR_POWER:           
                                 PUSH               CX
                                 PUSH               DI
-                                MOV                CX , POWERW
+                                MOV                CX , BIGPOWERW
     COLS_CLEAR_POWER:           
-                                MOV                BYTE PTR ES:[DI] , 0ffh
+
+                                MOV                DL , STATUS_BAR_COLOR
+                                MOV                BYTE PTR ES:[DI] , DL
                                 INC                DI
                                 LOOP               COLS_CLEAR_POWER
                                 POP                DI
