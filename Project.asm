@@ -503,6 +503,13 @@ ENDM
     DrawingColor                 DW  ?
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;   Interface data   ;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+    FirstName                    DB  'User1Name', '$'
+    SecondName                   DB  'User2Name', '$'
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;   road data   ;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1309,12 +1316,45 @@ DrawStatBar PROC FAR
                             MOV                BX , 2D
                             DIV                BX
                             ADD                AX , StatusBarStartY
-
+    ;--Drawing Lines
                             SetHorizontalLine  0, AX, SCREEN_WIDTH, STATUS_BAR_COLOR2
                             SetVerticalLine    SCREEN_WIDTH/2, StatusBarStartY, StatusBarTotalheight, STATUS_BAR_COLOR2
+    
+    ;Writing User names to be passed from interface
+                            
+
+    ;printing  FirstName
+                            MOV                SI , OFFSET FirstName
+                            MOV                DL , 4
+                            MOV                DH , 22
+                            CALL               PrintStringWithColor
+    ;printing  SecondName
+                            MOV                SI , OFFSET SecondName
+                            MOV                DL , 25
+                            MOV                DH , 22
+                            CALL               PrintStringWithColor
+
                             RET
 DrawStatBar ENDP
 
+    ;Set the Offset of the string you want to print in SI before calling
+PrintStringWithColor PROC FAR
+    printOneByOne:          
+    ;--Setting Cursor position
+                            MOV                AH , 2
+                            MOV                BH, 0
+                            INT                10H
+    ;--Start printing
+                            MOV                AL , [SI]
+                            CMP                AL , '$'
+                            JE                 PrintFinish
+                            CALL               char_display
+                            INC                SI
+                            INC                DL
+                            JMP                printOneByOne
+    PrintFinish:            
+                            RET
+PrintStringWithColor ENDP
 
     ;PROC TO RANDOMIZE
 
@@ -1759,6 +1799,15 @@ DrawEndLine PROC
                             RET
 DrawEndLine ENDP
 
+    ;prints character by character in video game mode in order to display string with font
+char_display proc  FAR
+                            mov                ah, 9
+                            mov                bh, 0
+                            mov                bl, 93H                                                                                       ;ANY COLOR.
+                            mov                cx, 1                                                                                         ;HOW MANY TIMES TO DISPLAY CHAR.
+                            int                10h
+                            ret
+char_display endp
 
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
