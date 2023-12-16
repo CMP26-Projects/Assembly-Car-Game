@@ -2,7 +2,55 @@
 ;;;;;;;;;;;;; MACROS ;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+DrawPower MACRO powerX , powerY , PType
+            ; DRAW MACRO IMG, WID, HEI, STARX, STARY, ISROAD
+            LOCAL DECSPEED , SETOBSTACLE , PASSOBSTACLE , FINISH_DRAWING_POWER
 
+            MOV AH , PType
+
+            CMP AH,1       ;Increase Speed Powerup
+            JNE DECSPEED
+            DRAW INCSPEEDPOWER, POWERW, POWERH, powerX, powerY, TMP4
+            JMP FINISH_DRAWING_POWER
+            ; MOV AX ,OFFSET INCSPEEDPOWER
+            ; MOV powerupToDraw , AX
+
+            ; CALL DrawPowerup
+
+        
+DECSPEED:
+            CMP AH,2       ;Decrease Speed Powerup   
+            JNE SETOBSTACLE
+            DRAW DECSPEEDPOWER, POWERW, POWERH, powerX, powerY, TMP4
+            JMP FINISH_DRAWING_POWER
+            ; MOV AX , OFFSET DECSPEEDPOWER
+            ; MOV powerupToDraw , AX
+            
+            ; CALL DrawPowerup
+            ; JMP FINISH_DRAWING_POWER
+
+SETOBSTACLE:
+            CMP AH,3       ;Create Obstacle Powerup
+            JNE PASSOBSTACLE
+            DRAW CREATEOBSTPOWER, POWERW, POWERH, powerX, powerY, TMP4
+            JMP FINISH_DRAWING_POWER
+            ; MOV AX , OFFSET CREATEOBSTPOWER
+            ; MOV powerupToDraw , AX
+
+            ; CALL DrawPowerup
+            ; JMP FINISH_Drawing_POWER
+
+PASSOBSTACLE:
+            CMP AH,4       ;Pass Obstacle Powerup
+            JNE FINISHPOWER
+            DRAW PASSOBSTPOWER , POWERW, POWERH, powerX, powerY, TMP4
+            ; MOV AX , OFFSET PASSOBSTPOWER
+            ; MOV powerupToDraw , AX
+
+            ; CALL DrawPowerup
+
+FINISH_DRAWING_POWER:
+ ENDM
 
 Draw_Car MACRO Img, CarSize, StartPosX, StartPosY
           MOV  AX, OFFSET Img
@@ -19,6 +67,10 @@ Draw_Car MACRO Img, CarSize, StartPosX, StartPosY
         
           CALL DrawCar
 ENDM
+
+
+
+
 
 ;CarNo: 1->car1 , 2->Car2
 CLEAR MACRO Car, ClearedSize, ClearedPosX, ClearedPosY
@@ -38,7 +90,29 @@ CLEAR MACRO Car, ClearedSize, ClearedPosX, ClearedPosY
            CALL ClearCarArea
 ENDM
 
-SETKEYS MACRO Up, Down , Left, Right
+ClearPower MACRO 
+            LOCAL CLEAR_SECOND_POWERUP, Delete_Powerup
+            CMP powerupParent , 1
+            JNE CLEAR_SECOND_POWERUP
+            MOV AX , powerup1Posx
+            MOV TEMPX,AX
+            MOV AX , powerup1Posy
+            MOV TEMPY,AX
+            JMP Delete_Powerup
+
+CLEAR_SECOND_POWERUP:
+            MOV AX , powerup2Posx
+            MOV TEMPX,AX
+            MOV AX , powerup2Posy
+            MOV TEMPY,AX
+
+
+Delete_Powerup:            
+            CALL ClearPowerup
+
+ENDM
+
+SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2
 
                                MOV   DL , Up
                                MOV   UpKeyCode , DL
@@ -52,12 +126,18 @@ SETKEYS MACRO Up, Down , Left, Right
                                MOV   DL , Right
                                MOV   RightKeyCode , DL
 
+                               MOV DL , DeletePower1
+                               MOV DeletePower1Key , DL
+
+                               MOV DL , DeletePower2
+                               MOV DeletePower2Key , DL
+
 
                               ; CALL InputButtonSwitchCase
 ENDM
 
     ;Setting Flags to be checked while movement
-SetFlags MACRO f1 , f2 , f3 , f4
+SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6 
 
                                 MOV   DL , f1
                                 MOV   UpFlag , DL
@@ -70,6 +150,13 @@ SetFlags MACRO f1 , f2 , f3 , f4
 
                                 MOV   DL , f4
                                 MOV   RightFlag , DL
+
+                                MOV  DL , f5
+                                MOV  KFlag , DL
+
+                                MOV  DL , f6
+                                MOV  MFlag , DL
+
 
 ENDM
 
@@ -381,12 +468,16 @@ ENDM
     DownFlag       DB   ?
     LeftFlag       DB   ?
     RightFlag      DB   ?
+    KFlag          DB   ?
+    MFlag          DB   ?
 
     ;Arrow flags to check whether this key is pressed down or not
     ArrowUpFlag    DB   0
     ArrowDownFlag  DB   0
     ArrowLeftFlag  DB   0
     ArrowRightFlag DB   0
+    LetterKFlag    DB   0
+    LetterMFlag    DB   0
    
     ;WASD flags to check whether this key is pressed down or not
     WFlag   DB  0
@@ -399,6 +490,8 @@ ENDM
     ArrowDown      DB   50H
     ArrowLeft      DB   4BH
     ArrowRight     DB   4DH
+    LetterK        DB   25h
+    LetterM        DB   32H
 
     ;WASD keys for movement
     WKey db 11h
@@ -411,6 +504,8 @@ ENDM
     DownKeyCode    DB   ?
     LeftKeyCode    DB   ?
     RightKeyCode   DB   ?
+    DeletePower1Key DB  ?
+    DeletePower2Key DB  ?
 
     ;Boolean to indicate if the path the car is going to move in is safe or not
     ;0 -> Safe , 1->Not Safe
@@ -427,6 +522,39 @@ ENDM
     ;Buffer to store the background to save it upon movement
     BackgroundBuffer1    DB     Car_Size*Car_Size DUP(?)
     BackgroundBuffer2    DB     Car_Size*Car_Size DUP(?)
+
+    ;Data for the status bar (First Player's data)
+    player1PosX     EQU  0
+    player1PosY     EQU  22
+    player1Name     DB  'Abd El-Rahman', '$'
+   
+
+    ;Data for the status bar (Second Player's data)
+    player2PosX     DB  65
+    player2PosY     DB  22
+    player2Name     DB  'Ahmed', '$'
+
+
+    ; Data for the powerups
+    powerupMessage      DB  'Powerup :', '$'
+
+    powerup1Posx        EQU  71
+    powerup1Posy        EQU  187
+
+    powerup2Posx        EQU  271
+    powerup2Posy        EQU  187
+
+    powerupToDraw       DW   ?
+    powerupToDrawPosX   DW   ?
+    powerupToDrawPosY   DW   ?
+
+    powerupParent       DB   ?
+    powerupType         DB   ?
+
+    catchedIndex        DW   ?
+
+    verticalFlag        DB   ?
+    horizontalFlag      DB   ?
 
 
 
@@ -461,7 +589,7 @@ YOBSTACLE               DW      ?
 ;POWERUPS
 POWERW                  EQU     3
 POWERH                  EQU     3
-CREATEOBSTPOWER         DB      36, 36, 36, 36, 16, 36, 36, 36, 36
+CREATEOBSTPOWER         DB      36, 36, 36, 36, 17, 36, 36, 36, 36
 PASSOBSTPOWER           DB      36, 36, 36, 36, 28, 36, 36, 36, 36
 DECSPEEDPOWER           DB      36, 36, 36, 112, 112, 112, 36, 36, 36
 INCSPEEDPOWER           DB      36, 121, 36, 121, 121, 121, 36, 121, 36
@@ -478,9 +606,9 @@ POWERTOPLEFTBYTE        DW      ?
 INDEXSTARTSHOWING       DW      5  ; INDEX TO START SHOWING THE HIDDEN POWER FROM
 
 ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
-POWERPROBABILITY        DB      30
+POWERPROBABILITY        DB      100
 OBSTPROBABILITY         DB      70
-POWERVISIBPROBABILITY   DB      60
+POWERVISIBPROBABILITY   DB      100
 
 
 ;CAR
@@ -540,8 +668,8 @@ RANGEOFRAND             DB      ?
 ;STARTdd
 STARTROADX              EQU     2
 STARTROADY              EQU     2
-NUMBEROFPARTS           EQU     30
-MINNUMOFPARTS           EQU     15
+NUMBEROFPARTS           EQU     10
+MINNUMOFPARTS           EQU     5
 
 ;VARIABLES FOR DRAWIMAGE PROCEDURE
 IMGTODRAW               DW      ?
@@ -602,6 +730,237 @@ HORROADIMG              DB      20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 
 ;;;;;;;;;;;     car procedures      ;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+SearchForLeftVertex PROC FAR 
+                        
+; ROWS_POWER:         
+;                     CMP BYTE PTR DS:[BX], 121       ; 121 is the color degree for the increasing speed powerup
+;                     JE THE_END
+;                     CMP BYTE PTR ES:[BX] , 20       ; 20 is the GREY color degree of the road
+;                     JE PREWORKOUT
+;                     CMP BYTE PTR ES:[BX] , 31       ; 31 is the WHITE color degree of the road
+;                     JE PREWORKOUT
+;                     CMP BYTE PTR ES:[BX] , 0     ; 46 is the transparent color degree of the CAR
+;                     JE PREWORKOUT
+;                     CMP BYTE PTR ES:[BX] , 142      ; 46 is the transparent color degree of the CAR
+;                     JE CAR_DETECTED
+;                     DEC BX
+;                     JMP ROWS_POWER
+
+; CAR_DETECTED:
+;                     INC BX
+; PREWORKOUT:
+;                     SUB BX , SCREEN_WIDTH
+; COL_POWER:
+;                     CMP BYTE PTR DS:[BX], 121
+;                     JE THE_END
+;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+;                     JE CATCHED
+;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+;                     JE CATCHED
+;                     CMP BYTE PTR ES:[BX] , 0    ; 31 is the WHITE color degree of the road
+;                     JE CATCHED
+;                     CMP BYTE PTR ES:[BX] , 142    ; 31 is the WHITE color degree of the road
+;                     JE CAR_DETECTED_FROM_UP
+;                     SUB BX , SCREEN_WIDTH
+;                     JMP COL_POWER
+; CAR_DETECTED_FROM_UP:
+;                     ADD BX , SCREEN_WIDTH
+; CATCHED:
+;                     INC BX
+;                     ADD BX , SCREEN_WIDTH
+; THE_END:
+;                     RET
+
+
+;                     CMP horizontalFlag , 1
+;                     JE HORIZONTAL_COLLIDE
+;                     CMP verticalFlag , 1
+;                     JE VERTICAL_COLLIDE
+;                     JMP END_POWER
+; VERTICAL_COLLIDE:
+;                     PUSH BX
+;                     SUB BX , 1    ;CHECKING whether the collided bit of the powerup is the left one
+;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+;                     JE LEFT_CHECKED
+;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+;                     JE LEFT_CHECKED
+;                     CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+;                     JE LEFT_CHECKED
+;                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+;                     JE LEFT_CHECKED
+;                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+;                     JE LEFT_CHECKED
+;                     POP BX
+
+;                     PUSH BX
+;                     INC BX                   ; CHECKING whether the collided bit of the powerup is the right one
+;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+;                     JE RIGHT_CHECKED
+;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+;                     JE RIGHT_CHECKED
+;                     CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+;                     JE RIGHT_CHECKED
+;                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+;                     JE RIGHT_CHECKED
+;                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+;                     JE RIGHT_CHECKED
+;                     POP BX
+
+;                     CMP YMovement , 1           ; if the car is moving up to the bottom of the powerup                    
+;                     JE TO_UP
+;                     JMP END_POWER
+
+; TO_UP:
+;                     SUB BX , SCREEN_WIDTH
+;                     JMP GET_ME_OUT_OF_HERE
+
+; RIGHT_CHECKED:
+;                     SUB BX , 2
+;                     CMP YMovement , 1           ; if the car is moving up to the bottom of the powerup                    
+;                     JE TO_UP
+;                     JMP END_POWER 
+
+; LEFT_CHECKED:            
+;                     ADD BX ,2
+;                     CMP YMovement , 1           ; if the car is moving up to the bottom of the powerup                    
+;                     JE TO_UP
+;                     JMP END_POWER
+
+; HORIZONTAL_COLLIDE:                    
+;                     CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+;                     JE CATCHED
+;                     CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+;                     JE CATCHED
+;                     CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+;                     JE CATCHED
+;                     CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+;                     JE CATCHED
+;                     CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+;                     JE CATCHED
+;                     SUB BX , SCREEN_WIDTH
+;                     JMP HORIZONTAL_COLLIDE
+
+; CATCHED:
+;                     ADD BX , SCREEN_WIDTH
+;                     CMP XMovement , 0           ; if the car is moving left to the right of the powerup
+;                     JE TOLEFT
+;                     INC BX
+;                     JMP END_POWER
+; TOLEFT:
+;                     DEC BX
+
+; END_POWER:
+;                     ADD BX , SCREEN_WIDTH
+
+; GET_ME_OUT_OF_HERE:                    
+;                     RET
+                    MOV DX,BX
+                    ; PUSH BX
+                    ; MOV BX,DX
+                    SUB BX , 1    ;CHECKING whether the collided bit of the powerup is the left one
+                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+                    JE LEFT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+                    JE LEFT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+                    JE LEFT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+                    JE LEFT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE LEFT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE LEFT_CHECKED
+                    MOV BX ,DX
+
+                    ; MOV DX,BX
+                    ; PUSH BX
+                    ; MOV BX,DX
+                    INC BX                   ; CHECKING whether the collided bit of the powerup is the right one
+                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+                    JE RIGHT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+                    JE RIGHT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+                    JE RIGHT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+                    JE RIGHT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE RIGHT_CHECKED
+                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE RIGHT_CHECKED
+                    ; POP BX
+                    MOV BX ,DX
+
+                    JMP MIDDLE_CHECKED
+
+LEFT_CHECKED:
+                    ADD BX ,2
+                    SUB BX , SCREEN_WIDTH
+                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    RET
+
+IAM_AT_TOP:
+                    ADD BX , SCREEN_WIDTH
+                    ADD BX , SCREEN_WIDTH
+                    RET
+
+RIGHT_CHECKED:
+                    SUB BX ,2
+                    SUB BX , SCREEN_WIDTH
+                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    RET
+
+MIDDLE_CHECKED:
+                    SUB BX , SCREEN_WIDTH
+                    CMP BYTE PTR ES:[BX] , 20    ; 20 is the GREY color degree of the road
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 31    ; 31 is the WHITE color degree of the road
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 142    ; 142 is COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 203    ; 203 is the COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 71      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    CMP BYTE PTR ES:[BX] , 16      ; 71 is the COLOR DEGREE FOR THE GRASS
+                    JE IAM_AT_TOP
+                    RET
+
+
+SearchForLeftVertex ENDP
+
+CalculatePowerupVertex PROC FAR
+                       MOV   DI , 0
+                       MOV   AX , TEMPY
+                       MOV   BX , SCREEN_WIDTH
+                       MUL   BX
+                       ADD   AX , TEMPX
+                       MOV   DI , AX
+                       RET
+CalculatePowerupVertex ENDP
+
 
 CalculateBoxVertex PROC FAR
                        MOV   DI , 0
@@ -612,6 +971,7 @@ CalculateBoxVertex PROC FAR
                        MOV   DI , AX
                        RET
 CalculateBoxVertex ENDP
+
 
 ;Moves the background of the car to be drawn in BX
 CheckCarToDraw PROC FAR
@@ -624,6 +984,7 @@ Car2Draw:
                 MOV BX ,OFFSET BackgroundBuffer2
                 RET
 CheckCarToDraw ENDP
+
 
 DrawCar PROC FAR
                 MOV  ax , 0A000H
@@ -691,6 +1052,28 @@ ClearCarArea PROC FAR
                        RET
 ClearCarArea ENDP
 
+ClearPowerup PROC FAR
+                        MOV AX,0A000H
+                        MOV ES,AX
+                        MOV DI ,0
+                        MOV CX , POWERH
+                        CALL CalculatePowerupVertex
+ROWS_CLEAR_POWER:
+                        PUSH CX
+                        PUSH DI
+                        MOV CX , POWERW
+COLS_CLEAR_POWER:
+                        MOV BYTE PTR ES:[DI] , 0ffh
+                        INC DI
+                        LOOP COLS_CLEAR_POWER
+                        POP DI
+                        POP CX
+                        ADD DI , SCREEN_WIDTH
+                        LOOP ROWS_CLEAR_POWER
+                        RET
+ClearPowerup ENDP
+
+
 InputButtonSwitchCase PROC  FAR
                  
                        cmp   al, 01h
@@ -749,8 +1132,41 @@ InputButtonSwitchCase PROC  FAR
                        MOV   BL , RightKeyCode
                        ADD   BL, 80H
                        CMP   AL , BL
-                       JNE   Default
+                       JNE   CheckLetterK
                        MOV   RightFlag , 0
+                       JMP   Default
+
+    CheckLetterK:     
+                       CMP AL , DeletePower1Key
+                       JNE NotPressed5
+                       MOV KFlag , 1
+                       MOV powerupParent , 1
+                       ClearPower
+                       JMP Default
+
+    NOTPRESSED5:
+                          MOV BL , DeletePower1Key
+                          ADD BL , 80H
+                          CMP AL , BL
+                          JNE CheckLetterM
+                          MOV KFlag , 0
+                          JMP Default
+    
+    CheckLetterM:
+                          CMP AL , DeletePower2Key
+                          JNE NotPressed6
+                          MOV MFlag , 1
+                          MOV powerupParent , 2
+                          ClearPower
+                          JMP Default
+
+    NOTPRESSED6:
+
+                            MOV BL , DeletePower2Key
+                            ADD BL , 80H
+                            CMP AL , BL
+                            JNE Default
+                            MOV MFlag , 0
 
     Default:              
     
@@ -857,6 +1273,13 @@ CheckWASDFlags ENDP
 
                 MOV BL , RightFlag
                 MOV ArrowRightFlag , BL
+
+                MOV BL , KFlag
+                MOV LetterKFlag , BL
+
+                MOV BL , MFlag
+                MOV LetterMFlag , BL
+
                 RET
 
  UpdateArrowFlags ENDP
@@ -874,6 +1297,13 @@ UpdateWASDFlags PROC FAR
 
                 MOV BL , RightFlag
                 MOV DFlag , BL
+
+                MOV BL , KFlag
+                MOV LetterKFlag , BL
+
+                MOV BL , MFlag
+                MOV LetterMFlag , BL
+
                 RET
 UpdateWASDFlags ENDP
 
@@ -881,8 +1311,8 @@ UpdateWASDFlags ENDP
 
 ;procedure calls all arrow keys functions
 CheckArrowKeys PROC FAR
-                SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight
-                SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag
+                SETKEYS ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM
+                SetFlags ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag
                 CALL InputButtonSwitchCase
                 CALL UpdateArrowFlags
                 RET
@@ -890,8 +1320,8 @@ CheckArrowKeys ENDP
 
 ;procedure calls all WASD keys functions
 CheckWASDKeys PROC FAR
-                SETKEYS WKey, SKey, AKey, DKey
-                SetFlags WFlag, SFlag, AFlag, DFlag
+                SETKEYS WKey, SKey, AKey, DKey , LetterK , LetterM
+                SetFlags WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag
                 CALL InputButtonSwitchCase
                 CALL UpdateWASDFlags
                 RET
@@ -942,6 +1372,7 @@ ScanYmovement PROC FAR
                 MOV ES , AX
                 
                 MOV DI , 0
+                MOV verticalFlag ,1
 
 ;Assume no addition or subtraction has occured to the positions in "checkFlags"   
 
@@ -975,13 +1406,83 @@ ScanYmovement PROC FAR
                 JE NoObstacleDetected
                 CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
                 JE NoObstacleDetected
-                
-                POP DI
-                POP CX
-                RET
-    NoObstacleDetected:
+                ;Checking if it is the increasing speed powerup
+
+                    CMP BYTE PTR ES:[DI] , 121     ; 121 is the color degree of the increasing powerup
+                    JE INCPOWERUP_DETECTED2
+                    CMP BYTE PTR ES:[DI] , 36       ; 36 is the color degree of any powerup
+                    JNE TERMINATE2
+
+                    MOV BX,DI
+                    CALL SearchForLeftVertex
+                    CMP BYTE PTR ES:[BX] , 121     ; 121 is the color degree of the increasing powerup
+                    JE INCPOWERUP_DETECTED2
+                    CMP BYTE PTR ES:[BX] , 112     ; 112 is the color degree of the decreasing powerup
+                    JE DECPOWERUP_DETECTED2
+                    CMP BYTE PTR ES:[BX] , 17
+                    JE CREATEOBSTPOWERUP_DETECTED2
+                    CMP BYTE PTR ES:[BX] , 28
+                    JE PASSOBSTPOWER_DETECTED2
+TERMINATE2:
+                    POP DI
+                    POP CX
+                    RET  
+INCPOWERUP_DETECTED2:
+                    MOV AL , 1
+                    MOV powerupType , AL
+                    JMP DRAWING_COLLECTED_POWERUP2
+DECPOWERUP_DETECTED2:
+                    MOV AL , 2
+                    MOV powerupType , AL
+                    JMP DRAWING_COLLECTED_POWERUP2
+CREATEOBSTPOWERUP_DETECTED2:
+                    MOV AL , 3
+                    MOV powerupType , AL
+                    JMP DRAWING_COLLECTED_POWERUP2
+
+PASSOBSTPOWER_DETECTED2:
+                    MOV AL , 4
+                    MOV powerupType , AL
+
+DRAWING_COLLECTED_POWERUP2:
+                    CMP CarToScan , 0       ;Car1 is scanning
+                    JE Car2Powerup2
+                    ;Powerup for first player is collected
+
+                    MOV AX , powerup1Posx
+                    MOV TEMPX , AX
+
+                    MOV AX , powerup1Posy
+                    MOV TEMPY , AX
+
+                    MOV AL , CarToScan
+                    MOV powerupParent , AL
+
+                    MOV TMP4 , 0
+
+                    DrawPower TEMPX,TEMPY,powerupType
+                    JMP TERMINATE2
+Car2Powerup2:
+                    ;Powerup for second player is collected
+
+                    MOV AX , powerup2Posx
+                    MOV TEMPX , AX
+
+                    MOV AX , powerup2Posy
+                    MOV TEMPY , AX
+
+                    MOV AL , CarToScan
+                    MOV powerupParent , AL
+
+                    MOV TMP4 , 0
+
+                    DrawPower TEMPX,TEMPY, powerupType
+                    JMP TERMINATE2
+NoObstacleDetected:
                 INC DI
-                LOOP checkY
+                DEC CX
+                CMP CX , 0
+                JNE CheckY
     
                 POP DI
                 POP CX
@@ -996,9 +1497,12 @@ ScanYmovement PROC FAR
                 SUB DI , SCREEN_WIDTH
                 DEC CarToDrawY
     NextLoop:
-                LOOP NextRow
+                DEC CX
+                CMP CX , 0
+                JNE NextRow
 
     checkYFinish:
+                MOV verticalFlag,0
                 RET
 ScanYmovement ENDP
 
@@ -1007,6 +1511,7 @@ ScanXmovement PROC FAR
                 MOV ES, AX
 
                 MOV DI , 0
+                MOV horizontalFlag ,1
 
                 CMP XMovement , 1   ; The car is moving right either car1 or car2
                 JNE LeftMovement
@@ -1028,26 +1533,95 @@ ScanXmovement PROC FAR
                     MOV CX, CAR_SIZE
 
     CheckX:
-                    ;CMP BYTE PTR ES:[DI] , 142
-                    ;JNE NoObstacleDetected2
-
-                CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
-                JE NoObstacleDetected2 
-                CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
-                JE NoObstacleDetected2 
-                CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
-                JE NoObstacleDetected2
 
 
+                    CMP BYTE PTR ES:[DI] , 20    ; 20 is the GREY color degree of the road
+                    JE NoObstacleDetected2 
+                    CMP BYTE PTR ES:[DI] , 31    ; 31 is the WHITE color degree of the road
+                    JE NoObstacleDetected2 
+                    CMP BYTE PTR ES:[DI] , 40    ; 40 is one of the color degrees for the end line
+                    JE NoObstacleDetected2
+                    ;Checking if it is the increasing speed powerup
+
+                    CMP BYTE PTR ES:[DI] , 121     ; 121 is the color degree of the increasing powerup
+                    JE INCPOWERUP_DETECTED
+                    CMP BYTE PTR ES:[DI] , 36       ; 36 is the color degree of any powerup
+                    JNE TERMINATE
+
+                    MOV BX,DI
+                    CALL SearchForLeftVertex
+                    CMP BYTE PTR ES:[BX] , 121     ; 121 is the color degree of the increasing powerup
+                    JE INCPOWERUP_DETECTED
+                    CMP BYTE PTR ES:[BX] , 112     ; 112 is the color degree of the decreasing powerup
+                    JE DECPOWERUP_DETECTED
+                    CMP BYTE PTR ES:[BX] , 17
+                    JE CREATEOBSTPOWERUP_DETECTED
+                    CMP BYTE PTR ES:[BX] , 28
+                    JE PASSOBSTPOWER_DETECTED
+TERMINATE:
                     POP DI
-                    POP cx
+                    POP CX
                     RET  
-    NoObstacleDetected2:
+INCPOWERUP_DETECTED:
+                    MOV AL , 1
+                    MOV powerupType , AL
+                    JMP DRAWING_COLLECTED_POWERUP
+DECPOWERUP_DETECTED:
+                    MOV AL , 2
+                    MOV powerupType , AL
+                    JMP DRAWING_COLLECTED_POWERUP
+CREATEOBSTPOWERUP_DETECTED:
+                    MOV AL , 3
+                    MOV powerupType , AL
+                    JMP DRAWING_COLLECTED_POWERUP
+
+PASSOBSTPOWER_DETECTED:
+                    MOV AL , 4
+                    MOV powerupType , AL
+
+DRAWING_COLLECTED_POWERUP:
+                    CMP CarToScan , 0       ;Car1 is scanning
+                    JE Car2Powerup
+                    ;Powerup for first player is collected
+
+                    MOV AX , powerup1Posx
+                    MOV TEMPX , AX
+
+                    MOV AX , powerup1Posy
+                    MOV TEMPY , AX
+
+                    MOV AL , CarToScan
+                    MOV powerupParent , AL
+
+                    MOV TMP4 , 0
+
+                    DrawPower TEMPX,TEMPY,powerupType
+                    JMP TERMINATE
+Car2Powerup:
+                    ;Powerup for second player is collected
+
+                    MOV AX , powerup2Posx
+                    MOV TEMPX , AX
+
+                    MOV AX , powerup2Posy
+                    MOV TEMPY , AX
+
+                    MOV AL , CarToScan
+                    MOV powerupParent , AL
+
+                    MOV TMP4 , 0
+
+                    DrawPower TEMPX,TEMPY, powerupType
+                    JMP TERMINATE
+
+NoObstacleDetected2:
                     ADD DI , SCREEN_WIDTH
-                    LOOP checkX
+                    DEC CX
+                    CMP CX , 0
+                    JNE CheckX
 
                     POP DI
-                    POP cx
+                    POP CX
 
                     CMP XMovement , 1
                     JNE LeftMovement2
@@ -1060,8 +1634,11 @@ ScanXmovement PROC FAR
                     DEC CarToDrawX
 
     NextLoop2:
-                    LOOP NextRow2
+                    DEC CX
+                    CMP CX , 0
+                    JNE NextRow2
     checkXFinish:
+                            MOV horizontalFlag ,0
                             RET
 ScanXmovement ENDP
 
@@ -1299,6 +1876,7 @@ CALCXY PROC
     MOV BX, SCREENWIDTH
     DIV BX
     MOV TEMPX, DX
+
     MOV TEMPY, AX
     RET
 CALCXY ENDP
@@ -1981,31 +2559,81 @@ CALL DRAWENDLINE
                 MOV  PosYsecond , STARTROADY + HORROADIMGH - Car_Size - 1
                 Draw_Car CarImg2, CAR_SIZE, PosXsecond , PosYsecond
 
-
                 MOV DX , PosXfirst
                 MOV PosX, DX
 
                 MOV DX , PosYfirst
                 MOV PosY, DX
+
+                ;Multiplayers' Names
+                MOV AH,2
+                MOV DH , player1PosY
+                MOV DL , player1PosX
+                INT 10H
+
+                MOV AH ,9
+                LEA DX , player1Name
+                INT 21H
+
+                MOV AH ,2
+                MOV DH , player2PosY
+                MOV DL , player2PosX
+                INT 10H
+
+                MOV AH ,9
+                LEA DX , player2Name
+                INT 21H
+
+                MOV AH ,2 
+                MOV DH , player1PosY
+                ADD DH ,1
+                MOV DL , player1PosX
+                INT 10H
+
+                MOV AH , 09
+                LEA DX , powerupMessage
+                INT 21H
+
+                MOV AH ,2 
+                MOV DH , player2PosY
+                ADD dh , 1
+                MOV DL , player2PosX
+                INT 10H
+
+                MOV AH , 09
+                LEA DX , powerupMessage
+                INT 21H
+
+        
+
+                    ; MOV TMP4 , 0
+                    ; MOV TEMPX , 71
+                    ; MOV TEMPY , 187
+                    ; DRAW INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+
+                    ; MOV powerupParent , 1
+                    ; ClearPower
+ 
+
      mainLoop:          
 
-                ; MOV AH, 2CH  ; INTERRUPT to get system time
-                ; INT 21H
-                ; MOV AL, DH
-                ; MOV AH, 0
-                ; MOV BL, 3
-                ; DIV BL
-                ; CMP AH, 0
-                ; JNE DONTSHOWPOWER
-                ; MOV SI, OFFSET ISVISIBLEPOWER
-                ; ADD SI, INDEXSTARTSHOWING
-                ; INC INDEXSTARTSHOWING
-                ; CMP BYTE PTR DS:[SI], 0
-                ; JNE DONTSHOWPOWER
-                ; CALL SHOWHIDDENPOWER
+    ;             ; MOV AH, 2CH  ; INTERRUPT to get system time
+    ;             ; INT 21H
+    ;             ; MOV AL, DH
+    ;             ; MOV AH, 0
+    ;             ; MOV BL, 3
+    ;             ; DIV BL
+    ;             ; CMP AH, 0
+    ;             ; JNE DONTSHOWPOWER
+    ;             ; MOV SI, OFFSET ISVISIBLEPOWER
+    ;             ; ADD SI, INDEXSTARTSHOWING
+    ;             ; INC INDEXSTARTSHOWING
+    ;             ; CMP BYTE PTR DS:[SI], 0
+    ;             ; JNE DONTSHOWPOWER
+    ;             ; CALL SHOWHIDDENPOWER
 
 
-                ; DONTSHOWPOWER:
+    ;             ; DONTSHOWPOWER:
 
                 MOV DX , PosXfirst
                 MOV PrevPosXfirst, DX
@@ -2040,10 +2668,11 @@ CALL DRAWENDLINE
             
                 
                 CALL CheckArrowFlags
-                CALL checkingPositionChange1 
+                CALL checkingPositionChange1
 
                 CALL CheckWASDFlags
-                CALL checkingPositionChange2               
+                CALL checkingPositionChange2
+
  
     ;Delay  
                 MOV CX , 0
