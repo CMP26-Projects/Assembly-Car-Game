@@ -693,7 +693,7 @@ RANGEOFRAND             DB      ?
 ;STARTdd
 STARTROADX              EQU     2
 STARTROADY              EQU     2
-NUMBEROFPARTS           EQU     100
+NUMBEROFPARTS           EQU     6
 MINNUMOFPARTS           EQU     5
 
 ;VARIABLES FOR DRAWIMAGE PROCEDURE
@@ -2246,11 +2246,52 @@ MOV AX, 0A000H
 MOV ES, AX
 
 
+                ;Multiplayers' Names
+                MOV AH,2
+                MOV DH , player1PosY
+                MOV DL , player1PosX
+                INT 10H
+
+                MOV AH ,9
+                LEA DX , player1Name
+                INT 21H
+
+                MOV AH ,2
+                MOV DH , player2PosY
+                MOV DL , player2PosX
+                INT 10H
+
+                MOV AH ,9
+                LEA DX , player2Name
+                INT 21H
+
+                MOV AH ,2 
+                MOV DH , player1PosY
+                ADD DH ,1
+                MOV DL , player1PosX
+                INT 10H
+
+                MOV AH , 09
+                LEA DX , powerupMessage
+                INT 21H
+
+                MOV AH ,2 
+                MOV DH , player2PosY
+                ADD dh , 1
+                MOV DL , player2PosX
+                INT 10H
+
+                MOV AH , 09
+                LEA DX , powerupMessage
+                INT 21H
+
 ;;;;;;;;;; DRAWING ROAD ;;;;;;;;;;;;
 
 
 ;DRAWING PART OF ROAD 
 ;DRAW BACKGROUNDIMAGE, SCREENWIDTH, SCREENHEIGHT, 0, 0
+
+
 STARTPROGRAM:
     MOV CANTUP, 0
     MOV CANTRIGHT, 0
@@ -2649,44 +2690,7 @@ CALL DRAWENDLINE
                 MOV DX , PosYfirst
                 MOV PosY, DX
 
-                ;Multiplayers' Names
-                MOV AH,2
-                MOV DH , player1PosY
-                MOV DL , player1PosX
-                INT 10H
 
-                MOV AH ,9
-                LEA DX , player1Name
-                INT 21H
-
-                MOV AH ,2
-                MOV DH , player2PosY
-                MOV DL , player2PosX
-                INT 10H
-
-                MOV AH ,9
-                LEA DX , player2Name
-                INT 21H
-
-                MOV AH ,2 
-                MOV DH , player1PosY
-                ADD DH ,1
-                MOV DL , player1PosX
-                INT 10H
-
-                MOV AH , 09
-                LEA DX , powerupMessage
-                INT 21H
-
-                MOV AH ,2 
-                MOV DH , player2PosY
-                ADD dh , 1
-                MOV DL , player2PosX
-                INT 10H
-
-                MOV AH , 09
-                LEA DX , powerupMessage
-                INT 21H
 
         
 
