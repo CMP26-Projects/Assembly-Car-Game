@@ -95,6 +95,38 @@ CLEAR MACRO Car, ClearedSize, ClearedPosX, ClearedPosY
           CALL ClearCarArea
 ENDM
 
+SetVerticalLine MACRO StX , StY, height, Color
+                    MOV  DX , StX
+                    MOV  CarToDrawX , DX
+
+                    MOV  DX , StY
+                    MOV  CarToDrawY , DX
+
+                    MOV  DX , height
+                    MOV  LineToDrawH , DX
+                    
+                    MOV  DX , Color
+                    MOV  DrawingColor , DX
+
+                    CALL DrawVerticlLine
+ENDM
+
+SetHorizontalLine MACRO StX , StY, width, Color
+                      MOV  DX , StX
+                      MOV  CarToDrawX , DX
+
+                      MOV  DX , StY
+                      MOV  CarToDrawY , DX
+
+                      MOV  DX , width
+                      MOV  LineToDrawW , DX
+
+                      MOV  DX , Color
+                      MOV  DrawingColor , DX
+                    
+                      CALL DrawHorizontalLine
+ENDM
+
 ClearPower MACRO
                          LOCAL CLEAR_SECOND_POWERUP, Delete_Powerup
                          CMP   powerupParent , 1
@@ -212,6 +244,13 @@ ScanX MACRO x , y , CarNo , MovemetType, Speed
 
 ENDM
 
+CalcStatBarStPts MACRO
+                     MOV StatusBarStartX , 0
+                     MOV StatusBarStartY,  BACKGROUNDIMAGEPARTH*VERTICALBACKGROUNDPARTSNO
+                     MOV DX , SCREEN_HEIGHT
+                     SUB DX , StatusBarStartY
+                     MOV StatusBarTotalheight, DX
+ENDM
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;; road MACROS ;;;;;;;;;;
@@ -246,7 +285,7 @@ CHECKCANDRAW MACRO WID, HEI, STARX, STARY, DIRECTION
                    MOV   AX, 0A000H
                    MOV   ES, AX
                    MOV   DI, STARY
-                   MOV   AX, SCREENWIDTH
+                   MOV   AX, SCREEN_WIDTH
                    MUL   DI
                    MOV   DI, AX
                    ADD   DI, STARX
@@ -266,7 +305,7 @@ CHECKCANDRAW MACRO WID, HEI, STARX, STARY, DIRECTION
                    DEC   INCOUNTER
                    JNZ   COLS
                    MOV   DI, FIRSTBYTEINROW
-                   ADD   DI, SCREENWIDTH
+                   ADD   DI, SCREEN_WIDTH
                    DEC   OUTCOUNTER
                    JNZ   ROWS
                    JMP   FINISH
@@ -306,7 +345,7 @@ CHECKCANDRAWPOWER MACRO WID, HEI, STARX, STARY
                       MOV   AX, 0A000H
                       MOV   ES, AX
                       MOV   DI, STARY
-                      MOV   AX, SCREENWIDTH
+                      MOV   AX, SCREEN_WIDTH
                       MUL   DI
                       MOV   DI, AX
                       ADD   DI, STARX
@@ -324,7 +363,7 @@ CHECKCANDRAWPOWER MACRO WID, HEI, STARX, STARY
                       DEC   INCOUNTER
                       JNZ   COLS
                       MOV   DI, FIRSTBYTEINROW
-                      ADD   DI, SCREENWIDTH
+                      ADD   DI, SCREEN_WIDTH
                       DEC   OUTCOUNTER
                       JNZ   ROWS
                       JMP   FINISH
@@ -864,11 +903,11 @@ ENDM
     ; Data for the powerups
     powerupMessage        DB  'Powerup :', '$'
 
-    powerup1Posx          EQU 71
-    powerup1Posy          EQU 184
+    powerup1Posx          EQU 70
+    powerup1Posy          EQU 190
 
-    powerup2Posx          EQU 271
-    powerup2Posy          EQU 184
+    powerup2Posx          EQU 230
+    powerup2Posy          EQU 190
 
     powerupToDraw         DW  ?
     powerupToDrawPosX     DW  ?
@@ -882,6 +921,17 @@ ENDM
     verticalFlag          DB  ?
     horizontalFlag        DB  ?
 
+;Status Bar Variables
+    StatusBarStartX           DW  ?
+    StatusBarStartY           DW  ?
+    StatusBarTotalheight      DW  ?
+    STATUS_BAR_COLOR          EQU 8
+    STATUS_BAR_COLOR2         EQU 7
+
+    ;Drawing line variables
+    LineToDrawH               DW  ?
+    LineToDrawW               DW  ?
+    DrawingColor              DW  ?
 
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -892,6 +942,7 @@ ENDM
     ;BACKGROUND
     BACKGROUNDIMAGEPARTH  EQU 16
     BACKGROUNDIMAGEPARTW  EQU 16
+    VERTICALBACKGROUNDPARTSNO EQU 11
     BACKGROUNDIMAGEPART   DB  142, 203, 142, 142, 71, 142, 203, 142, 143, 203, 142, 142, 142, 71, 142, 142, 71, 142, 203, 142, 71, 142, 203, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 142, 203, 142, 142, 142, 142, 142
                           DB  71, 142, 142, 142, 203, 142, 142, 71, 142, 142, 142, 142, 143, 142, 142, 142, 142, 71, 142, 203, 142, 142, 143, 71, 142, 143, 142, 142, 142, 142, 142, 142, 142, 71, 142, 203, 142, 142, 142, 71
                           DB  142, 142, 142, 71, 142, 142, 142, 142, 142, 142, 142, 142, 142, 203, 142, 142, 142, 142, 142, 142, 71, 142, 203, 142, 142, 143, 142, 142, 142, 203, 142, 142, 142, 203, 142, 142, 71, 142, 142, 203
@@ -901,7 +952,6 @@ ENDM
                           DB  142, 143, 142, 71, 142, 203, 142, 142, 142, 203, 142, 143, 142, 71, 142, 142
     SCREENWIDTH           EQU 320
     SCREENHEIGHT          EQU 200
-    SCREENSIZE            EQU 32*32
 
 
     ;OBSTACLE
@@ -1344,14 +1394,15 @@ ClearPowerup PROC FAR
                                 MOV                AX,0A000H
                                 MOV                ES,AX
                                 MOV                DI ,0
-                                MOV                CX , POWERH
+                                MOV                CX , BIGPOWERH
                                 CALL               CalculatePowerupVertex
     ROWS_CLEAR_POWER:           
                                 PUSH               CX
                                 PUSH               DI
-                                MOV                CX , POWERW
+                                MOV                CX , BIGPOWERW
     COLS_CLEAR_POWER:           
-                                MOV                BYTE PTR ES:[DI] , 0ffh
+                                MOV                DL , STATUS_BAR_COLOR
+                                MOV                BYTE PTR ES:[DI] , DL
                                 INC                DI
                                 LOOP               COLS_CLEAR_POWER
                                 POP                DI
@@ -1703,7 +1754,7 @@ ScanYmovement PROC FAR
     POWERUPDETECTED:            
                                 PUSH               CX
                                 PUSH               DI
-                                CALL               GETTOPLEFTPOWER
+                                CALL               GetTopLeftPower
                 
                                 MOV                BX,POWERTOPLEFTBYTE
                                 INC                BX
@@ -1847,7 +1898,7 @@ ScanXmovement PROC FAR
     POWERUPDETECTED2:           
                                 PUSH               CX
                                 PUSH               DI
-                                CALL               GETTOPLEFTPOWER
+                                CALL               GetTopLeftPower
                 
                                 MOV                BX,POWERTOPLEFTBYTE
                                 INC                BX
@@ -2206,7 +2257,99 @@ DRAWIMAGE PROC FAR
 DRAWIMAGE ENDP
 
 
+ ;Called inside macro "SetVerticalLine"
+DrawVerticlLine PROC FAR
+                                CALL               CalculateBoxVertex
+                                MOV                CX , LineToDrawH
+    LineHeightLoop:             
+                                MOV                DX , DrawingColor
+                                MOV                BYTE PTR ES:[DI] , DL
+                                ADD                DI , SCREEN_WIDTH
+                                LOOP               LineHeightLoop
+                                RET
+DrawVerticlLine ENDP
 
+    ;Called inside macro "SetHorizontalLine"
+DrawHorizontalLine PROC FAR
+                                CALL               CalculateBoxVertex
+                                MOV                CX , LineToDrawW
+    LineWidthLoop:              
+                                MOV                DX , DrawingColor
+                                MOV                BYTE PTR ES:[DI] , DL
+                                INC                DI
+                                LOOP               LineWidthLoop
+
+                                RET
+DrawHorizontalLine ENDP
+    ;Uses stored variables to draw status Bar
+DrawStatBar PROC FAR
+ 
+    ;Setting starting posititons of the status bar to carToDraw varialbes as it's used in 'CalculateBoxVertix' proc
+                                MOV                DX , StatusBarStartX
+                                MOV                CarToDrawX , DX
+
+                                MOV                DX , StatusBarStartY
+                                MOV                CarToDrawY , DX
+
+                                CALL               CalculateBoxVertex
+                            
+    ; Setting CX by the remaining number of bytes in the screen
+                                MOV                AX , StatusBarTotalheight
+                                MOV                BX , SCREEN_WIDTH
+                                MUL                BX
+                                MOV                CX , AX
+    ;Drawing status Bar background
+    DrawStatusBg:               
+                                MOV                BYTE PTR ES:[DI], STATUS_BAR_COLOR
+                                INC                DI
+                                LOOP               DrawStatusBg
+    
+    ;Drawing horizontal line to leave space to powerups
+
+    ;-- Calculate Ypos of the line:
+                                MOV                AX , StatusBarTotalheight
+                                MOV                BX , 2D
+                                DIV                BX
+                                ADD                AX , StatusBarStartY
+    ;--Drawing Lines
+                                SetHorizontalLine  0, AX, SCREEN_WIDTH, STATUS_BAR_COLOR2
+                                SetVerticalLine    SCREEN_WIDTH/2, StatusBarStartY, StatusBarTotalheight, STATUS_BAR_COLOR2
+    
+    ;Writing User names to be passed from interface
+                            
+
+    ;printing  FirstName
+                                MOV                SI , OFFSET FirstName
+                                MOV                DL , 4
+                                MOV                DH , 22
+                                CALL               PrintStringWithColor
+    ;printing  SecondName
+                                MOV                SI , OFFSET SecondName
+                                MOV                DL , 25
+                                MOV                DH , 22
+                                CALL               PrintStringWithColor
+
+                                RET
+DrawStatBar ENDP
+
+    ;Set the Offset of the string you want to print in SI before calling
+PrintStringWithColor PROC FAR
+    printOneByOne:              
+    ;--Setting Cursor position
+                                MOV                AH , 2
+                                MOV                BH, 0
+                                INT                10H
+    ;--Start printing
+                                MOV                AL , [SI]
+                                CMP                AL , '$'
+                                JE                 PrintFinish
+                                CALL               char_display
+                                INC                SI
+                                INC                DL
+                                JMP                printOneByOne
+    PrintFinish:                
+                                RET
+PrintStringWithColor ENDP
 
 
     ;PROC TO RANDOMIZE
@@ -2653,6 +2796,15 @@ DRAWENDLINE PROC
                                 RET
 DRAWENDLINE ENDP
 
+   ;prints character by character in video game mode in order to display string with font
+char_display proc  FAR
+                                mov                ah, 9
+                                mov                bh, 0
+                                mov                bl, 93H                                                                                 ;ANY COLOR.
+                                mov                cx, 1                                                                                   ;HOW MANY TIMES TO DISPLAY CHAR.
+                                int                10h
+                                ret
+char_display endp
 
 
 
@@ -2764,6 +2916,9 @@ MAIN PROC FAR
                                 DRAW               STARTFLAGIMG, STARTFLAGIMGW, STARTFLAGIMGH, STARTROADX, STARTROADY, TMP4
 
 
+    ;Drawing Status Bar
+                                CalcStatBarStPts
+                                CALL               DrawStatBar
     ;THIS IS TO RANDOMIZE NUMBER FROM 0 TO 3 TO SPECIFY THE DIRECTON
                                 MOV                CX, NUMBEROFPARTS
     RANDOMIZEPART:              
