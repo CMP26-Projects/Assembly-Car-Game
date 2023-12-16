@@ -10,7 +10,7 @@ DrawPower MACRO powerX , powerY , PType
 
             CMP AH,1       ;Increase Speed Powerup
             JNE DECSPEED
-            DRAW INCSPEEDPOWER, POWERW, POWERH, powerX, powerY, TMP4
+            DRAW BIGINCSPEEDPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
             JMP FINISH_DRAWING_POWER
             ; MOV AX ,OFFSET INCSPEEDPOWER
             ; MOV powerupToDraw , AX
@@ -21,7 +21,7 @@ DrawPower MACRO powerX , powerY , PType
 DECSPEED:
             CMP AH,2       ;Decrease Speed Powerup   
             JNE SETOBSTACLE
-            DRAW DECSPEEDPOWER, POWERW, POWERH, powerX, powerY, TMP4
+            DRAW BIGDECSPEEDPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
             JMP FINISH_DRAWING_POWER
             ; MOV AX , OFFSET DECSPEEDPOWER
             ; MOV powerupToDraw , AX
@@ -32,7 +32,7 @@ DECSPEED:
 SETOBSTACLE:
             CMP AH,3       ;Create Obstacle Powerup
             JNE PASSOBSTACLE
-            DRAW CREATEOBSTPOWER, POWERW, POWERH, powerX, powerY, TMP4
+            DRAW BIGCREATEOBSTPOWER, BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
             JMP FINISH_DRAWING_POWER
             ; MOV AX , OFFSET CREATEOBSTPOWER
             ; MOV powerupToDraw , AX
@@ -43,7 +43,7 @@ SETOBSTACLE:
 PASSOBSTACLE:
             CMP AH,4       ;Pass Obstacle Powerup
             JNE FINISHPOWER
-            DRAW PASSOBSTPOWER , POWERW, POWERH, powerX, powerY, TMP4
+            DRAW BIGPASSOBSTPOWER , BIGPOWERW, BIGPOWERH, powerX, powerY, TMP4
             ; MOV AX , OFFSET PASSOBSTPOWER
             ; MOV powerupToDraw , AX
 
@@ -560,10 +560,10 @@ ENDM
     powerupMessage      DB  'Powerup :', '$'
 
     powerup1Posx        EQU  71
-    powerup1Posy        EQU  187
+    powerup1Posy        EQU  184
 
     powerup2Posx        EQU  271
-    powerup2Posy        EQU  187
+    powerup2Posy        EQU  184
 
     powerupToDraw       DW   ?
     powerupToDrawPosX   DW   ?
@@ -615,6 +615,20 @@ PASSOBSTPOWER           DB      36, 36, 36, 36, 28, 36, 36, 36, 36
 DECSPEEDPOWER           DB      36, 36, 36, 112, 112, 112, 36, 36, 36
 INCSPEEDPOWER           DB      36, 121, 36, 121, 121, 121, 36, 121, 36
 
+BIGPOWERW               EQU     9
+BIGPOWERH               EQU     9
+BIGCREATEOBSTPOWER      DB 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 17, 17, 17, 36, 36, 36, 36, 36, 36, 17
+ DB 17, 17, 36, 36, 36, 36, 36, 36, 17, 17, 17, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
+ DB 36
+BIGPASSOBSTPOWER        DB 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 28, 28, 28, 36, 36, 36, 36, 36, 36, 28
+ DB 28, 28, 36, 36, 36, 36, 36, 36, 28, 28, 28, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
+ DB 36
+BIGDECSPEEDPOWER        DB 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112
+ DB 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 112, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36
+ DB 36    
+BIGINCSPEEDPOWER        DB 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121
+ DB 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 121, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36, 36, 36, 36, 36, 121, 121, 121, 36, 36
+ DB 36
 ;STORING ROAD UNDER POWERUPS TO DRAW IT AGAIN WHEN IT'S COLLECTED
 TOPLEFTPOWER            DW      45 DUP(?)  
 ROADUNDERPOWER          DB      405 DUP(?)
