@@ -2300,9 +2300,6 @@ ENTERPLAYERNAME PROC
     FIRSTCHARLOOP:              
                                 MOV                AH, 0
                                 INT                16H
-                                MOV                DL, AL
-                                MOV                AH, 2
-                                INT                21H
                                 CMP                AL, 'A'
                                 JB                 FIRSTCHARLOOP
                                 CMP                AL, 'Z'
@@ -2313,17 +2310,33 @@ ENTERPLAYERNAME PROC
                                 CMP                AL, 'z'
                                 JBE                RESTOFCHARS
 
+                                JMP                FIRSTCHARLOOP
+
     RESTOFCHARS:                
+                                MOV                DL, AL
+                                MOV                AH, 2
+                                INT                21H
+
+    RESTOFCHARSLOOP:
+                                CMP                AL, 8
+                                JE                 DONTSTORECHAR
                                 MOV                BYTE PTR DS:[SI], AL
                                 INC                SI
+                                DONTSTORECHAR:
                                 MOV                AH, 0
                                 INT                16H
                                 CMP                AH, 28
                                 JE                 FINISHENTERNAME
+                                CMP                AH, 14
+                                JNE                NOTBACKSPACE
+                                INC                CX
+                                INC                CX
+                                DEC                SI
+                                NOTBACKSPACE:
                                 MOV                DL, AL
                                 MOV                AH, 2
                                 INT                21H
-                                LOOP               RESTOFCHARS
+                                LOOP               RESTOFCHARSLOOP
     FINISHENTERNAME:            
                                 RET
 ENTERPLAYERNAME ENDP
