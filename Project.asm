@@ -3963,15 +3963,17 @@ MAIN PROC FAR
 
                                    MOV                PreviousSecond , DH
                                    INC                TotalSeconds
+                                   MOV                AH , 0
                                    MOV                AL , TotalSeconds
                                    MOV                BL , 60
                                    DIV                BL
+                                   
                                 
                                    MOV                CountSecond , AH                                                                        ; Current Seconds
                                    MOV                CountMinute , AL                                                                        ; Current Minutes
 
                                    CMP                TotalSeconds , 120                                                                      ; 2 minutes are achieved
-                                   JE                exit
+                                   JE                 exit
 
     CheckTimeFinish:               
 
@@ -4019,6 +4021,10 @@ MAIN PROC FAR
                                    MOV                CX , 1
                                    INT                21H
     ContinueLooping22:             
+                                   MOV                CX , 0
+                                   MOV                DX , 64000D
+                                   MOV                AH , 86H
+                                   INT                15H
                                    JMP                mainLoop                                                                                ; keep looping
     exit:                          
                                    HLT
