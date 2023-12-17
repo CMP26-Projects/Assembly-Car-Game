@@ -786,14 +786,14 @@ ENDM
     CarImg2                   DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
                               DB  192, 0, 17, 192, 17, 192, 17, 192, 0
 
-    CarImg1Up             DB  0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 122, 122, 122
-                          DB  122, 192, 17, 17, 0, 0, 0, 17, 17
-    CarImg1Right          DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
-                          DB  192, 0, 17, 192, 17, 192, 17, 192, 0
-    CarImg1Down           DB  17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
-                          DB  192, 192, 0, 0, 0, 17, 0, 0, 0
-    CarImg1Left           DB  0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 9, 9, 122, 0, 17, 192, 192, 192, 9, 122, 0, 0, 0, 122, 9, 9, 122, 0, 0, 192, 122, 122, 122
-                          DB  122, 17, 0, 192, 17, 192, 17, 192, 17
+    CarImg1Up                 DB  0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 122, 122, 122
+                              DB  122, 192, 17, 17, 0, 0, 0, 17, 17
+    CarImg1Right              DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
+                              DB  192, 0, 17, 192, 17, 192, 17, 192, 0
+    CarImg1Down               DB  17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
+                              DB  192, 192, 0, 0, 0, 17, 0, 0, 0
+    CarImg1Left               DB  0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 9, 9, 122, 0, 17, 192, 192, 192, 9, 122, 0, 0, 0, 122, 9, 9, 122, 0, 0, 192, 122, 122, 122
+                              DB  122, 17, 0, 192, 17, 192, 17, 192, 17
 
     CarImg2Up                 DB  0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 122, 122, 122
                               DB  122, 192, 17, 17, 0, 0, 0, 17, 17
@@ -915,9 +915,9 @@ ENDM
    
 
     ;Data for the status bar (Second Player's data)
-    player2PosX           EQU  65
-    player2PosY           EQU  22
-    player2Name           DB  'Ahmed', '$'
+    player2PosX               EQU 65
+    player2PosY               EQU 22
+    player2Name               DB  'Ahmed', '$'
 
 
     ; Data for the powerups
@@ -941,8 +941,8 @@ ENDM
     verticalFlag              DB  ?
     horizontalFlag            DB  ?
 
-    ScanYFlag                  DB  ?
-    ScanXFlag                  DB  ?
+    ScanYFlag                 DB  ?
+    ScanXFlag                 DB  ?
 
     ;Status Bar Variables
     StatusBarStartX           DW  ?
@@ -1084,10 +1084,10 @@ ENDM
     RANGEOFRAND               DB  ?
 
     ;STARTdd
-    STARTROADX            EQU 2
-    STARTROADY            EQU 2
-    NUMBEROFPARTS         EQU 18
-    MINNUMOFPARTS         EQU 10
+    STARTROADX                EQU 2
+    STARTROADY                EQU 2
+    NUMBEROFPARTS             EQU 18
+    MINNUMOFPARTS             EQU 10
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
     IMGTODRAW                 DW  ?
@@ -1103,29 +1103,29 @@ ENDM
     YNODOWN                   EQU 124
 
     ;DIRECTIONS
-    UPDIR                 DW  ?
-    RIGHTDIR              DW  ?
-    DOWNDIR               DW  ?
-    LEFTDIR               DW  ?
+    UPDIR                     DW  ?
+    RIGHTDIR                  DW  ?
+    DOWNDIR                   DW  ?
+    LEFTDIR                   DW  ?
 
     ;TMP
-    TMPIMG                DB  4, 4, 4, 4
+    TMPIMG                    DB  4, 4, 4, 4
 
     ;CHECKLINE IMAGES
-    VERCHECKLINEIMGW      EQU 1
-    VERCHECKLINEIMGH      EQU 20
-    HORCHECKLINEIMGW      EQU 20
-    HORCHECKLINEIMGH      EQU 1
-    CHECKLINEIMG          DB  0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0
-    ISVERTICALCHECKLINE   DW  ?
+    VERCHECKLINEIMGW          EQU 1
+    VERCHECKLINEIMGH          EQU 20
+    HORCHECKLINEIMGW          EQU 20
+    HORCHECKLINEIMGH          EQU 1
+    CHECKLINEIMG              DB  0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0
+    ISVERTICALCHECKLINE       DW  ?
 
-    CHECKLINESVERTICIES   DW  NUMBEROFPARTS DUP('?')
-    CHECKLINEVERTEX       DW  ?
-    INDEXOFPART           DW  0
-    CAR1PARTSVIS          DW  0
-    CAR2PARTSVIS          DW  0
-    CAR1VIS               DB  NUMBEROFPARTS DUP(0)
-    CAR2VIS               DB  NUMBEROFPARTS DUP(0)
+    CHECKLINESVERTICIES       DW  NUMBEROFPARTS DUP('?')
+    CHECKLINEVERTEX           DW  ?
+    INDEXOFPART               DW  0
+    CAR1PARTSVIS              DW  0
+    CAR2PARTSVIS              DW  0
+    CAR1VIS                   DB  NUMBEROFPARTS DUP(0)
+    CAR2VIS                   DB  NUMBEROFPARTS DUP(0)
 
     ;ROAD IMAGES
     VERROADIMGW               EQU 20
@@ -1168,134 +1168,134 @@ ENDM
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 SearchForLeftVertex PROC FAR
-                                MOV                DX,BX
+                                   MOV                DX,BX
     ; PUSH BX
     ; MOV BX,DX
-                                SUB                BX , 1                                                                                  ;CHECKING whether the collided bit of the powerup is the left one
-                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
-                                JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
-                                JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
-                                JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
-                                JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 LEFT_CHECKED
-                                MOV                BX ,DX
+                                   SUB                BX , 1                                                                                  ;CHECKING whether the collided bit of the powerup is the left one
+                                   CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                   JE                 LEFT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                   JE                 LEFT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                   JE                 LEFT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 LEFT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 LEFT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 LEFT_CHECKED
+                                   MOV                BX ,DX
 
     ; MOV DX,BX
     ; PUSH BX
     ; MOV BX,DX
-                                INC                BX                                                                                      ; CHECKING whether the collided bit of the powerup is the right one
-                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
-                                JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
-                                JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
-                                JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
-                                JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 RIGHT_CHECKED
+                                   INC                BX                                                                                      ; CHECKING whether the collided bit of the powerup is the right one
+                                   CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                   JE                 RIGHT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                   JE                 RIGHT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                   JE                 RIGHT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 RIGHT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 RIGHT_CHECKED
+                                   CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 RIGHT_CHECKED
     ; POP BX
-                                MOV                BX ,DX
+                                   MOV                BX ,DX
 
-                                JMP                MIDDLE_CHECKED
+                                   JMP                MIDDLE_CHECKED
 
-    LEFT_CHECKED:               
-                                ADD                BX ,2
-                                SUB                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                RET
+    LEFT_CHECKED:                  
+                                   ADD                BX ,2
+                                   SUB                BX , SCREEN_WIDTH
+                                   CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   RET
 
-    IAM_AT_TOP:                 
-                                ADD                BX , SCREEN_WIDTH
-                                ADD                BX , SCREEN_WIDTH
-                                RET
+    IAM_AT_TOP:                    
+                                   ADD                BX , SCREEN_WIDTH
+                                   ADD                BX , SCREEN_WIDTH
+                                   RET
 
-    RIGHT_CHECKED:              
-                                SUB                BX ,2
-                                SUB                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                RET
+    RIGHT_CHECKED:                 
+                                   SUB                BX ,2
+                                   SUB                BX , SCREEN_WIDTH
+                                   CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   RET
 
-    MIDDLE_CHECKED:             
-                                SUB                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
-                                JE                 IAM_AT_TOP
-                                RET
+    MIDDLE_CHECKED:                
+                                   SUB                BX , SCREEN_WIDTH
+                                   CMP                BYTE PTR ES:[BX] , 20                                                                   ; 20 is the GREY color degree of the road
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 142                                                                  ; 142 is COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 203                                                                  ; 203 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 71                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   CMP                BYTE PTR ES:[BX] , 16                                                                   ; 71 is the COLOR DEGREE FOR THE GRASS
+                                   JE                 IAM_AT_TOP
+                                   RET
 
 
 SearchForLeftVertex ENDP
 
 CalculatePowerupVertex PROC FAR
-                                MOV                DI , 0
-                                MOV                AX , TEMPY
-                                MOV                BX , SCREEN_WIDTH
-                                MUL                BX
-                                ADD                AX , TEMPX
-                                MOV                DI , AX
-                                RET
+                                   MOV                DI , 0
+                                   MOV                AX , TEMPY
+                                   MOV                BX , SCREEN_WIDTH
+                                   MUL                BX
+                                   ADD                AX , TEMPX
+                                   MOV                DI , AX
+                                   RET
 CalculatePowerupVertex ENDP
 
 
 CalculateBoxVertex PROC FAR
-                                MOV                DI , 0
-                                MOV                AX , CarToDrawY
-                                MOV                BX , SCREEN_WIDTH
-                                MUL                BX
-                                ADD                AX , CarToDrawX
-                                MOV                DI , AX
-                                RET
+                                   MOV                DI , 0
+                                   MOV                AX , CarToDrawY
+                                   MOV                BX , SCREEN_WIDTH
+                                   MUL                BX
+                                   ADD                AX , CarToDrawX
+                                   MOV                DI , AX
+                                   RET
 CalculateBoxVertex ENDP
 
 
     ;Moves the background of the car to be drawn in BX
 CheckCarToDraw PROC FAR
-                                CMP                CarToScan , 1
-                                JNE                Car2Draw
-                                MOV                BX ,OFFSET BackgroundBuffer1
-                                RET
-    Car2Draw:                   
-                                MOV                BX ,OFFSET BackgroundBuffer2
-                                RET
+                                   CMP                CarToScan , 1
+                                   JNE                Car2Draw
+                                   MOV                BX ,OFFSET BackgroundBuffer1
+                                   RET
+    Car2Draw:                      
+                                   MOV                BX ,OFFSET BackgroundBuffer2
+                                   RET
 CheckCarToDraw ENDP
 
 
@@ -1303,501 +1303,501 @@ CheckCarToDraw ENDP
     ;Needs to set carToScan by the current car (1 or 2)
     ;MOVEMENT On X change(right ->1 , left-> 0) . On Y change(up -> 1 or down -> 0)
 ChooseCar1Image PROC FAR
-                                MOV                DX , PrevPosXfirst
-                                CMP                PosXfirst , DX
-                                JE                 CheckOnY
-                                JB                 LeftImage
+                                   MOV                DX , PrevPosXfirst
+                                   CMP                PosXfirst , DX
+                                   JE                 CheckOnY
+                                   JB                 LeftImage
                                 
-                                MOV                SI  , OFFSET CarImg1Right
-                                JMP                ChooseEnded
-    LeftImage:                  
-                                MOV                SI  , OFFSET CarImg1Left
-                                JMP                ChooseEnded
+                                   MOV                SI  , OFFSET CarImg1Right
+                                   JMP                ChooseEnded
+    LeftImage:                     
+                                   MOV                SI  , OFFSET CarImg1Left
+                                   JMP                ChooseEnded
 
-    CheckOnY:                   
-                                MOV                DX , PrevPosYfirst
-                                CMP                PosYfirst , DX
-                                JE                 ChooseEnded
-                                JA                 DownImage
+    CheckOnY:                      
+                                   MOV                DX , PrevPosYfirst
+                                   CMP                PosYfirst , DX
+                                   JE                 ChooseEnded
+                                   JA                 DownImage
 
-                                MOV                SI , OFFSET CarImg1Up
-                                JMP                ChooseEnded
+                                   MOV                SI , OFFSET CarImg1Up
+                                   JMP                ChooseEnded
                                 
-    DownImage:                  
-                                MOV                SI , OFFSET CarImg1Down
+    DownImage:                     
+                                   MOV                SI , OFFSET CarImg1Down
             
-    ChooseEnded:                
-                                RET
+    ChooseEnded:                   
+                                   RET
 
 ChooseCar1Image ENDP
 
 ChooseCar2Image PROC FAR
-                                MOV                DX , PrevPosXsecond
-                                CMP                PosXsecond , DX
-                                JE                 CheckOnY2
-                                JB                 LeftImage2
+                                   MOV                DX , PrevPosXsecond
+                                   CMP                PosXsecond , DX
+                                   JE                 CheckOnY2
+                                   JB                 LeftImage2
                                 
-                                MOV                SI  , OFFSET CarImg2Right
-                                JMP                ChooseEnded2
-    LeftImage2:                 
-                                MOV                SI  , OFFSET CarImg2Left
-                                JMP                ChooseEnded2
+                                   MOV                SI  , OFFSET CarImg2Right
+                                   JMP                ChooseEnded2
+    LeftImage2:                    
+                                   MOV                SI  , OFFSET CarImg2Left
+                                   JMP                ChooseEnded2
 
-    CheckOnY2:                  
-                                MOV                DX , PrevPosYsecond
-                                CMP                PosYsecond , DX
-                                JE                 ChooseEnded2
-                                JA                 DownImage2
+    CheckOnY2:                     
+                                   MOV                DX , PrevPosYsecond
+                                   CMP                PosYsecond , DX
+                                   JE                 ChooseEnded2
+                                   JA                 DownImage2
 
-                                MOV                SI , OFFSET CarImg2Up
-                                JMP                ChooseEnded2
+                                   MOV                SI , OFFSET CarImg2Up
+                                   JMP                ChooseEnded2
                                 
-    DownImage2:                 
-                                MOV                SI , OFFSET CarImg2Down
+    DownImage2:                    
+                                   MOV                SI , OFFSET CarImg2Down
             
-    ChooseEnded2:               
-                                RET
+    ChooseEnded2:                  
+                                   RET
 
 ChooseCar2Image ENDP
 
 
 DrawCar PROC FAR
-                                MOV                ax , 0A000H
-                                MOV                es , ax
-                                MOV                DI , 0
-                                MOV                cx , CarToDrawSize
-                                MOV                SI ,  CarToDraw
-                                MOV                DL , 0
-                                CALL               CalculateBoxVertex
-                                CALL               CheckCarToDraw
+                                   MOV                ax , 0A000H
+                                   MOV                es , ax
+                                   MOV                DI , 0
+                                   MOV                cx , CarToDrawSize
+                                   MOV                SI ,  CarToDraw
+                                   MOV                DL , 0
+                                   CALL               CalculateBoxVertex
+                                   CALL               CheckCarToDraw
                              
-                                CMP                CarToScan , 1
-                                JNE                GetCar2Img
-                                CALL               ChooseCar1Image
-                                JMP                ROWS_DRAW
-    GetCar2Img:                 
-                                CALL               ChooseCar2Image                                                                         ;Get Background offset in BX
+                                   CMP                CarToScan , 1
+                                   JNE                GetCar2Img
+                                   CALL               ChooseCar1Image
+                                   JMP                ROWS_DRAW
+    GetCar2Img:                    
+                                   CALL               ChooseCar2Image                                                                         ;Get Background offset in BX
 
-    ROWS_DRAW:                  
-                                PUSH               CX
-                                PUSH               DI
+    ROWS_DRAW:                     
+                                   PUSH               CX
+                                   PUSH               DI
 
-                                MOV                CX , CarToDrawSize
-    COLS_DRAW:                  
-                                MOV                DH , BYTE PTR ES:[DI]                                                                   ;Moving the byte of the road to DH to be stored in buffer
-                                MOV                BYTE PTR DS:[BX] , DH                                                                   ;Moving DH -> the memory with offset BX
-                                MOV                DL , BYTE PTR [SI]                                                                      ;Car byte to be drawn this iteration
-                                CMP                DL, 0
-                                JE                 DONTDRAWBYTECAR
-                                MOV                BYTE PTR ES:[DI] , DL                                                                   ;Drawing the car bit
-    DONTDRAWBYTECAR:            
+                                   MOV                CX , CarToDrawSize
+    COLS_DRAW:                     
+                                   MOV                DH , BYTE PTR ES:[DI]                                                                   ;Moving the byte of the road to DH to be stored in buffer
+                                   MOV                BYTE PTR DS:[BX] , DH                                                                   ;Moving DH -> the memory with offset BX
+                                   MOV                DL , BYTE PTR [SI]                                                                      ;Car byte to be drawn this iteration
+                                   CMP                DL, 0
+                                   JE                 DONTDRAWBYTECAR
+                                   MOV                BYTE PTR ES:[DI] , DL                                                                   ;Drawing the car bit
+    DONTDRAWBYTECAR:               
     ;Updates
-                                INC                SI
-                                INC                DI
-                                INC                BX
-                                LOOP               COLS_DRAW
+                                   INC                SI
+                                   INC                DI
+                                   INC                BX
+                                   LOOP               COLS_DRAW
 
-                                POP                DI
-                                POP                CX
-                                ADD                DI, SCREEN_WIDTH
-                                LOOP               ROWS_DRAW
-                                RET
+                                   POP                DI
+                                   POP                CX
+                                   ADD                DI, SCREEN_WIDTH
+                                   LOOP               ROWS_DRAW
+                                   RET
 DrawCar ENDP
 
 
 
     ;clear the car's image from the screen
 ClearCarArea PROC FAR
-                                MOV                ax , 0A000H
-                                MOV                es , ax
-                                MOV                cx , CarToDrawSize
-                                CALL               CalculateBoxVertex
+                                   MOV                ax , 0A000H
+                                   MOV                es , ax
+                                   MOV                cx , CarToDrawSize
+                                   CALL               CalculateBoxVertex
 
-                                CALL               CheckCarToDraw                                                                          ;Get Background offset in BX
+                                   CALL               CheckCarToDraw                                                                          ;Get Background offset in BX
 
-    ROWS_CLEAR:                 
-                                PUSH               CX
-                                PUSH               DI
-                                MOV                CX , CarToDrawSize
-    COLS_CLEAR:                 
-                                MOV                DL, BYTE PTR DS:[BX]                                                                    ;Moving road byte in dl
-                                MOV                BYTE PTR ES:[DI] , DL                                                                   ;Moving the road byte to be printed
-                                INC                DI
-                                INC                BX
-                                LOOP               COLS_CLEAR
+    ROWS_CLEAR:                    
+                                   PUSH               CX
+                                   PUSH               DI
+                                   MOV                CX , CarToDrawSize
+    COLS_CLEAR:                    
+                                   MOV                DL, BYTE PTR DS:[BX]                                                                    ;Moving road byte in dl
+                                   MOV                BYTE PTR ES:[DI] , DL                                                                   ;Moving the road byte to be printed
+                                   INC                DI
+                                   INC                BX
+                                   LOOP               COLS_CLEAR
 
-                                POP                DI
-                                POP                CX
-                                ADD                DI, SCREEN_WIDTH
-                                LOOP               ROWS_CLEAR
-                                RET
+                                   POP                DI
+                                   POP                CX
+                                   ADD                DI, SCREEN_WIDTH
+                                   LOOP               ROWS_CLEAR
+                                   RET
 ClearCarArea ENDP
 
     ;description
 IncreaseCarSpeed PROC FAR
     ;Get current system time
-                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
-                                INT                21H
+                                   MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                   INT                21H
     ;Check which car to apply speedup on
-                                CMP                CarToScan , 1
-                                JNE                IncCar2Speed
+                                   CMP                CarToScan , 1
+                                   JNE                IncCar2Speed
 
-                                MOV                Car1Speed , 3
-                                MOV                Car1SpeedUPTimer , DH
-                                JMP                incFinish
-    IncCar2Speed:               
-                                MOV                Car2Speed, 3
-                                MOV                Car2SpeedUPTimer , DH
+                                   MOV                Car1Speed , 3
+                                   MOV                Car1SpeedUPTimer , DH
+                                   JMP                incFinish
+    IncCar2Speed:                  
+                                   MOV                Car2Speed, 3
+                                   MOV                Car2SpeedUPTimer , DH
 
-    incFinish:                  
+    incFinish:                     
                                 
-                                RET
+                                   RET
 IncreaseCarSpeed ENDP
 
 DecreaseCarSpeed PROC FAR
     ;Get current system time
-                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
-                                INT                21H
+                                   MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                   INT                21H
     ;Check which car to apply speedup on
-                                CMP                CarToScan , 1
-                                JNE                DECCar2Speed
+                                   CMP                CarToScan , 1
+                                   JNE                DECCar2Speed
     ;If car 1 collected the power up, car 2 speeds down
-                                MOV                Car2Speed , 1
-                                MOV                Car2SpeedUPTimer , DH
+                                   MOV                Car2Speed , 1
+                                   MOV                Car2SpeedUPTimer , DH
 
-                                JMP                DECFinish
-    DecCar2Speed:               
-                                MOV                Car1Speed, 1
-                                MOV                Car1SpeedUPTimer , DH
+                                   JMP                DECFinish
+    DecCar2Speed:                  
+                                   MOV                Car1Speed, 1
+                                   MOV                Car1SpeedUPTimer , DH
 
-    DecFinish:                  
+    DecFinish:                     
                                 
-                                RET
+                                   RET
 DecreaseCarSpeed ENDP
 
     ;creates obstacle after powerup is invoked
 CreateObstacle PROC FAR
-                                PUSH               DI
-                                PUSH               BX
-                                MOV                SI , OFFSET OBSTACLE
-                                CMP                CarToScan , 1
-                                JNE                STORECAR2
+                                   PUSH               DI
+                                   PUSH               BX
+                                   MOV                SI , OFFSET OBSTACLE
+                                   CMP                CarToScan , 1
+                                   JNE                STORECAR2
 
-                                MOV                BX , OFFSET BackgroundBuffer1
-                                JMP                StartCreatingObs
-    STORECAR2:                  
-                                MOV                BX , OFFSET BackgroundBuffer2
+                                   MOV                BX , OFFSET BackgroundBuffer1
+                                   JMP                StartCreatingObs
+    STORECAR2:                     
+                                   MOV                BX , OFFSET BackgroundBuffer2
 
-    StartCreatingObs:           
-                                MOV                CX , OBSTACLEH
-    StartCopyingColumns:        
-                                PUSH               CX
-                                PUSH               BX
-                                MOV                CX ,OBSTACLEW
-    StartCopyingRows:           
-                                MOV                DL , BYTE PTR DS:[SI]
-                                MOV                BYTE PTR DS:[BX] , DL
-                                INC                BX
-                                LOOP               StartCopyingRows
+    StartCreatingObs:              
+                                   MOV                CX , OBSTACLEH
+    StartCopyingColumns:           
+                                   PUSH               CX
+                                   PUSH               BX
+                                   MOV                CX ,OBSTACLEW
+    StartCopyingRows:              
+                                   MOV                DL , BYTE PTR DS:[SI]
+                                   MOV                BYTE PTR DS:[BX] , DL
+                                   INC                BX
+                                   LOOP               StartCopyingRows
 
-                                POP                BX
-                                POP                CX
-                                ADD                BX , CAR_SIZE
-                                LOOP               StartCopyingColumns
+                                   POP                BX
+                                   POP                CX
+                                   ADD                BX , CAR_SIZE
+                                   LOOP               StartCopyingColumns
                                 
-                                POP                BX
-                                POP                DI
-                                RET
+                                   POP                BX
+                                   POP                DI
+                                   RET
 CreateObstacle ENDP
 
 ApplyPowerUpLogic PROC FAR
 
     ;Getting the middle byte of the powerup to detect it's type
-                                ADD                TEMPX , BIGPOWERW/2
-                                ADD                TEMPY, BIGPOWERH/2
-                                CALL               CalculatePowerupVertex
+                                   ADD                TEMPX , BIGPOWERW/2
+                                   ADD                TEMPY, BIGPOWERH/2
+                                   CALL               CalculatePowerupVertex
     ;Detecting powerUp type
     ;increment speed powerup
-                                CMP                BYTE PTR ES:[DI] ,121
-                                JNE                IsDecrementPowerUP
+                                   CMP                BYTE PTR ES:[DI] ,121
+                                   JNE                IsDecrementPowerUP
 
-                                CALL               IncreaseCarSpeed
-                                JMP                PowerUpLogicFinish
-    IsDecrementPowerUP:         
+                                   CALL               IncreaseCarSpeed
+                                   JMP                PowerUpLogicFinish
+    IsDecrementPowerUP:            
     ;decrement speed powerup
-                                CMP                BYTE PTR ES:[DI] ,112
-                                JNE                ISPassObsPowerUp
+                                   CMP                BYTE PTR ES:[DI] ,112
+                                   JNE                ISPassObsPowerUp
                                
-                                CALL               DecreaseCarSpeed
-                                JMP                PowerUpLogicFinish
-    ISPassObsPowerUp:           
+                                   CALL               DecreaseCarSpeed
+                                   JMP                PowerUpLogicFinish
+    ISPassObsPowerUp:              
     ;pass obstacle speed powerup
-                                CMP                BYTE PTR ES:[DI] ,28
-                                JNE                IsCreateObsPowerUp
+                                   CMP                BYTE PTR ES:[DI] ,28
+                                   JNE                IsCreateObsPowerUp
                                 
-                                MOV                CanPassObs, 1
-                                JMP                PowerUpLogicFinish
-    IsCreateObsPowerUp:         
-                                CMP                BYTE PTR ES:[DI] ,17
-                                JNE                PowerUpLogicFinish
+                                   MOV                CanPassObs, 1
+                                   JMP                PowerUpLogicFinish
+    IsCreateObsPowerUp:            
+                                   CMP                BYTE PTR ES:[DI] ,17
+                                   JNE                PowerUpLogicFinish
                                 
-                                CALL               CreateObstacle
+                                   CALL               CreateObstacle
 
-    PowerUpLogicFinish:         
-                                RET
+    PowerUpLogicFinish:            
+                                   RET
 ApplyPowerUpLogic ENDP
 
     ;Invoked in Main to check each lap on the timers of cars
 CheckSpeedUpTimer PROC FAR
-                                CMP                Car1Speed , 2
-                                JE                 Car2Timing
+                                   CMP                Car1Speed , 2
+                                   JE                 Car2Timing
     ;Car1Speed is not in the defualt state
     ;--Comparing the current second with the timer
-                                CMP                Car1SpeedUPTimer ,  DH
-                                JE                 Car2Timing
+                                   CMP                Car1SpeedUPTimer ,  DH
+                                   JE                 Car2Timing
     ;--If different seconds, update the counter
     ;--Check if  the powerup time has finished
-                                MOV                Car1SpeedUPTimer ,DH
-                                INC                Car1SpeedUpCounter
-                                CMP                Car1SpeedUpCounter , 5
-                                JBE                Car2Timing
+                                   MOV                Car1SpeedUPTimer ,DH
+                                   INC                Car1SpeedUpCounter
+                                   CMP                Car1SpeedUpCounter , 5
+                                   JBE                Car2Timing
     ;Resetting car1Speed
-                                MOV                Car1Speed , 2
-                                MOV                Car1SpeedUpCounter , 0
+                                   MOV                Car1Speed , 2
+                                   MOV                Car1SpeedUpCounter , 0
                                 
-    Car2Timing:                 
-                                CMP                Car2Speed , 2
-                                JE                 CheckSpeedFinish
+    Car2Timing:                    
+                                   CMP                Car2Speed , 2
+                                   JE                 CheckSpeedFinish
     ;Car1Speed is not in the defualt state
     ;--Comparing the current second with the timer
-                                CMP                Car2SpeedUPTimer ,  DH
-                                JE                 CheckSpeedFinish
+                                   CMP                Car2SpeedUPTimer ,  DH
+                                   JE                 CheckSpeedFinish
 
     ;--If different seconds, update the counter
     ;--Check if  the powerup time has finished
-                                MOV                Car2SpeedUPTimer ,DH
-                                INC                Car2SpeedUpCounter
-                                CMP                Car2SpeedUpCounter , 5
-                                JNE                CheckSpeedFinish
+                                   MOV                Car2SpeedUPTimer ,DH
+                                   INC                Car2SpeedUpCounter
+                                   CMP                Car2SpeedUpCounter , 5
+                                   JNE                CheckSpeedFinish
     ;Resetting car2Speed
-                                MOV                Car2Speed , 2
-                                MOV                Car2SpeedUpCounter , 0
-    CheckSpeedFinish:           
-                                RET                                                                                                        ;
+                                   MOV                Car2Speed , 2
+                                   MOV                Car2SpeedUpCounter , 0
+    CheckSpeedFinish:              
+                                   RET                                                                                                        ;
 CheckSpeedUpTimer ENDP
 
 ClearPowerup PROC FAR
-                                PUSH               TEMPX
-                                PUSH               TEMPY
+                                   PUSH               TEMPX
+                                   PUSH               TEMPY
 
-                                CALL               ApplyPowerUpLogic
+                                   CALL               ApplyPowerUpLogic
 
-                                POP                TEMPY
-                                POP                TEMPX
+                                   POP                TEMPY
+                                   POP                TEMPX
 
-                                MOV                AX,0A000H
-                                MOV                ES,AX
-                                MOV                DI ,0
-                                MOV                CX , BIGPOWERH
-                                CALL               CalculatePowerupVertex
-    ROWS_CLEAR_POWER:           
-                                PUSH               CX
-                                PUSH               DI
-                                MOV                CX , BIGPOWERW
-    COLS_CLEAR_POWER:           
-                                MOV                DL , STATUS_BAR_COLOR
-                                MOV                BYTE PTR ES:[DI] , DL
-                                INC                DI
-                                LOOP               COLS_CLEAR_POWER
-                                POP                DI
-                                POP                CX
-                                ADD                DI , SCREEN_WIDTH
-                                LOOP               ROWS_CLEAR_POWER
-                                RET
+                                   MOV                AX,0A000H
+                                   MOV                ES,AX
+                                   MOV                DI ,0
+                                   MOV                CX , BIGPOWERH
+                                   CALL               CalculatePowerupVertex
+    ROWS_CLEAR_POWER:              
+                                   PUSH               CX
+                                   PUSH               DI
+                                   MOV                CX , BIGPOWERW
+    COLS_CLEAR_POWER:              
+                                   MOV                DL , STATUS_BAR_COLOR
+                                   MOV                BYTE PTR ES:[DI] , DL
+                                   INC                DI
+                                   LOOP               COLS_CLEAR_POWER
+                                   POP                DI
+                                   POP                CX
+                                   ADD                DI , SCREEN_WIDTH
+                                   LOOP               ROWS_CLEAR_POWER
+                                   RET
 ClearPowerup ENDP
 
 
 InputButtonSwitchCase PROC  FAR
                  
-                                cmp                al, 01h
-                                jne                bridge
+                                   cmp                al, 01h
+                                   jne                bridge
     ;esc logic
-                                jmp                exit
-    bridge:                     
+                                   jmp                exit
+    bridge:                        
 
     ; up arrow
-                                cmp                al, UpKeyCode
-                                JNE                NotPressed1
-                                MOV                UpFlag , 1
-                                JMP                Default
-    NotPressed1:                
-                                MOV                BL , UpKeyCode
-                                ADD                BL, 80H
-                                CMP                AL ,  BL
-                                JNE                CarCheckLeft
-                                MOV                UpFlag , 0
-                                JMP                Default
-    CarCheckLeft:               
+                                   cmp                al, UpKeyCode
+                                   JNE                NotPressed1
+                                   MOV                UpFlag , 1
+                                   JMP                Default
+    NotPressed1:                   
+                                   MOV                BL , UpKeyCode
+                                   ADD                BL, 80H
+                                   CMP                AL ,  BL
+                                   JNE                CarCheckLeft
+                                   MOV                UpFlag , 0
+                                   JMP                Default
+    CarCheckLeft:                  
     ; left arrow
-                                CMP                AL, LeftKeyCode
-                                JNE                NotPressed2
-                                MOV                LeftFlag , 1
-                                JMP                Default
-    NotPressed2:                
-                                MOV                BL , LeftKeyCode
-                                ADD                BL, 80H
-                                CMP                AL , BL
-                                JNE                CarCheckDown
-                                MOV                LeftFlag , 0
-                                JMP                Default
+                                   CMP                AL, LeftKeyCode
+                                   JNE                NotPressed2
+                                   MOV                LeftFlag , 1
+                                   JMP                Default
+    NotPressed2:                   
+                                   MOV                BL , LeftKeyCode
+                                   ADD                BL, 80H
+                                   CMP                AL , BL
+                                   JNE                CarCheckDown
+                                   MOV                LeftFlag , 0
+                                   JMP                Default
 
-    CarCheckDown:               
+    CarCheckDown:                  
     ; down arrow
-                                cmp                AL, DownKeyCode
-                                JNE                NotPressed3
-                                MOV                DownFlag , 1
-                                JMP                Default
-    NotPressed3:                
-                                MOV                BL , DownKeyCode
-                                ADD                BL, 80H
-                                CMP                AL , BL
-                                JNE                CarCheckRight
-                                MOV                DownFlag , 0
-                                JMP                Default
+                                   cmp                AL, DownKeyCode
+                                   JNE                NotPressed3
+                                   MOV                DownFlag , 1
+                                   JMP                Default
+    NotPressed3:                   
+                                   MOV                BL , DownKeyCode
+                                   ADD                BL, 80H
+                                   CMP                AL , BL
+                                   JNE                CarCheckRight
+                                   MOV                DownFlag , 0
+                                   JMP                Default
     
-    CarCheckRight:              
+    CarCheckRight:                 
     ; right arrow
-                                CMP                AL , RightKeyCode
-                                JNE                NotPressed4
-                                MOV                RightFlag , 1
-                                JMP                Default
-    NotPressed4:                
-                                MOV                BL , RightKeyCode
-                                ADD                BL, 80H
-                                CMP                AL , BL
-                                JNE                CheckLetterK
-                                MOV                RightFlag , 0
-                                JMP                Default
+                                   CMP                AL , RightKeyCode
+                                   JNE                NotPressed4
+                                   MOV                RightFlag , 1
+                                   JMP                Default
+    NotPressed4:                   
+                                   MOV                BL , RightKeyCode
+                                   ADD                BL, 80H
+                                   CMP                AL , BL
+                                   JNE                CheckLetterK
+                                   MOV                RightFlag , 0
+                                   JMP                Default
 
-    CheckLetterK:               
-                                CMP                AL , DeletePower1Key
-                                JNE                NotPressed5
-                                MOV                KFlag , 1
-                                MOV                powerupParent , 1
-                                ClearPower
-                                JMP                Default
+    CheckLetterK:                  
+                                   CMP                AL , DeletePower1Key
+                                   JNE                NotPressed5
+                                   MOV                KFlag , 1
+                                   MOV                powerupParent , 1
+                                   ClearPower
+                                   JMP                Default
 
-    NOTPRESSED5:                
-                                MOV                BL , DeletePower1Key
-                                ADD                BL , 80H
-                                CMP                AL , BL
-                                JNE                CheckLetterM
-                                MOV                KFlag , 0
-                                JMP                Default
+    NOTPRESSED5:                   
+                                   MOV                BL , DeletePower1Key
+                                   ADD                BL , 80H
+                                   CMP                AL , BL
+                                   JNE                CheckLetterM
+                                   MOV                KFlag , 0
+                                   JMP                Default
     
-    CheckLetterM:               
-                                CMP                AL , DeletePower2Key
-                                JNE                NotPressed6
-                                MOV                MFlag , 1
-                                MOV                powerupParent , 2
-                                ClearPower
-                                JMP                Default
+    CheckLetterM:                  
+                                   CMP                AL , DeletePower2Key
+                                   JNE                NotPressed6
+                                   MOV                MFlag , 1
+                                   MOV                powerupParent , 2
+                                   ClearPower
+                                   JMP                Default
 
-    NOTPRESSED6:                
+    NOTPRESSED6:                   
 
-                                MOV                BL , DeletePower2Key
-                                ADD                BL , 80H
-                                CMP                AL , BL
-                                JNE                Default
-                                MOV                MFlag , 0
+                                   MOV                BL , DeletePower2Key
+                                   ADD                BL , 80H
+                                   CMP                AL , BL
+                                   JNE                Default
+                                   MOV                MFlag , 0
 
-    Default:                    
+    Default:                       
     
-                                RET
+                                   RET
 InputButtonSwitchCase ENDP
     
 CheckArrowFlags PROC FAR
 
     ;------- checking Flags -------
 	
-                                CMP                ArrowUpFlag , 1
-                                JNE                CmpLeft
+                                   CMP                ArrowUpFlag , 1
+                                   JNE                CmpLeft
                           
-                                ScanY              PosXfirst, PosYfirst , 1 , 1, Car1Speed
-                                CALL               ScanYmovement
-                                CALL               UpdateCarPos
-                                INC                PosYfirst
-    CmpLeft:                    
-                                CMP                ArrowLeftFlag , 1
-                                JNE                CmpDown
+                                   ScanY              PosXfirst, PosYfirst , 1 , 1, Car1Speed
+                                   CALL               ScanYmovement
+                                   CALL               UpdateCarPos
+                                   INC                PosYfirst
+    CmpLeft:                       
+                                   CMP                ArrowLeftFlag , 1
+                                   JNE                CmpDown
                         
-                                ScanX              PosXfirst, PosYfirst , 1 , 0, Car1Speed
-                                CALL               ScanXmovement
-                                CALL               UpdateCarPos
-                                INC                PosXfirst
+                                   ScanX              PosXfirst, PosYfirst , 1 , 0, Car1Speed
+                                   CALL               ScanXmovement
+                                   CALL               UpdateCarPos
+                                   INC                PosXfirst
 
-    CmpDown:                    
-                                CMP                ArrowDownFlag , 1
-                                JNE                CmpRight
+    CmpDown:                       
+                                   CMP                ArrowDownFlag , 1
+                                   JNE                CmpRight
                         
-                                ScanY              PosXfirst, PosYfirst , 1 , 0, Car1Speed
-                                CALL               ScanYmovement
-                                CALL               UpdateCarPos
-                                DEC                PosYfirst
+                                   ScanY              PosXfirst, PosYfirst , 1 , 0, Car1Speed
+                                   CALL               ScanYmovement
+                                   CALL               UpdateCarPos
+                                   DEC                PosYfirst
 
-    CmpRight:                   
-                                CMP                ArrowRightFlag, 1
-                                JNE                CmpFinish
+    CmpRight:                      
+                                   CMP                ArrowRightFlag, 1
+                                   JNE                CmpFinish
                          
-                                ScanX              PosXfirst, PosYfirst , 1 ,1, Car1Speed
-                                CALL               ScanXmovement
-                                CALL               UpdateCarPos
-                                DEC                PosXfirst
-    CmpFinish:                  
-                                RET
+                                   ScanX              PosXfirst, PosYfirst , 1 ,1, Car1Speed
+                                   CALL               ScanXmovement
+                                   CALL               UpdateCarPos
+                                   DEC                PosXfirst
+    CmpFinish:                     
+                                   RET
 CheckArrowFlags ENDP
 
 CheckWASDFlags PROC FAR
 
     ;------- checking Flags -------
 	
-                                CMP                WFlag , 1
-                                JNE                CmpLeft2
+                                   CMP                WFlag , 1
+                                   JNE                CmpLeft2
 
-                                ScanY              PosXsecond, PosYsecond , 0 , 1, Car2Speed
-                                CALL               ScanYmovement
-                                CALL               UpdateCarPos
-                                INC                PosYsecond
+                                   ScanY              PosXsecond, PosYsecond , 0 , 1, Car2Speed
+                                   CALL               ScanYmovement
+                                   CALL               UpdateCarPos
+                                   INC                PosYsecond
 
-    CmpLeft2:                   
-                                CMP                AFlag , 1
-                                JNE                CmpDown2
+    CmpLeft2:                      
+                                   CMP                AFlag , 1
+                                   JNE                CmpDown2
 
-                                ScanX              PosXsecond, PosYsecond , 0 , 0, Car2Speed
-                                CALL               ScanXmovement
-                                CALL               UpdateCarPos
-                                INC                PosXsecond
+                                   ScanX              PosXsecond, PosYsecond , 0 , 0, Car2Speed
+                                   CALL               ScanXmovement
+                                   CALL               UpdateCarPos
+                                   INC                PosXsecond
 
-    CmpDown2:                   
-                                CMP                SFlag , 1
-                                JNE                CmpRight2
+    CmpDown2:                      
+                                   CMP                SFlag , 1
+                                   JNE                CmpRight2
 
-                                ScanY              PosXsecond, PosYsecond , 0 , 0, Car2Speed
-                                CALL               ScanYmovement
-                                CALL               UpdateCarPos
-                                DEC                PosYsecond
+                                   ScanY              PosXsecond, PosYsecond , 0 , 0, Car2Speed
+                                   CALL               ScanYmovement
+                                   CALL               UpdateCarPos
+                                   DEC                PosYsecond
 
-    CmpRight2:                  
-                                CMP                DFlag, 1
-                                JNE                CmpFinish2
+    CmpRight2:                     
+                                   CMP                DFlag, 1
+                                   JNE                CmpFinish2
 
-                                ScanX              PosXsecond, PosYsecond , 0 ,1, Car2Speed
-                                CALL               ScanXmovement
-                                CALL               UpdateCarPos
-                                DEC                PosXsecond
+                                   ScanX              PosXsecond, PosYsecond , 0 ,1, Car2Speed
+                                   CALL               ScanXmovement
+                                   CALL               UpdateCarPos
+                                   DEC                PosXsecond
 
-    CmpFinish2:                 
-                                RET
+    CmpFinish2:                    
+                                   RET
                 
 CheckWASDFlags ENDP
 
@@ -1805,663 +1805,620 @@ CheckWASDFlags ENDP
     ;Update Flags after each game loop
 UpdateArrowFlags PROC FAR
    
-                                MOV                BL , UpFlag
-                                MOV                ArrowUpFlag, BL
+                                   MOV                BL , UpFlag
+                                   MOV                ArrowUpFlag, BL
 
-                                MOV                BL , DownFlag
-                                MOV                ArrowDownFlag ,  BL
+                                   MOV                BL , DownFlag
+                                   MOV                ArrowDownFlag ,  BL
 
-                                MOV                BL , LeftFlag
-                                MOV                ArrowLeftFlag, BL
+                                   MOV                BL , LeftFlag
+                                   MOV                ArrowLeftFlag, BL
 
-                                MOV                BL , RightFlag
-                                MOV                ArrowRightFlag , BL
+                                   MOV                BL , RightFlag
+                                   MOV                ArrowRightFlag , BL
 
-                                MOV                BL , KFlag
-                                MOV                LetterKFlag , BL
+                                   MOV                BL , KFlag
+                                   MOV                LetterKFlag , BL
 
-                                MOV                BL , MFlag
-                                MOV                LetterMFlag , BL
+                                   MOV                BL , MFlag
+                                   MOV                LetterMFlag , BL
 
-                                RET
+                                   RET
 
 UpdateArrowFlags ENDP
 
     ;description
 UpdateWASDFlags PROC FAR
-                                MOV                BL , UpFlag
-                                MOV                WFlag, BL
+                                   MOV                BL , UpFlag
+                                   MOV                WFlag, BL
 
-                                MOV                BL , DownFlag
-                                MOV                SFlag ,  BL
+                                   MOV                BL , DownFlag
+                                   MOV                SFlag ,  BL
 
-                                MOV                BL , LeftFlag
-                                MOV                AFlag, BL
+                                   MOV                BL , LeftFlag
+                                   MOV                AFlag, BL
 
-                                MOV                BL , RightFlag
-                                MOV                DFlag , BL
+                                   MOV                BL , RightFlag
+                                   MOV                DFlag , BL
 
-                                MOV                BL , KFlag
-                                MOV                LetterKFlag , BL
+                                   MOV                BL , KFlag
+                                   MOV                LetterKFlag , BL
 
-                                MOV                BL , MFlag
-                                MOV                LetterMFlag , BL
+                                   MOV                BL , MFlag
+                                   MOV                LetterMFlag , BL
 
-                                RET
+                                   RET
 UpdateWASDFlags ENDP
 
     ;description
 
     ;procedure calls all arrow keys functions
 CheckArrowKeys PROC FAR
-                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM
-                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag
-                                CALL               InputButtonSwitchCase
-                                CALL               UpdateArrowFlags
-                                RET
+                                   SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM
+                                   SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag
+                                   CALL               InputButtonSwitchCase
+                                   CALL               UpdateArrowFlags
+                                   RET
 CheckArrowKeys ENDP
 
     ;procedure calls all WASD keys functions
 CheckWASDKeys PROC FAR
-                                SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM
-                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag
-                                CALL               InputButtonSwitchCase
-                                CALL               UpdateWASDFlags
-                                RET
+                                   SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM
+                                   SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag
+                                   CALL               InputButtonSwitchCase
+                                   CALL               UpdateWASDFlags
+                                   RET
 CheckWASDKeys ENDP
 
 Update1 PROC FAR
-                                CLEAR              CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
-                                Draw_Car           CarImg1, CAR_SIZE, Posxfirst , PosYfirst, 1
-    CannotDraw:                 
-                                RET
+                                   CLEAR              CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
+                                   Draw_Car           CarImg1, CAR_SIZE, Posxfirst , PosYfirst, 1
+    CannotDraw:                    
+                                   RET
 Update1 ENDP
 
 
 Update2 PROC FAR
-                                CLEAR              CarImg2, CAR_SIZE, PrevPosXsecond, PrevPosYsecond
-                                Draw_Car           CarImg2, CAR_SIZE, PosXsecond , PosYsecond, 2
-                                RET
+                                   CLEAR              CarImg2, CAR_SIZE, PrevPosXsecond, PrevPosYsecond
+                                   Draw_Car           CarImg2, CAR_SIZE, PosXsecond , PosYsecond, 2
+                                   RET
 Update2 ENDP
 
     ;Before Calling, Set the carToScan with the car you want to scan
 UpdateCarPos PROC FAR
     ;Checking that the car that it is scanning
-                                CMP                CarToScan , 0
-                                JE                 Car2
+                                   CMP                CarToScan , 0
+                                   JE                 Car2
     ;Changing car1 position to the previous position
-                                MOV                DX , CarToDrawY
-                                MOV                PosYfirst , DX
+                                   MOV                DX , CarToDrawY
+                                   MOV                PosYfirst , DX
 
-                                MOV                DX , CarToDrawX
-                                MOV                PosXfirst , DX
-                                RET
+                                   MOV                DX , CarToDrawX
+                                   MOV                PosXfirst , DX
+                                   RET
                 
     ;Changing car2 position to the previous position
-    Car2:                       
-                                MOV                DX , CarToDrawY
-                                MOV                PosYsecond , DX
+    Car2:                          
+                                   MOV                DX , CarToDrawY
+                                   MOV                PosYsecond , DX
 
-                                MOV                DX , CarToDrawX
-                                MOV                PosXsecond , DX
+                                   MOV                DX , CarToDrawX
+                                   MOV                PosXsecond , DX
     ;No matching found, continue looping
-                                RET
+                                   RET
 UpdateCarPos ENDP
 
 EnforcePosition PROC FAR
-                                CALL GETTOPLEFTOBSTACLE
-                                ; MOV DI , POWERTOPLEFTBYTE_OBSTACLE
-                                CALL CALCXY
-                                MOV DI , TEMPX
-                                MOV CarToDrawX , DI
+                                   CALL               GETTOPLEFTOBSTACLE
+    ; MOV DI , POWERTOPLEFTBYTE_OBSTACLE
+                                   CALL               CALCXY
+                                   MOV                DI , TEMPX
+                                   MOV                CarToDrawX , DI
 
-                                MOV DI , TEMPY
-                                MOV CarToDrawY , DI
-                                RET
+                                   MOV                DI , TEMPY
+                                   MOV                CarToDrawY , DI
+                                   RET
 EnforcePosition ENDP
 
 
     ;description
 ScanYmovement PROC FAR
     
-                                MOV                AX , 0A000H
-                                MOV                ES , AX
+                                   MOV                AX , 0A000H
+                                   MOV                ES , AX
                 
-                                MOV                DI , 0
-                                MOV                verticalFlag ,1
+                                   MOV                DI , 0
+                                   MOV                verticalFlag ,1
 
-                                MOV ScanYFlag , 1 
+                                   MOV                ScanYFlag , 1
 
     ;Assume no addition or subtraction has occured to the positions in "checkFlags"
 
-                                CMP                YMovement , 1                                                                           ; The car is moving up either car1 or car2
-                                JE                 UpMovement
+                                   CMP                YMovement , 1                                                                           ; The car is moving up either car1 or car2
+                                   JE                 UpMovement
 
-                                ADD                CarToDrawY , CAR_SIZE
-                                CALL               CalculateBoxVertex
-                                SUB                CarToDrawY , CAR_SIZE-1
+                                   ADD                CarToDrawY , CAR_SIZE
+                                   CALL               CalculateBoxVertex
+                                   SUB                CarToDrawY , CAR_SIZE-1
 
-                                JMP                StartScanning
-    UpMovement:                 
-                                DEC                CarToDrawY
-                                CALL               CalculateBoxVertex
-    StartScanning:              
-                                MOV                CX , CurrentSpeed                                                                       ;# of rows to be checked
+                                   JMP                StartScanning
+    UpMovement:                    
+                                   DEC                CarToDrawY
+                                   CALL               CalculateBoxVertex
+    StartScanning:                 
+                                   MOV                CX , CurrentSpeed                                                                       ;# of rows to be checked
 
     ;Outer Loop Starts
-    NextRow:                    
-                                PUSH               CX
-                                PUSH               DI
-                                MOV                CX , CAR_SIZE
+    NextRow:                       
+                                   PUSH               CX
+                                   PUSH               DI
+                                   MOV                CX , CAR_SIZE
     ;Inner loop starts
-    CheckY:                     
+    CheckY:                        
     ; CMP BYTE PTR ES:[DI] , 142
     ; JNE NoObstacleDetected
-                                CMP                BYTE PTR ES:[DI], 19 ; THIS IS TO CHECK FOR CHECKLINES
-                                JE                 CHECKLINEDETECTED
-                                CMP                BYTE PTR ES:[DI], 16
-                                JE                 Validate_Passing_The_Obstacle
-                                CMP                BYTE PTR ES:[DI], 36
-                                JE                 POWERUPDETECTED
-                                CMP                BYTE PTR ES:[DI] , 20                                                                   ; 20 is the GREY color degree of the road
-                                JE                 NoObstacleDetected
-                                CMP                BYTE PTR ES:[DI] , 31                                                                   ; 31 is the WHITE color degree of the road
-                                JE                 NoObstacleDetected
-                                CMP                BYTE PTR ES:[DI] , 40                                                                   ; 40 is one of the color degrees for the end line
-                                JE                 NoObstacleDetected
-    Validate_Passing_The_Obstacle:
-                                CMP CanPassObs , 1
-                                JE Edit_Position
+                                   CMP                BYTE PTR ES:[DI], 19                                                                    ; THIS IS TO CHECK FOR CHECKLINES
+                                   JE                 CHECKLINEDETECTED
+                                   CMP                BYTE PTR ES:[DI], 16
+                                   JE                 Validate_Passing_The_Obstacle
+                                   CMP                BYTE PTR ES:[DI], 36
+                                   JE                 POWERUPDETECTED
+                                   CMP                BYTE PTR ES:[DI] , 20                                                                   ; 20 is the GREY color degree of the road
+                                   JE                 NoObstacleDetected
+                                   CMP                BYTE PTR ES:[DI] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                   JE                 NoObstacleDetected
+                                   CMP                BYTE PTR ES:[DI] , 40                                                                   ; 40 is one of the color degrees for the end line
+                                   JE                 NoObstacleDetected
+    Validate_Passing_The_Obstacle: 
+                                   CMP                CanPassObs , 1
+                                   JE                 Edit_Position
 
 
-                                POP                DI
-                                POP                CX
-                                RET
-    CHECKLINEDETECTED:
-                                PUSH               CX
-                                PUSH               DI
-                                MOV                ISVERTICALCHECKLINE, 0
-                                CALL               GETCHECKLINEVERTIX   
-                                CALL               UPDATESCORE       
-                                POP                DI
-                                POP                CX 
-                                JMP                NoObstacleDetected
-    POWERUPDETECTED:            
-                                PUSH               CX
-                                PUSH               DI
-                                CALL               GETTOPLEFTPOWER
+                                   POP                DI
+                                   POP                CX
+                                   RET
+    CHECKLINEDETECTED:             
+                                   PUSH               CX
+                                   PUSH               DI
+                                   MOV                ISVERTICALCHECKLINE, 0
+                                   CALL               GETCHECKLINEVERTIX
+                                   CALL               UPDATESCORE
+                                   POP                DI
+                                   POP                CX
+                                   JMP                NoObstacleDetected
+    POWERUPDETECTED:               
+                                   PUSH               CX
+                                   PUSH               DI
+                                   CALL               GETTOPLEFTPOWER
                                 
-                                MOV                BX,POWERTOPLEFTBYTE
-                                INC                BX
-                                ADD                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 121                                                                  ; 121 is the color degree of the increasing powerup
-                                JE                 INCPOWERUP_DETECTED
-                                CMP                BYTE PTR ES:[BX] , 112                                                                  ; 112 is the color degree of the decreasing powerup
-                                JE                 DECPOWERUP_DETECTED
-                                CMP                BYTE PTR ES:[BX] , 17
-                                JE                 CREATEOBSTPOWERUP_DETECTED
-                                CMP                BYTE PTR ES:[BX] , 28
-                                JE                 PASSOBSTPOWER_DETECTED
+                                   MOV                BX,POWERTOPLEFTBYTE
+                                   INC                BX
+                                   ADD                BX , SCREEN_WIDTH
+                                   CMP                BYTE PTR ES:[BX] , 121                                                                  ; 121 is the color degree of the increasing powerup
+                                   JE                 INCPOWERUP_DETECTED
+                                   CMP                BYTE PTR ES:[BX] , 112                                                                  ; 112 is the color degree of the decreasing powerup
+                                   JE                 DECPOWERUP_DETECTED
+                                   CMP                BYTE PTR ES:[BX] , 17
+                                   JE                 CREATEOBSTPOWERUP_DETECTED
+                                   CMP                BYTE PTR ES:[BX] , 28
+                                   JE                 PASSOBSTPOWER_DETECTED
 
-    INCPOWERUP_DETECTED:        
-                                MOV                AL , 1
-                                MOV                powerupType , AL
-                                JMP                DRAWING_COLLECTED_POWERUP
-    DECPOWERUP_DETECTED:        
-                                MOV                AL , 2
-                                MOV                powerupType , AL
-                                JMP                DRAWING_COLLECTED_POWERUP
-    CREATEOBSTPOWERUP_DETECTED: 
-                                MOV                AL , 3
-                                MOV                powerupType , AL
-                                JMP                DRAWING_COLLECTED_POWERUP
+    INCPOWERUP_DETECTED:           
+                                   MOV                AL , 1
+                                   MOV                powerupType , AL
+                                   JMP                DRAWING_COLLECTED_POWERUP
+    DECPOWERUP_DETECTED:           
+                                   MOV                AL , 2
+                                   MOV                powerupType , AL
+                                   JMP                DRAWING_COLLECTED_POWERUP
+    CREATEOBSTPOWERUP_DETECTED:    
+                                   MOV                AL , 3
+                                   MOV                powerupType , AL
+                                   JMP                DRAWING_COLLECTED_POWERUP
 
-    PASSOBSTPOWER_DETECTED:     
-                                MOV                AL , 4
-                                MOV                powerupType , AL
+    PASSOBSTPOWER_DETECTED:        
+                                   MOV                AL , 4
+                                   MOV                powerupType , AL
 
-    DRAWING_COLLECTED_POWERUP:  
-                                CMP                CarToScan , 0                                                                           ;Car1 is scanning
-                                JE                 Car2Powerup2
+    DRAWING_COLLECTED_POWERUP:     
+                                   CMP                CarToScan , 0                                                                           ;Car1 is scanning
+                                   JE                 Car2Powerup2
     ;Powerup for first player is collected
 
-                                MOV                AX , powerup1Posx
-                                MOV                TEMPX , AX
+                                   MOV                AX , powerup1Posx
+                                   MOV                TEMPX , AX
 
-                                MOV                AX , powerup1Posy
-                                MOV                TEMPY , AX
+                                   MOV                AX , powerup1Posy
+                                   MOV                TEMPY , AX
 
-                                MOV                AL , CarToScan
-                                MOV                powerupParent , AL
+                                   MOV                AL , CarToScan
+                                   MOV                powerupParent , AL
 
-                                MOV                TMP4 , 0
+                                   MOV                TMP4 , 0
 
-                                DrawPower          TEMPX,TEMPY,powerupType
-                                JMP                COLLECTPOWER
-    Car2Powerup:                
+                                   DrawPower          TEMPX,TEMPY,powerupType
+                                   JMP                COLLECTPOWER
+    Car2Powerup:                   
     ;Powerup for second player is collected
 
-                                MOV                AX , powerup2Posx
-                                MOV                TEMPX , AX
+                                   MOV                AX , powerup2Posx
+                                   MOV                TEMPX , AX
 
-                                MOV                AX , powerup2Posy
-                                MOV                TEMPY , AX
+                                   MOV                AX , powerup2Posy
+                                   MOV                TEMPY , AX
 
-                                MOV                AL , CarToScan
-                                MOV                powerupParent , AL
+                                   MOV                AL , CarToScan
+                                   MOV                powerupParent , AL
 
-                                MOV                TMP4 , 0
+                                   MOV                TMP4 , 0
 
-                                DrawPower          TEMPX,TEMPY, powerupType
-
-
-    COLLECTPOWER:               
-                                CALL               SEARCHTORETRIEVE
-                                POP                DI
-                                POP                CX
-                                JMP  NoObstacleDetected
-
-    Edit_Position:
-                                PUSH CX
-                                PUSH DI
-                                CALL EnforcePosition
-                                POP DI
-                                POP CX
-                                MOV CanPassObs,0
-                                POP                DI
-                                POP                CX
-                                JMP checkYFinish
+                                   DrawPower          TEMPX,TEMPY, powerupType
 
 
+    COLLECTPOWER:                  
+                                   CALL               SEARCHTORETRIEVE
+                                   POP                DI
+                                   POP                CX
+                                   JMP                NoObstacleDetected
 
-    NoObstacleDetected:         
-                                INC                DI
-                                DEC                CX
-                                CMP                CX , 0
-                                JNE                CheckY
+    Edit_Position:                 
+                                   PUSH               CX
+                                   PUSH               DI
+                                   CALL               EnforcePosition
+                                   POP                DI
+                                   POP                CX
+                                   MOV                CanPassObs,0
+                                   POP                DI
+                                   POP                CX
+                                   JMP                checkYFinish
+
+
+
+    NoObstacleDetected:            
+                                   INC                DI
+                                   DEC                CX
+                                   CMP                CX , 0
+                                   JNE                CheckY
     
-                                POP                DI
-                                POP                CX
+                                   POP                DI
+                                   POP                CX
     ;Incrementing DI & Y position of the car after each row is scanned
 
-                                CMP                YMovement , 1
-                                JE                 UpMovement2
-                                ADD                DI , SCREEN_WIDTH
-                                INC                CarToDrawY
-                                JMP                NextLoop
-    UpMovement2:                
-                                SUB                DI , SCREEN_WIDTH
-                                DEC                CarToDrawY
-    NextLoop:                   
-                                DEC                CX
-                                CMP                CX , 0
-                                JNE                NextRow
+                                   CMP                YMovement , 1
+                                   JE                 UpMovement2
+                                   ADD                DI , SCREEN_WIDTH
+                                   INC                CarToDrawY
+                                   JMP                NextLoop
+    UpMovement2:                   
+                                   SUB                DI , SCREEN_WIDTH
+                                   DEC                CarToDrawY
+    NextLoop:                      
+                                   DEC                CX
+                                   CMP                CX , 0
+                                   JNE                NextRow
 
-    checkYFinish:               
-                                MOV                verticalFlag,0
-                                RET
+    checkYFinish:                  
+                                   MOV                verticalFlag,0
+                                   RET
 ScanYmovement ENDP
 
 ScanXmovement PROC FAR
-                                MOV                AX , 0A000H
-                                MOV                ES, AX
+                                   MOV                AX , 0A000H
+                                   MOV                ES, AX
 
-                                MOV                DI , 0
-                                MOV                horizontalFlag ,1
+                                   MOV                DI , 0
+                                   MOV                horizontalFlag ,1
 
-                                CMP                XMovement , 1                                                                           ; The car is moving right either car1 or car2
-                                JNE                LeftMovement
+                                   CMP                XMovement , 1                                                                           ; The car is moving right either car1 or car2
+                                   JNE                LeftMovement
     ;Moving right
-                                ADD                CarToDrawX , CAR_SIZE
-                                CALL               CalculateBoxVertex
-                                SUB                CarToDrawX , CAR_SIZE-1
-                                JMP                StartScanning2
+                                   ADD                CarToDrawX , CAR_SIZE
+                                   CALL               CalculateBoxVertex
+                                   SUB                CarToDrawX , CAR_SIZE-1
+                                   JMP                StartScanning2
     ;Moving left
-    LeftMovement:               
-                                DEC                CarToDrawX
-                                CALL               CalculateBoxVertex
-    StartScanning2:             
-                                MOV                CX , CurrentSpeed
+    LeftMovement:                  
+                                   DEC                CarToDrawX
+                                   CALL               CalculateBoxVertex
+    StartScanning2:                
+                                   MOV                CX , CurrentSpeed
     
-    NextRow2:                   
-                                PUSH               CX
-                                PUSH               DI
-                                MOV                CX, CAR_SIZE
+    NextRow2:                      
+                                   PUSH               CX
+                                   PUSH               DI
+                                   MOV                CX, CAR_SIZE
 
-    CheckX:                     
+    CheckX:                        
     ;CMP BYTE PTR ES:[DI] , 142
     ;JNE NoObstacleDetected2
-                                CMP                BYTE PTR ES:[DI], 19 ; THIS IS TO CHECK FOR CHECKLINES
-                                JE                 CHECKLINEDETECTED2
-                                CMP                BYTE PTR ES:[DI], 16
-                                JE                 Validate_Passing_The_Obstacle2
-                                CMP                BYTE PTR ES:[DI], 36
-                                JE                 POWERUPDETECTED2
-                                CMP                BYTE PTR ES:[DI] , 20                                                                   ; 20 is the GREY color degree of the road
-                                JE                 NoObstacleDetected2
-                                CMP                BYTE PTR ES:[DI] , 31                                                                   ; 31 is the WHITE color degree of the road
-                                JE                 NoObstacleDetected2
-                                CMP                BYTE PTR ES:[DI] , 40                                                                   ; 40 is one of the color degrees for the end line
-                                JE                 NoObstacleDetected2
+                                   CMP                BYTE PTR ES:[DI], 19                                                                    ; THIS IS TO CHECK FOR CHECKLINES
+                                   JE                 CHECKLINEDETECTED2
+                                   CMP                BYTE PTR ES:[DI], 16
+                                   JE                 Validate_Passing_The_Obstacle2
+                                   CMP                BYTE PTR ES:[DI], 36
+                                   JE                 POWERUPDETECTED2
+                                   CMP                BYTE PTR ES:[DI] , 20                                                                   ; 20 is the GREY color degree of the road
+                                   JE                 NoObstacleDetected2
+                                   CMP                BYTE PTR ES:[DI] , 31                                                                   ; 31 is the WHITE color degree of the road
+                                   JE                 NoObstacleDetected2
+                                   CMP                BYTE PTR ES:[DI] , 40                                                                   ; 40 is one of the color degrees for the end line
+                                   JE                 NoObstacleDetected2
 
-Validate_Passing_The_Obstacle2:
-                                CMP CanPassObs ,1 
-                                JE Edit_Position2
+    Validate_Passing_The_Obstacle2:
+                                   CMP                CanPassObs ,1
+                                   JE                 Edit_Position2
 
-                                POP                DI
-                                POP                cx
-                                RET
+                                   POP                DI
+                                   POP                cx
+                                   RET
 
-    CHECKLINEDETECTED2:
-                                PUSH               CX
-                                PUSH               DI
-                                MOV                ISVERTICALCHECKLINE, 1
-                                CALL               GETCHECKLINEVERTIX   
-                                CALL               UPDATESCORE       
-                                POP                DI
-                                POP                CX 
-                                JMP                NoObstacleDetected2
-    POWERUPDETECTED2:           
-                                PUSH               CX
-                                PUSH               DI
-                                CALL               GETTOPLEFTPOWER
+    CHECKLINEDETECTED2:            
+                                   PUSH               CX
+                                   PUSH               DI
+                                   MOV                ISVERTICALCHECKLINE, 1
+                                   CALL               GETCHECKLINEVERTIX
+                                   CALL               UPDATESCORE
+                                   POP                DI
+                                   POP                CX
+                                   JMP                NoObstacleDetected2
+    POWERUPDETECTED2:              
+                                   PUSH               CX
+                                   PUSH               DI
+                                   CALL               GETTOPLEFTPOWER
                 
-                                MOV                BX,POWERTOPLEFTBYTE
-                                INC                BX
-                                ADD                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 121                                                                  ; 121 is the color degree of the increasing powerup
-                                JE                 INCPOWERUP_DETECTED2
-                                CMP                BYTE PTR ES:[BX] , 112                                                                  ; 112 is the color degree of the decreasing powerup
-                                JE                 DECPOWERUP_DETECTED2
-                                CMP                BYTE PTR ES:[BX] , 17
-                                JE                 CREATEOBSTPOWERUP_DETECTED2
-                                CMP                BYTE PTR ES:[BX] , 28
-                                JE                 PASSOBSTPOWER_DETECTED2
+                                   MOV                BX,POWERTOPLEFTBYTE
+                                   INC                BX
+                                   ADD                BX , SCREEN_WIDTH
+                                   CMP                BYTE PTR ES:[BX] , 121                                                                  ; 121 is the color degree of the increasing powerup
+                                   JE                 INCPOWERUP_DETECTED2
+                                   CMP                BYTE PTR ES:[BX] , 112                                                                  ; 112 is the color degree of the decreasing powerup
+                                   JE                 DECPOWERUP_DETECTED2
+                                   CMP                BYTE PTR ES:[BX] , 17
+                                   JE                 CREATEOBSTPOWERUP_DETECTED2
+                                   CMP                BYTE PTR ES:[BX] , 28
+                                   JE                 PASSOBSTPOWER_DETECTED2
 
-    INCPOWERUP_DETECTED2:       
-                                MOV                AL , 1
-                                MOV                powerupType , AL
-                                JMP                DRAWING_COLLECTED_POWERUP2
-    DECPOWERUP_DETECTED2:       
-                                MOV                AL , 2
-                                MOV                powerupType , AL
-                                JMP                DRAWING_COLLECTED_POWERUP2
-    CREATEOBSTPOWERUP_DETECTED2:
-                                MOV                AL , 3
-                                MOV                powerupType , AL
-                                JMP                DRAWING_COLLECTED_POWERUP2
+    INCPOWERUP_DETECTED2:          
+                                   MOV                AL , 1
+                                   MOV                powerupType , AL
+                                   JMP                DRAWING_COLLECTED_POWERUP2
+    DECPOWERUP_DETECTED2:          
+                                   MOV                AL , 2
+                                   MOV                powerupType , AL
+                                   JMP                DRAWING_COLLECTED_POWERUP2
+    CREATEOBSTPOWERUP_DETECTED2:   
+                                   MOV                AL , 3
+                                   MOV                powerupType , AL
+                                   JMP                DRAWING_COLLECTED_POWERUP2
 
-    PASSOBSTPOWER_DETECTED2:    
-                                MOV                AL , 4
-                                MOV                powerupType , AL
+    PASSOBSTPOWER_DETECTED2:       
+                                   MOV                AL , 4
+                                   MOV                powerupType , AL
 
-    DRAWING_COLLECTED_POWERUP2: 
-                                CMP                CarToScan , 0                                                                           ;Car1 is scanning
-                                JE                 Car2Powerup2
+    DRAWING_COLLECTED_POWERUP2:    
+                                   CMP                CarToScan , 0                                                                           ;Car1 is scanning
+                                   JE                 Car2Powerup2
     ;Powerup for first player is collected
 
-                                MOV                AX , powerup1Posx
-                                MOV                TEMPX , AX
+                                   MOV                AX , powerup1Posx
+                                   MOV                TEMPX , AX
 
-                                MOV                AX , powerup1Posy
-                                MOV                TEMPY , AX
+                                   MOV                AX , powerup1Posy
+                                   MOV                TEMPY , AX
 
-                                MOV                AL , CarToScan
-                                MOV                powerupParent , AL
+                                   MOV                AL , CarToScan
+                                   MOV                powerupParent , AL
 
-                                MOV                TMP4 , 0
+                                   MOV                TMP4 , 0
 
-                                DrawPower          TEMPX,TEMPY,powerupType
-                                JMP                COLLECTPOWER2
-    Car2Powerup2:               
+                                   DrawPower          TEMPX,TEMPY,powerupType
+                                   JMP                COLLECTPOWER2
+    Car2Powerup2:                  
     ;Powerup for second player is collected
 
-                                MOV                AX , powerup2Posx
-                                MOV                TEMPX , AX
+                                   MOV                AX , powerup2Posx
+                                   MOV                TEMPX , AX
 
-                                MOV                AX , powerup2Posy
-                                MOV                TEMPY , AX
+                                   MOV                AX , powerup2Posy
+                                   MOV                TEMPY , AX
 
-                                MOV                AL , CarToScan
-                                MOV                powerupParent , AL
+                                   MOV                AL , CarToScan
+                                   MOV                powerupParent , AL
 
-                                MOV                TMP4 , 0
+                                   MOV                TMP4 , 0
 
-                                DrawPower          TEMPX,TEMPY, powerupType
+                                   DrawPower          TEMPX,TEMPY, powerupType
 
 
-    COLLECTPOWER2:              
-                                CALL               SEARCHTORETRIEVE
-                                POP                DI
-                                POP                CX
-                                JMP NoObstacleDetected2
+    COLLECTPOWER2:                 
+                                   CALL               SEARCHTORETRIEVE
+                                   POP                DI
+                                   POP                CX
+                                   JMP                NoObstacleDetected2
 
-    Edit_Position2:
-                                PUSH CX
-                                PUSH DI
-                                CALL EnforcePosition
-                                POP DI 
-                                POP CX
-                                MOV CanPassObs , 0
-                                POP                DI
-                                POP                CX
-                                JMP checkXFinish
+    Edit_Position2:                
+                                   PUSH               CX
+                                   PUSH               DI
+                                   CALL               EnforcePosition
+                                   POP                DI
+                                   POP                CX
+                                   MOV                CanPassObs , 0
+                                   POP                DI
+                                   POP                CX
+                                   JMP                checkXFinish
 
-    NoObstacleDetected2:        
-                                ADD                DI , SCREEN_WIDTH
-                                DEC                CX
-                                CMP                CX , 0
-                                JNE                CheckX
+    NoObstacleDetected2:           
+                                   ADD                DI , SCREEN_WIDTH
+                                   DEC                CX
+                                   CMP                CX , 0
+                                   JNE                CheckX
 
-                                POP                DI
-                                POP                CX
+                                   POP                DI
+                                   POP                CX
 
-                                CMP                XMovement , 1
-                                JNE                LeftMovement2
+                                   CMP                XMovement , 1
+                                   JNE                LeftMovement2
 
-                                INC                DI
-                                INC                CarToDrawX
-                                JMP                NextLoop2
-    LeftMovement2:              
-                                DEC                DI
-                                DEC                CarToDrawX
+                                   INC                DI
+                                   INC                CarToDrawX
+                                   JMP                NextLoop2
+    LeftMovement2:                 
+                                   DEC                DI
+                                   DEC                CarToDrawX
 
-    NextLoop2:                  
-                                DEC                CX
-                                CMP                CX , 0
-                                JNE                NextRow2
-    checkXFinish:               
-                                MOV                horizontalFlag ,0
-                                RET
+    NextLoop2:                     
+                                   DEC                CX
+                                   CMP                CX , 0
+                                   JNE                NextRow2
+    checkXFinish:                  
+                                   MOV                horizontalFlag ,0
+                                   RET
 ScanXmovement ENDP
 
     ;description
 checkingPositionChange1 PROC FAR
              
-                                MOV                DX , PosXfirst
-                                CMP                PrevPosXfirst, DX
+                                   MOV                DX , PosXfirst
+                                   CMP                PrevPosXfirst, DX
 
-                                JE                 bridge1
-                                CALL               Update1
-                                JMP                Car2Check
-    bridge1:                    
-                                MOV                DX , PosYfirst
-                                CMP                PrevPosYfirst , DX
-                                JE                 Car2Check
-                                CALL               Update1
-    Car2Check:                  
-                                RET
+                                   JE                 bridge1
+                                   CALL               Update1
+                                   JMP                Car2Check
+    bridge1:                       
+                                   MOV                DX , PosYfirst
+                                   CMP                PrevPosYfirst , DX
+                                   JE                 Car2Check
+                                   CALL               Update1
+    Car2Check:                     
+                                   RET
 checkingPositionChange1 ENDP
 
     ;description
 checkingPositionChange2 PROC FAR
-                                MOV                DX , PosXsecond
-                                CMP                PrevPosXsecond, DX
-                                JE                 bridge2
-                                CALL               Update2
-                                JMP                ContinueLooping
-    bridge2:                    
-                                MOV                DX , PosYsecond
-                                CMP                PrevPosYsecond , DX
-                                JE                 ContinueLooping
-                                CALL               Update2
+                                   MOV                DX , PosXsecond
+                                   CMP                PrevPosXsecond, DX
+                                   JE                 bridge2
+                                   CALL               Update2
+                                   JMP                ContinueLooping
+    bridge2:                       
+                                   MOV                DX , PosYsecond
+                                   CMP                PrevPosYsecond , DX
+                                   JE                 ContinueLooping
+                                   CALL               Update2
 
-    ContinueLooping:            
-                                RET
+    ContinueLooping:               
+                                   RET
 checkingPositionChange2 ENDP
 
 INT09H PROC FAR
-                                IN                 AL, 60H
+                                   IN                 AL, 60H
                             
-                                CALL               CheckArrowKeys
-                                CALL               CheckWASDKeys
+                                   CALL               CheckArrowKeys
+                                   CALL               CheckWASDKeys
 
                                     
-                                MOV                AL , 20H
-                                OUT                20H, AL
-                                IRET
+                                   MOV                AL , 20H
+                                   OUT                20H, AL
+                                   IRET
 INT09H ENDP
 
 
 ShowCurrentTime PROC FAR
-                                ;Drawing the timer-area box
-                                MOV CarToDrawX, SCREEN_WIDTH - 30
-                                MOV  CarToDrawY ,0
-                                CALL CalculateBoxVertex
-                                MOV CX , 30
+    ;Drawing the timer-area box
+                                   MOV                CarToDrawX, SCREEN_WIDTH - 30
+                                   MOV                CarToDrawY ,0
+                                   CALL               CalculateBoxVertex
+                                   MOV                CX , 30
                                 
-        DrawTimerAreaBackground_COLS:
-                                PUSH CX
-                                PUSH DI
-                                MOV CX , 30
+    DrawTimerAreaBackground_COLS:  
+                                   PUSH               CX
+                                   PUSH               DI
+                                   MOV                CX , 30
 
-        DrawTimerAreaBackground_ROWS:
-                                MOV BYTE PTR ES:[DI] , 0
-                                INC DI
-                                LOOP DrawTimerAreaBackground_ROWS
+    DrawTimerAreaBackground_ROWS:  
+                                   MOV                BYTE PTR ES:[DI] , 0
+                                   INC                DI
+                                   LOOP               DrawTimerAreaBackground_ROWS
 
-                                POP DI
-                                POP CX
-                                ADD DI , SCREEN_WIDTH
-                                LOOP DrawTimerAreaBackground_COLS
+                                   POP                DI
+                                   POP                CX
+                                   ADD                DI , SCREEN_WIDTH
+                                   LOOP               DrawTimerAreaBackground_COLS
 
-                                ; ;Drawing the timer text
-                                ; AND DL , 0
-                                ; MOV BX ,CX     ;Moving the CL(Minutes) to BX register
-                                ; MOV AX ,60
-                                ; MUL BL
-                                ; ADD AX ,DX     ;AX = Minutes*60 + Seconds
-                                ; ; MOV DX ,AX     ;DX = AX (Preserving the time)
-                                ; ; XOR AH ,AH
-                                ; ; MOV AX,DX
-                                ; MOV BX ,60
-                                ; DIV BX          ; AX = AX/60 (Minutes) , DX = AX%60 (Seconds)
-                                ; ADD AL , '0'    ;    Converting the minutes to ASCII   
-                                ; ADD DL , '0'    ;    Converting the seconds to ASCII
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                            
+                                   MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                   INT                21H
+
+                                   CMP                DH , PreviousSecond
+                                   JE                 CheckTimeFinish
 
 
-                                ; MOV BX ,DX       ;BX = DX (Preserving the time)  IN BX = Seconds
-                                ; MOV CX , AX      ; CX = AX (Preserving the time)    IN CX = Minutes
-
-                                ; MOV AH , 2
-                                ; MOV DH ,0
-                                ; MOV DL , 90
-                                ; INT 10H
-
-                                ; mov                ah, 9
-                                ; mov                bh, 0 ; page number
-                                ; MOV                AL ,CL
-                                ; mov                bl, 93H                                                                                 ;ANY COLOR.
-                                ; mov                cx, 1                                                                                   ;HOW MANY TIMES TO DISPLAY CHAR.
-                                ; int                10h
-
-                                ; MOV AH , 2
-                                ; MOV DH ,0
-                                ; MOV DL , 91
-                                ; INT 10H
-
-                                ; mov                ah, 9
-                                ; mov                bh, 0 ; page number
-                                ; MOV                AL ,BL
-                                ; mov                bl, 93H                                                                                 ;ANY COLOR.
-                                ; mov                cx, 1                                                                                   ;HOW MANY TIMES TO DISPLAY CHAR.
-                                ; int                10h
-
-                                ; MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
-                                ; INT                21H
-
-                                CMP DH , PreviousSecond
-                                JE CheckTimeFinish
+                                   MOV                DI ,2*SCREEN_WIDTH
+                                   MOV                BYTE PTR ES:[DI],04H
+                                   INC                DI
 
 
-                                MOV DI ,0
-                                MOV CX,5
-                                JUMPER:
-                                MOV BYTE PTR ES:[DI],04H
-                                INC DI
-                                LOOP JUMPER
-
-
-                                MOV PreviousSecond , DH
-                                INC TotalSeconds
-                                AND DX ,DX
-                                MOV AL , TotalSeconds
-                                MOV BL , 60
-                                DIV BL
+                                   MOV                PreviousSecond , DH
+                                   INC                TotalSeconds
+                                   AND                DX ,DX
+                                   MOV                AL , TotalSeconds
+                                   MOV                BL , 60
+                                   DIV                BL
                                 
-                                MOV CountSecond , AH        ; Current Seconds
-                                MOV CountMinute , AL        ; Current Minutes
+                                   MOV                CountSecond , AH                                                                        ; Current Seconds
+                                   MOV                CountMinute , AL                                                                        ; Current Minutes
 
-                                CMP TotalSeconds , 120      ; 2 minutes are achieved
-                                JMP exit
+                                   CMP                TotalSeconds , 120                                                                      ; 2 minutes are achieved
+                                   JMP                exit
 
-    CheckTimeFinish:             
-
-
+    ; CheckTimeFinish:
 
 
-                                MOV AH , 2
-                                MOV DL , 50
-                                MOV DH , 0                                                                              ;ANY COLOR.
-                                MOV BH,0
-                                INT 10H
+
+
+                                   MOV                AH , 2
+                                   MOV                DL , 50
+                                   MOV                DH , 0                                                                                  ;ANY COLOR.
+                                   MOV                BH,0
+                                   INT                10H
                                 
-                                MOV AH , 2
-                                MOV BH,0
-                                MOV BL ,0H
-                                MOV DL , CountMinute
-                                ADD DL ,'0'
-                                MOV CX , 1
-                                INT 21H
+                                   MOV                AH , 2
+                                   MOV                BH,0
+                                   MOV                BL ,0H
+                                   MOV                DL , CountMinute
+                                   ADD                DL ,'0'
+                                   MOV                CX , 1
+                                   INT                21H
 
-                                MOV AH , 2
-                                MOV DL , 51
-                                MOV DH , 0                                                                               ;ANY COLOR.
-                                MOV BH,0
-                                INT 10H
+                                   MOV                AH , 2
+                                   MOV                DL , 51
+                                   MOV                DH , 0                                                                                  ;ANY COLOR.
+                                   MOV                BH,0
+                                   INT                10H
                                 
-                                MOV AH , 2
-                                MOV BH,0
-                                MOV BL ,0H
-                                MOV DL , ':'
-                                MOV CX , 1
-                                INT 21H
+                                   MOV                AH , 2
+                                   MOV                BH,0
+                                   MOV                BL ,0H
+                                   MOV                DL , ':'
+                                   MOV                CX , 1
+                                   INT                21H
 
-                                MOV AH , 2
-                                MOV DL , 52
-                                MOV DH , 0                                                                                 ;ANY COLOR.
-                                MOV BH,0
-                                INT 10H
+                                   MOV                AH , 2
+                                   MOV                DL , 52
+                                   MOV                DH , 0                                                                                  ;ANY COLOR.
+                                   MOV                BH,0
+                                   INT                10H
                                 
-                                MOV AH , 2
-                                MOV BH,0
-                                MOV BL ,0H
-                                MOV DL , 10
-                                ADD DL ,'0'
-                                MOV CX , 1
-                                INT 21H
+                                   MOV                AH , 2
+                                   MOV                BH,0
+                                   MOV                BL ,0H
+                                   MOV                DL , 10
+                                   ADD                DL ,'0'
+                                   MOV                CX , 1
+                                   INT                21H
 
-                                RET
+                                   RET
 ShowCurrentTime ENDP
 
 
@@ -2475,161 +2432,161 @@ ShowCurrentTime ENDP
 
 
 INTERFACEBACKGROUND PROC
-                                MOV                TEMPX, 0
-                                MOV                TEMPY, 0
-                                MOV                DI, TEMPY
-                                MOV                AX, SCREENWIDTH
-                                MUL                DI
-                                MOV                DI, AX
-                                ADD                DI, TEMPX
+                                   MOV                TEMPX, 0
+                                   MOV                TEMPY, 0
+                                   MOV                DI, TEMPY
+                                   MOV                AX, SCREENWIDTH
+                                   MUL                DI
+                                   MOV                DI, AX
+                                   ADD                DI, TEMPX
     
-                                MOV                CX, 200
-    INTERFACEOUTERLOOP:         
-                                PUSH               CX
-                                MOV                CX, 320
-    INTERFACEINNERLOOP:         
-                                MOV                BYTE PTR ES:[DI], 71H
-                                INC                DI
-                                LOOP               INTERFACEINNERLOOP
-                                MOV                TEMPX, 0
-                                ADD                TEMPY, BACKGROUNDIMAGEPARTH
-                                POP                CX
-                                LOOP               INTERFACEOUTERLOOP
+                                   MOV                CX, 200
+    INTERFACEOUTERLOOP:            
+                                   PUSH               CX
+                                   MOV                CX, 320
+    INTERFACEINNERLOOP:            
+                                   MOV                BYTE PTR ES:[DI], 71H
+                                   INC                DI
+                                   LOOP               INTERFACEINNERLOOP
+                                   MOV                TEMPX, 0
+                                   ADD                TEMPY, BACKGROUNDIMAGEPARTH
+                                   POP                CX
+                                   LOOP               INTERFACEOUTERLOOP
 
-                                MOV                TEMPX, 80
-                                MOV                TEMPY, 20
-                                MOV                TMP, 0
-                                DRAW               LOGOIMG, LOGOIMGW, LOGOIMGH, TEMPX, TEMPY, TMP
-                                RET
+                                   MOV                TEMPX, 80
+                                   MOV                TEMPY, 20
+                                   MOV                TMP, 0
+                                   DRAW               LOGOIMG, LOGOIMGW, LOGOIMGH, TEMPX, TEMPY, TMP
+                                   RET
 INTERFACEBACKGROUND ENDP
 
 
 ENTERPLAYERNAME PROC
-                                MOV                CX, 14
-    FIRSTCHARLOOP:              
-                                MOV                AH, 0
-                                INT                16H
-                                CMP                AL, 'A'
-                                JB                 FIRSTCHARLOOP
-                                CMP                AL, 'Z'
-                                JBE                RESTOFCHARS
+                                   MOV                CX, 14
+    FIRSTCHARLOOP:                 
+                                   MOV                AH, 0
+                                   INT                16H
+                                   CMP                AL, 'A'
+                                   JB                 FIRSTCHARLOOP
+                                   CMP                AL, 'Z'
+                                   JBE                RESTOFCHARS
 
-                                CMP                AL, 'a'
-                                JB                 FIRSTCHARLOOP
-                                CMP                AL, 'z'
-                                JBE                RESTOFCHARS
+                                   CMP                AL, 'a'
+                                   JB                 FIRSTCHARLOOP
+                                   CMP                AL, 'z'
+                                   JBE                RESTOFCHARS
 
-                                JMP                FIRSTCHARLOOP
+                                   JMP                FIRSTCHARLOOP
 
-    RESTOFCHARS:                
-                                MOV                DL, AL
-                                MOV                AH, 2
-                                INT                21H
+    RESTOFCHARS:                   
+                                   MOV                DL, AL
+                                   MOV                AH, 2
+                                   INT                21H
 
-    RESTOFCHARSLOOP:
-                                CMP                AL, 8
-                                JE                 DONTSTORECHAR
-                                MOV                BYTE PTR DS:[SI], AL
-                                INC                SI
-                                DONTSTORECHAR:
-                                MOV                AH, 0
-                                INT                16H
-                                CMP                AH, 28
-                                JE                 FINISHENTERNAME
-                                CMP                AH, 14
-                                JNE                NOTBACKSPACE
-                                INC                CX
-                                INC                CX
-                                DEC                SI
-                                NOTBACKSPACE:
-                                MOV                DL, AL
-                                MOV                AH, 2
-                                INT                21H
-                                LOOP               RESTOFCHARSLOOP
-    FINISHENTERNAME:            
-                                RET
+    RESTOFCHARSLOOP:               
+                                   CMP                AL, 8
+                                   JE                 DONTSTORECHAR
+                                   MOV                BYTE PTR DS:[SI], AL
+                                   INC                SI
+    DONTSTORECHAR:                 
+                                   MOV                AH, 0
+                                   INT                16H
+                                   CMP                AH, 28
+                                   JE                 FINISHENTERNAME
+                                   CMP                AH, 14
+                                   JNE                NOTBACKSPACE
+                                   INC                CX
+                                   INC                CX
+                                   DEC                SI
+    NOTBACKSPACE:                  
+                                   MOV                DL, AL
+                                   MOV                AH, 2
+                                   INT                21H
+                                   LOOP               RESTOFCHARSLOOP
+    FINISHENTERNAME:               
+                                   RET
 ENTERPLAYERNAME ENDP
 
 
 
 INTERFACESTAGE PROC
-                                CALL               INTERFACEBACKGROUND
+                                   CALL               INTERFACEBACKGROUND
 
 
     ;DRAWING LOGO AND INPUT TEXTS AND NOTE
-                                MOV                TEMPX, 5
-                                MOV                TEMPY, 80
-                                MOV                TMP, 0
-                                DRAW               INPUTIMG, INPUTIMGW, INPUTIMGH, TEMPX, TEMPY, TMP
+                                   MOV                TEMPX, 5
+                                   MOV                TEMPY, 80
+                                   MOV                TMP, 0
+                                   DRAW               INPUTIMG, INPUTIMGW, INPUTIMGH, TEMPX, TEMPY, TMP
 
     ;FIRST NOTE
-                                MOV                AH, 2H
-                                MOV                DL, 0
-                                MOV                DH, 17
-                                MOV                BH, 0
-                                INT                10H
-                                MOV                AH, 9
-                                MOV                DX, OFFSET NOTE1
-                                INT                21H
+                                   MOV                AH, 2H
+                                   MOV                DL, 0
+                                   MOV                DH, 17
+                                   MOV                BH, 0
+                                   INT                10H
+                                   MOV                AH, 9
+                                   MOV                DX, OFFSET NOTE1
+                                   INT                21H
 
     ;SECOND NOTE
-                                MOV                AH, 2H
-                                MOV                DL, 0
-                                MOV                DH, 19
-                                MOV                BH, 0
-                                INT                10H
-                                MOV                AH, 9
-                                MOV                DX, OFFSET NOTE2
-                                INT                21H
+                                   MOV                AH, 2H
+                                   MOV                DL, 0
+                                   MOV                DH, 19
+                                   MOV                BH, 0
+                                   INT                10H
+                                   MOV                AH, 9
+                                   MOV                DX, OFFSET NOTE2
+                                   INT                21H
 
 
 
     ;X = 47 Y = 16
 
     ;SETTING CURSOR FOR FIRST NAME
-                                MOV                AH, 2H
-                                MOV                DL, 16
-                                MOV                DH, 36
-                                MOV                BH, 0
-                                INT                10H
+                                   MOV                AH, 2H
+                                   MOV                DL, 16
+                                   MOV                DH, 36
+                                   MOV                BH, 0
+                                   INT                10H
 
-                                MOV                SI, OFFSET FIRSTNAME
-                                CALL               ENTERPLAYERNAME
+                                   MOV                SI, OFFSET FIRSTNAME
+                                   CALL               ENTERPLAYERNAME
 
 
     ;SETTING CURSOR FOR SECOND NAME
-                                MOV                AH, 2H
-                                MOV                DL, 16
-                                MOV                DH, 38
-                                MOV                BH, 0
-                                INT                10H
-                                MOV                SI, OFFSET SECONDNAME
-                                CALL               ENTERPLAYERNAME
+                                   MOV                AH, 2H
+                                   MOV                DL, 16
+                                   MOV                DH, 38
+                                   MOV                BH, 0
+                                   INT                10H
+                                   MOV                SI, OFFSET SECONDNAME
+                                   CALL               ENTERPLAYERNAME
 
 
 
-                                CALL               INTERFACEBACKGROUND
+                                   CALL               INTERFACEBACKGROUND
 
     ;FIRST INSTRUCTION
-                                MOV                AH, 2H
-                                MOV                DL, 2
-                                MOV                DH, 15
-                                MOV                BH, 0
-                                INT                10H
-                                MOV                AH, 9
-                                MOV                DX, OFFSET INSTRUCTION1
-                                INT                21H
+                                   MOV                AH, 2H
+                                   MOV                DL, 2
+                                   MOV                DH, 15
+                                   MOV                BH, 0
+                                   INT                10H
+                                   MOV                AH, 9
+                                   MOV                DX, OFFSET INSTRUCTION1
+                                   INT                21H
 
     ;SECOND INSTRUCTION
-                                MOV                AH, 2H
-                                MOV                DL, 2
-                                MOV                DH, 17
-                                MOV                BH, 0
-                                INT                10H
-                                MOV                AH, 9
-                                MOV                DX, OFFSET INSTRUCTION2
-                                INT                21H
-                                RET
+                                   MOV                AH, 2H
+                                   MOV                DL, 2
+                                   MOV                DH, 17
+                                   MOV                BH, 0
+                                   INT                10H
+                                   MOV                AH, 9
+                                   MOV                DX, OFFSET INSTRUCTION2
+                                   INT                21H
+                                   RET
 INTERFACESTAGE ENDP
 
 
@@ -2648,782 +2605,782 @@ INTERFACESTAGE ENDP
 
     ;PROC TO DRAW AN IMAGE
 DRAWIMAGE PROC FAR
-                                PUSH               CX
+                                   PUSH               CX
     ;VIDEO MEMORY
-                                MOV                AX, 0A000H
-                                MOV                ES, AX
+                                   MOV                AX, 0A000H
+                                   MOV                ES, AX
 
-                                MOV                DI, STARYTODRAW
-                                MOV                AX, SCREENWIDTH
-                                MUL                DI
-                                MOV                DI, AX
-                                ADD                DI, STARXTODRAW
+                                   MOV                DI, STARYTODRAW
+                                   MOV                AX, SCREENWIDTH
+                                   MUL                DI
+                                   MOV                DI, AX
+                                   ADD                DI, STARXTODRAW
     
-                                MOV                CX, HEITODRAW
-                                MOV                SI, IMGTODRAW
+                                   MOV                CX, HEITODRAW
+                                   MOV                SI, IMGTODRAW
 
-    ROWS:                       
-                                PUSH               CX
-                                PUSH               DI
-                                MOV                CX, WIDTODRAW
-    COLS:                       
-                                MOV                DL, BYTE PTR [SI]
-                                CMP                DL, 0
-                                JE                 DONTDRAWBYTE
-                                MOV                ES:[DI], DL
-    DONTDRAWBYTE:               
-                                INC                SI
-                                INC                DI
-                                LOOP               COLS
-                                POP                DI
-                                POP                CX
-                                ADD                DI, SCREENWIDTH
-                                LOOP               ROWS
-                                MOV                DI, STARYTODRAW
-                                MOV                AX, SCREENWIDTH
-                                MUL                DI
-                                MOV                DI, AX
-                                ADD                DI, STARXTODRAW
-                                ADD                DI, WIDTODRAW
-                                POP                CX
-                                RET
+    ROWS:                          
+                                   PUSH               CX
+                                   PUSH               DI
+                                   MOV                CX, WIDTODRAW
+    COLS:                          
+                                   MOV                DL, BYTE PTR [SI]
+                                   CMP                DL, 0
+                                   JE                 DONTDRAWBYTE
+                                   MOV                ES:[DI], DL
+    DONTDRAWBYTE:                  
+                                   INC                SI
+                                   INC                DI
+                                   LOOP               COLS
+                                   POP                DI
+                                   POP                CX
+                                   ADD                DI, SCREENWIDTH
+                                   LOOP               ROWS
+                                   MOV                DI, STARYTODRAW
+                                   MOV                AX, SCREENWIDTH
+                                   MUL                DI
+                                   MOV                DI, AX
+                                   ADD                DI, STARXTODRAW
+                                   ADD                DI, WIDTODRAW
+                                   POP                CX
+                                   RET
 DRAWIMAGE ENDP
 
 
     ;Called inside macro "SetVerticalLine"
 DrawVerticlLine PROC FAR
-                                CALL               CalculateBoxVertex
-                                MOV                CX , LineToDrawH
-    LineHeightLoop:             
-                                MOV                DX , DrawingColor
-                                MOV                BYTE PTR ES:[DI] , DL
-                                ADD                DI , SCREEN_WIDTH
-                                LOOP               LineHeightLoop
-                                RET
+                                   CALL               CalculateBoxVertex
+                                   MOV                CX , LineToDrawH
+    LineHeightLoop:                
+                                   MOV                DX , DrawingColor
+                                   MOV                BYTE PTR ES:[DI] , DL
+                                   ADD                DI , SCREEN_WIDTH
+                                   LOOP               LineHeightLoop
+                                   RET
 DrawVerticlLine ENDP
 
     ;Called inside macro "SetHorizontalLine"
 DrawHorizontalLine PROC FAR
-                                CALL               CalculateBoxVertex
-                                MOV                CX , LineToDrawW
-    LineWidthLoop:              
-                                MOV                DX , DrawingColor
-                                MOV                BYTE PTR ES:[DI] , DL
-                                INC                DI
-                                LOOP               LineWidthLoop
+                                   CALL               CalculateBoxVertex
+                                   MOV                CX , LineToDrawW
+    LineWidthLoop:                 
+                                   MOV                DX , DrawingColor
+                                   MOV                BYTE PTR ES:[DI] , DL
+                                   INC                DI
+                                   LOOP               LineWidthLoop
 
-                                RET
+                                   RET
 DrawHorizontalLine ENDP
     ;Uses stored variables to draw status Bar
 DrawStatBar PROC FAR
  
     ;Setting starting posititons of the status bar to carToDraw varialbes as it's used in 'CalculateBoxVertix' proc
-                                MOV                DX , StatusBarStartX
-                                MOV                CarToDrawX , DX
+                                   MOV                DX , StatusBarStartX
+                                   MOV                CarToDrawX , DX
 
-                                MOV                DX , StatusBarStartY
-                                MOV                CarToDrawY , DX
+                                   MOV                DX , StatusBarStartY
+                                   MOV                CarToDrawY , DX
 
-                                CALL               CalculateBoxVertex
+                                   CALL               CalculateBoxVertex
                             
     ; Setting CX by the remaining number of bytes in the screen
-                                MOV                AX , StatusBarTotalheight
-                                MOV                BX , SCREEN_WIDTH
-                                MUL                BX
-                                MOV                CX , AX
+                                   MOV                AX , StatusBarTotalheight
+                                   MOV                BX , SCREEN_WIDTH
+                                   MUL                BX
+                                   MOV                CX , AX
     ;Drawing status Bar background
-    DrawStatusBg:               
-                                MOV                BYTE PTR ES:[DI], STATUS_BAR_COLOR
-                                INC                DI
-                                LOOP               DrawStatusBg
+    DrawStatusBg:                  
+                                   MOV                BYTE PTR ES:[DI], STATUS_BAR_COLOR
+                                   INC                DI
+                                   LOOP               DrawStatusBg
     
     ;Drawing horizontal line to leave space to powerups
 
     ;-- Calculate Ypos of the line:
-                                MOV                AX , StatusBarTotalheight
-                                MOV                BX , 2D
-                                DIV                BX
-                                ADD                AX , StatusBarStartY
+                                   MOV                AX , StatusBarTotalheight
+                                   MOV                BX , 2D
+                                   DIV                BX
+                                   ADD                AX , StatusBarStartY
     ;--Drawing Lines
-                                SetHorizontalLine  0, AX, SCREEN_WIDTH, STATUS_BAR_COLOR2
-                                SetVerticalLine    SCREEN_WIDTH/2, StatusBarStartY, StatusBarTotalheight, STATUS_BAR_COLOR2
+                                   SetHorizontalLine  0, AX, SCREEN_WIDTH, STATUS_BAR_COLOR2
+                                   SetVerticalLine    SCREEN_WIDTH/2, StatusBarStartY, StatusBarTotalheight, STATUS_BAR_COLOR2
     
     ;Writing User names to be passed from interface
                             
 
     ;printing  FirstName
-                                MOV                SI , OFFSET FirstName
-                                MOV                DL , 4
-                                MOV                DH , 22
-                                CALL               PrintStringWithColor
+                                   MOV                SI , OFFSET FirstName
+                                   MOV                DL , 4
+                                   MOV                DH , 22
+                                   CALL               PrintStringWithColor
     ;printing  SecondName
-                                MOV                SI , OFFSET SecondName
-                                MOV                DL , 25
-                                MOV                DH , 22
-                                CALL               PrintStringWithColor
+                                   MOV                SI , OFFSET SecondName
+                                   MOV                DL , 25
+                                   MOV                DH , 22
+                                   CALL               PrintStringWithColor
 
-                                RET
+                                   RET
 DrawStatBar ENDP
 
     ;Set the Offset of the string you want to print in SI before calling
 PrintStringWithColor PROC FAR
-    printOneByOne:              
+    printOneByOne:                 
     ;--Setting Cursor position
-                                MOV                AH , 2
-                                MOV                BH, 0 
-                                INT                10H
+                                   MOV                AH , 2
+                                   MOV                BH, 0
+                                   INT                10H
     ;--Start printing
-                                MOV                AL , [SI]
-                                CMP                AL , '$'
-                                JE                 PrintFinish
-                                CALL               char_display
-                                INC                SI
-                                INC                DL
-                                JMP                printOneByOne
-    PrintFinish:                
-                                RET
+                                   MOV                AL , [SI]
+                                   CMP                AL , '$'
+                                   JE                 PrintFinish
+                                   CALL               char_display
+                                   INC                SI
+                                   INC                DL
+                                   JMP                printOneByOne
+    PrintFinish:                   
+                                   RET
 PrintStringWithColor ENDP
 
 
     ;PROC TO RANDOMIZE
 
 GETSYSTEMTIME PROC FAR
-                                MOV                CX, 0
-                                MOV                DX, 59000                                                                               ;63997
-                                MOV                AH, 86H
-                                INT                15H
-                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
-                                INT                21H
-                                RET
+                                   MOV                CX, 0
+                                   MOV                DX, 59000                                                                               ;63997
+                                   MOV                AH, 86H
+                                   INT                15H
+                                   MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                   INT                21H
+                                   RET
 GETSYSTEMTIME ENDP
 
 
 GETSYSTEMTIME2 PROC FAR
-                                MOV                CX, 0
-                                MOV                DX, 53000                                                                               ;63997
-                                MOV                AH, 86H
-                                INT                15H
-                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
-                                INT                21H
-                                RET
+                                   MOV                CX, 0
+                                   MOV                DX, 53000                                                                               ;63997
+                                   MOV                AH, 86H
+                                   INT                15H
+                                   MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                   INT                21H
+                                   RET
 GETSYSTEMTIME2 ENDP
 
 RANDOMIZEPERCENTAGE PROC
-                                CALL               GETSYSTEMTIME2
-                                MOV                AL, 100
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND                                                                             ;DL NOW HAS A NUMBER FROM 0 TO 99
-                                RET
+                                   CALL               GETSYSTEMTIME2
+                                   MOV                AL, 100
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND                                                                             ;DL NOW HAS A NUMBER FROM 0 TO 99
+                                   RET
 RANDOMIZEPERCENTAGE ENDP
 
 
     ;PROC TO GET THE POSIBLE POINTS AFTER DRAWING UP
 POINTSAFTERUP PROC
-                                CALL               CALCXY                                                                                  ; AS WE NEED IT IN THE LEFT DIR
+                                   CALL               CALCXY                                                                                  ; AS WE NEED IT IN THE LEFT DIR
 
-                                MOV                UPDIR, DI
-                                CMP                UPDIR, VERROADIMGH*SCREENWIDTH + VERROADIMGW                                            ;CHECKING FOR OVERFLOWING THE SCREEN
-                                JA                 FIRSTUP
-                                MOV                UPDIR, 0
-                                JMP                NOTFIRSTUP
-    FIRSTUP:                    
-                                SUB                UPDIR, VERROADIMGH*SCREENWIDTH + VERROADIMGW
-    NOTFIRSTUP:                 
+                                   MOV                UPDIR, DI
+                                   CMP                UPDIR, VERROADIMGH*SCREENWIDTH + VERROADIMGW                                            ;CHECKING FOR OVERFLOWING THE SCREEN
+                                   JA                 FIRSTUP
+                                   MOV                UPDIR, 0
+                                   JMP                NOTFIRSTUP
+    FIRSTUP:                       
+                                   SUB                UPDIR, VERROADIMGH*SCREENWIDTH + VERROADIMGW
+    NOTFIRSTUP:                    
 
-                                MOV                RIGHTDIR, DI
-                                SUB                RIGHTDIR, HORROADIMGH*SCREENWIDTH + VERROADIMGW
-                                MOV                DOWNDIR, 0
+                                   MOV                RIGHTDIR, DI
+                                   SUB                RIGHTDIR, HORROADIMGH*SCREENWIDTH + VERROADIMGW
+                                   MOV                DOWNDIR, 0
     
-                                CMP                TEMPX, HORROADIMGW
-                                JA                 FIRSTLEFT
-                                MOV                LEFTDIR, 0
-                                JMP                NOTFIRSTLEFT
-    FIRSTLEFT:                  
-                                MOV                LEFTDIR, DI
-                                SUB                LEFTDIR, HORROADIMGH*SCREENWIDTH + HORROADIMGW
-    NOTFIRSTLEFT:               
-                                RET
+                                   CMP                TEMPX, HORROADIMGW
+                                   JA                 FIRSTLEFT
+                                   MOV                LEFTDIR, 0
+                                   JMP                NOTFIRSTLEFT
+    FIRSTLEFT:                     
+                                   MOV                LEFTDIR, DI
+                                   SUB                LEFTDIR, HORROADIMGH*SCREENWIDTH + HORROADIMGW
+    NOTFIRSTLEFT:                  
+                                   RET
 POINTSAFTERUP ENDP
 
     ;PROC TO GET THE POSIBLE POINTS AFTER DRAWING RIGHT
 POINTSAFTERRIGHT PROC
-                                MOV                UPDIR, DI
-                                CMP                UPDIR, (VERROADIMGH-HORROADIMGH)*SCREENWIDTH
-                                JA                 SECONDUP
-                                MOV                UPDIR, 0
-                                JMP                NOTSECONDUP
-    SECONDUP:                   
-                                SUB                UPDIR, (VERROADIMGH-HORROADIMGH)*SCREENWIDTH                                            ;VERROADIMGH-HORROADIMGH = 30
-    NOTSECONDUP:                
+                                   MOV                UPDIR, DI
+                                   CMP                UPDIR, (VERROADIMGH-HORROADIMGH)*SCREENWIDTH
+                                   JA                 SECONDUP
+                                   MOV                UPDIR, 0
+                                   JMP                NOTSECONDUP
+    SECONDUP:                      
+                                   SUB                UPDIR, (VERROADIMGH-HORROADIMGH)*SCREENWIDTH                                            ;VERROADIMGH-HORROADIMGH = 30
+    NOTSECONDUP:                   
 
-                                MOV                RIGHTDIR, DI
-                                MOV                DOWNDIR, DI
-                                MOV                LEFTDIR, 0
-                                RET
+                                   MOV                RIGHTDIR, DI
+                                   MOV                DOWNDIR, DI
+                                   MOV                LEFTDIR, 0
+                                   RET
 POINTSAFTERRIGHT ENDP
 
     ;PROC TO GET THE POSIBLE POINTS AFTER DRAWING DOWN
 POINTSAFTERDOWN PROC
-                                CALL               CALCXY
-                                MOV                UPDIR, 0
-                                MOV                RIGHTDIR, DI
-                                SUB                RIGHTDIR, VERROADIMGW
-                                ADD                RIGHTDIR, VERROADIMGH * SCREENWIDTH
-                                MOV                DOWNDIR, DI
-                                SUB                DOWNDIR, VERROADIMGW
-                                ADD                DOWNDIR, VERROADIMGH * SCREENWIDTH
+                                   CALL               CALCXY
+                                   MOV                UPDIR, 0
+                                   MOV                RIGHTDIR, DI
+                                   SUB                RIGHTDIR, VERROADIMGW
+                                   ADD                RIGHTDIR, VERROADIMGH * SCREENWIDTH
+                                   MOV                DOWNDIR, DI
+                                   SUB                DOWNDIR, VERROADIMGW
+                                   ADD                DOWNDIR, VERROADIMGH * SCREENWIDTH
 
-                                CMP                TEMPX, HORROADIMGW
-                                JA                 THIRDLEFT
-                                MOV                LEFTDIR, 0
-                                JMP                NOTTHIRDLEFT
-    THIRDLEFT:                  
-                                MOV                LEFTDIR, DI
-                                SUB                LEFTDIR, HORROADIMGW
-                                ADD                LEFTDIR, VERROADIMGH * SCREENWIDTH
-    NOTTHIRDLEFT:               
-                                RET
+                                   CMP                TEMPX, HORROADIMGW
+                                   JA                 THIRDLEFT
+                                   MOV                LEFTDIR, 0
+                                   JMP                NOTTHIRDLEFT
+    THIRDLEFT:                     
+                                   MOV                LEFTDIR, DI
+                                   SUB                LEFTDIR, HORROADIMGW
+                                   ADD                LEFTDIR, VERROADIMGH * SCREENWIDTH
+    NOTTHIRDLEFT:                  
+                                   RET
 POINTSAFTERDOWN ENDP
 
     ;PROC TO GET THE POSIBLE POINTS AFTER DRAWING LEFT
 POINTSAFTERLEFT PROC
-                                CALL               CALCXY
-                                MOV                UPDIR, DI
-                                CMP                UPDIR, HORROADIMGW + VERROADIMGW + (VERROADIMGH - HORROADIMGH) * SCREENWIDTH
-                                JA                 FOURTHUP
-                                MOV                UPDIR, 0
-                                JMP                NOTFOURTHUP
-    FOURTHUP:                   
-                                SUB                UPDIR, HORROADIMGW + VERROADIMGW + (VERROADIMGH - HORROADIMGH) * SCREENWIDTH
-    NOTFOURTHUP:                
-                                MOV                RIGHTDIR, 0
-                                MOV                DOWNDIR, DI
-                                SUB                DOWNDIR, HORROADIMGW + VERROADIMGW
+                                   CALL               CALCXY
+                                   MOV                UPDIR, DI
+                                   CMP                UPDIR, HORROADIMGW + VERROADIMGW + (VERROADIMGH - HORROADIMGH) * SCREENWIDTH
+                                   JA                 FOURTHUP
+                                   MOV                UPDIR, 0
+                                   JMP                NOTFOURTHUP
+    FOURTHUP:                      
+                                   SUB                UPDIR, HORROADIMGW + VERROADIMGW + (VERROADIMGH - HORROADIMGH) * SCREENWIDTH
+    NOTFOURTHUP:                   
+                                   MOV                RIGHTDIR, 0
+                                   MOV                DOWNDIR, DI
+                                   SUB                DOWNDIR, HORROADIMGW + VERROADIMGW
 
-                                CMP                TEMPX, 2 * HORROADIMGW
-                                JA                 FOURTHLEFT
-                                MOV                LEFTDIR, 0
-                                JMP                NOTFOURTHLEFT
-    FOURTHLEFT:                 
-                                MOV                LEFTDIR, DI
-                                SUB                LEFTDIR, 2 * HORROADIMGW
-    NOTFOURTHLEFT:              
-                                RET
+                                   CMP                TEMPX, 2 * HORROADIMGW
+                                   JA                 FOURTHLEFT
+                                   MOV                LEFTDIR, 0
+                                   JMP                NOTFOURTHLEFT
+    FOURTHLEFT:                    
+                                   MOV                LEFTDIR, DI
+                                   SUB                LEFTDIR, 2 * HORROADIMGW
+    NOTFOURTHLEFT:                 
+                                   RET
 POINTSAFTERLEFT ENDP
 
 
 
     ;PROCEDURE TO CALCULATE X AND Y FROM THE LOCATION OF THE BYTE
 CALCXY PROC
-                                MOV                AX, DI
-                                MOV                DX, 0
-                                MOV                BX, SCREENWIDTH
-                                DIV                BX
-                                MOV                TEMPX, DX
+                                   MOV                AX, DI
+                                   MOV                DX, 0
+                                   MOV                BX, SCREENWIDTH
+                                   DIV                BX
+                                   MOV                TEMPX, DX
 
-                                MOV                TEMPY, AX
-                                RET
+                                   MOV                TEMPY, AX
+                                   RET
 CALCXY ENDP
 
 
 GETTOPLEFTOBSTACLE PROC FAR
-                                GOLEFTBYTE_OBSTACLE:                 
-                                MOV                BX, DI
-                                DEC                BX
-                                CMP                BYTE PTR ES:[BX], 16
-                                JE                 STILLLEFT_OBSTACLE
-                                CMP                BYTE PTR ES:[BX], 28
-                                JE                 STILLLEFT_OBSTACLE
-                                JMP                GOUPBYTE_OBSTACLE
+    GOLEFTBYTE_OBSTACLE:           
+                                   MOV                BX, DI
+                                   DEC                BX
+                                   CMP                BYTE PTR ES:[BX], 16
+                                   JE                 STILLLEFT_OBSTACLE
+                                   CMP                BYTE PTR ES:[BX], 28
+                                   JE                 STILLLEFT_OBSTACLE
+                                   JMP                GOUPBYTE_OBSTACLE
 
-    STILLLEFT_OBSTACLE:                  
-                                DEC                DI
-                                JMP                GOLEFTBYTE_OBSTACLE
-    GOUPBYTE_OBSTACLE:                   
-                                MOV                BX, DI
-                                SUB                BX, SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX], 16
-                                JE                 STILLUP_OBSTACLE
-                                CMP                BYTE PTR ES:[BX], 28
-                                JE                 STILLUP_OBSTACLE
-                                JMP                FINISHGETTOPLEFT_OBSTACLE
+    STILLLEFT_OBSTACLE:            
+                                   DEC                DI
+                                   JMP                GOLEFTBYTE_OBSTACLE
+    GOUPBYTE_OBSTACLE:             
+                                   MOV                BX, DI
+                                   SUB                BX, SCREEN_WIDTH
+                                   CMP                BYTE PTR ES:[BX], 16
+                                   JE                 STILLUP_OBSTACLE
+                                   CMP                BYTE PTR ES:[BX], 28
+                                   JE                 STILLUP_OBSTACLE
+                                   JMP                FINISHGETTOPLEFT_OBSTACLE
         
-    STILLUP_OBSTACLE:                    
-                                SUB                DI, SCREEN_WIDTH
-                                JMP                GOUPBYTE_OBSTACLE
+    STILLUP_OBSTACLE:              
+                                   SUB                DI, SCREEN_WIDTH
+                                   JMP                GOUPBYTE_OBSTACLE
 
-    FINISHGETTOPLEFT_OBSTACLE:           
-                                MOV                POWERTOPLEFTBYTE_OBSTACLE, DI
-                                RET
+    FINISHGETTOPLEFT_OBSTACLE:     
+                                   MOV                POWERTOPLEFTBYTE_OBSTACLE, DI
+                                   RET
 
 GETTOPLEFTOBSTACLE ENDP
 
 
 GETTOPLEFTPOWER PROC
-    GOLEFTBYTE:                 
-                                MOV                BX, DI
-                                DEC                BX
-                                CMP                BYTE PTR ES:[BX], 36
-                                JE                 STILLLEFT
-                                CMP                BYTE PTR ES:[BX], 112
-                                JE                 STILLLEFT
-                                CMP                BYTE PTR ES:[BX], 121
-                                JE                 STILLLEFT
-                                CMP                BYTE PTR ES:[BX], 17
-                                JE                 STILLLEFT
-                                CMP                BYTE PTR ES:[BX], 28
-                                JE                 STILLLEFT
-                                JMP                GOUPBYTE
+    GOLEFTBYTE:                    
+                                   MOV                BX, DI
+                                   DEC                BX
+                                   CMP                BYTE PTR ES:[BX], 36
+                                   JE                 STILLLEFT
+                                   CMP                BYTE PTR ES:[BX], 112
+                                   JE                 STILLLEFT
+                                   CMP                BYTE PTR ES:[BX], 121
+                                   JE                 STILLLEFT
+                                   CMP                BYTE PTR ES:[BX], 17
+                                   JE                 STILLLEFT
+                                   CMP                BYTE PTR ES:[BX], 28
+                                   JE                 STILLLEFT
+                                   JMP                GOUPBYTE
 
-    STILLLEFT:                  
-                                DEC                DI
-                                JMP                GOLEFTBYTE
-    GOUPBYTE:                   
-                                MOV                BX, DI
-                                SUB                BX, SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX], 36
-                                JE                 STILLUP
-                                CMP                BYTE PTR ES:[BX], 112
-                                JE                 STILLUP
-                                CMP                BYTE PTR ES:[BX], 121
-                                JE                 STILLUP
-                                CMP                BYTE PTR ES:[BX], 17
-                                JE                 STILLUP
-                                CMP                BYTE PTR ES:[BX], 28
-                                JE                 STILLUP
-                                JMP                FINISHGETTOPLEFT
+    STILLLEFT:                     
+                                   DEC                DI
+                                   JMP                GOLEFTBYTE
+    GOUPBYTE:                      
+                                   MOV                BX, DI
+                                   SUB                BX, SCREEN_WIDTH
+                                   CMP                BYTE PTR ES:[BX], 36
+                                   JE                 STILLUP
+                                   CMP                BYTE PTR ES:[BX], 112
+                                   JE                 STILLUP
+                                   CMP                BYTE PTR ES:[BX], 121
+                                   JE                 STILLUP
+                                   CMP                BYTE PTR ES:[BX], 17
+                                   JE                 STILLUP
+                                   CMP                BYTE PTR ES:[BX], 28
+                                   JE                 STILLUP
+                                   JMP                FINISHGETTOPLEFT
         
-    STILLUP:                    
-                                SUB                DI, SCREEN_WIDTH
-                                JMP                GOUPBYTE
+    STILLUP:                       
+                                   SUB                DI, SCREEN_WIDTH
+                                   JMP                GOUPBYTE
 
-    FINISHGETTOPLEFT:           
-                                MOV                POWERTOPLEFTBYTE, DI
-                                RET
+    FINISHGETTOPLEFT:              
+                                   MOV                POWERTOPLEFTBYTE, DI
+                                   RET
 GETTOPLEFTPOWER ENDP
 
 STORINGROADUNDERPOWER PROC
-                                MOV                AX, POWERH
-                                MOV                OUTCOUNTER, AX
+                                   MOV                AX, POWERH
+                                   MOV                OUTCOUNTER, AX
 
-    POWERROWS:                  
-                                MOV                FIRSTBYTEINROW, DI
-                                MOV                AX, POWERW
-                                MOV                INCOUNTER, AX
-    POWERCOLS:                  
-                                MOV                AL, BYTE PTR ES:[DI]
-                                MOV                BYTE PTR DS:[SI], AL
+    POWERROWS:                     
+                                   MOV                FIRSTBYTEINROW, DI
+                                   MOV                AX, POWERW
+                                   MOV                INCOUNTER, AX
+    POWERCOLS:                     
+                                   MOV                AL, BYTE PTR ES:[DI]
+                                   MOV                BYTE PTR DS:[SI], AL
 
-                                INC                DI
-                                INC                SI
-                                DEC                INCOUNTER
-                                JNZ                POWERCOLS
-                                MOV                DI, FIRSTBYTEINROW
-                                ADD                DI, SCREENWIDTH
-                                DEC                OUTCOUNTER
-                                JNZ                POWERROWS
-                                RET
+                                   INC                DI
+                                   INC                SI
+                                   DEC                INCOUNTER
+                                   JNZ                POWERCOLS
+                                   MOV                DI, FIRSTBYTEINROW
+                                   ADD                DI, SCREENWIDTH
+                                   DEC                OUTCOUNTER
+                                   JNZ                POWERROWS
+                                   RET
 STORINGROADUNDERPOWER ENDP
 
 RETRIEVEROAD PROC
-                                MOV                AL, POWERW * POWERH
-                                MOV                BX, CURPOWERINDEX
-                                MOV                BH, 0
-                                MUL                BL                                                                                      ; NOW AX HAS THE INDEX OF STARTING BYTE
+                                   MOV                AL, POWERW * POWERH
+                                   MOV                BX, CURPOWERINDEX
+                                   MOV                BH, 0
+                                   MUL                BL                                                                                      ; NOW AX HAS THE INDEX OF STARTING BYTE
 
-                                MOV                SI, OFFSET ROADUNDERPOWER
-                                ADD                SI, AX
+                                   MOV                SI, OFFSET ROADUNDERPOWER
+                                   ADD                SI, AX
 
-                                MOV                BX, OFFSET TOPLEFTPOWER
-                                MOV                AL, 2
-                                MOV                DX, CURPOWERINDEX
-                                MOV                DH, 0
-                                MUL                DL
-                                ADD                BX, AX
-                                MOV                DI, WORD PTR DS:[BX]
+                                   MOV                BX, OFFSET TOPLEFTPOWER
+                                   MOV                AL, 2
+                                   MOV                DX, CURPOWERINDEX
+                                   MOV                DH, 0
+                                   MUL                DL
+                                   ADD                BX, AX
+                                   MOV                DI, WORD PTR DS:[BX]
 
-                                MOV                CX, POWERH
-    RETRIEVEROWS:               
-                                PUSH               CX
-                                PUSH               DI
-                                MOV                CX, POWERW
-    RETRIEVECOLS:               
-                                MOV                DL, BYTE PTR DS:[SI]
-                                MOV                BYTE PTR ES:[DI], DL
-                                INC                SI
-                                INC                DI
-                                LOOP               RETRIEVECOLS
-                                POP                DI
-                                POP                CX
-                                ADD                DI, SCREENWIDTH
-                                LOOP               RETRIEVEROWS
-                                RET
+                                   MOV                CX, POWERH
+    RETRIEVEROWS:                  
+                                   PUSH               CX
+                                   PUSH               DI
+                                   MOV                CX, POWERW
+    RETRIEVECOLS:                  
+                                   MOV                DL, BYTE PTR DS:[SI]
+                                   MOV                BYTE PTR ES:[DI], DL
+                                   INC                SI
+                                   INC                DI
+                                   LOOP               RETRIEVECOLS
+                                   POP                DI
+                                   POP                CX
+                                   ADD                DI, SCREENWIDTH
+                                   LOOP               RETRIEVEROWS
+                                   RET
 RETRIEVEROAD ENDP
 
 
 
 SEARCHTORETRIEVE PROC
-                                MOV                DX, POWERTOPLEFTBYTE
-                                MOV                SI, OFFSET TOPLEFTPOWER
-                                MOV                CX, POWERUPCOUNTER
-    SEARCH:                     
-                                CMP                WORD PTR DS:[SI], DX
-                                JE                 GOTORETRIEVE
-                                ADD                SI, 2
-                                LOOP               SEARCH
+                                   MOV                DX, POWERTOPLEFTBYTE
+                                   MOV                SI, OFFSET TOPLEFTPOWER
+                                   MOV                CX, POWERUPCOUNTER
+    SEARCH:                        
+                                   CMP                WORD PTR DS:[SI], DX
+                                   JE                 GOTORETRIEVE
+                                   ADD                SI, 2
+                                   LOOP               SEARCH
 
-    GOTORETRIEVE:               
-                                MOV                AX, POWERUPCOUNTER
-                                SUB                AX, CX
-                                MOV                CURPOWERINDEX, AX
-                                CALL               RETRIEVEROAD
-                                RET
+    GOTORETRIEVE:                  
+                                   MOV                AX, POWERUPCOUNTER
+                                   SUB                AX, CX
+                                   MOV                CURPOWERINDEX, AX
+                                   CALL               RETRIEVEROAD
+                                   RET
 SEARCHTORETRIEVE ENDP
 
 SHOWHIDDENPOWER PROC
-                                MOV                AX, INDEXSTARTSHOWING
-                                DEC                AX
-                                MOV                BL, 2
-                                MOV                BH, 0
-                                MUL                BL                                                                                      ;NOW WE HAVE THE SHIFTING IN AX
-                                MOV                SI, OFFSET TOPLEFTPOWER
-                                ADD                SI, AX
-                                MOV                DI, WORD PTR DS:[SI]
-                                CALL               CALCXY
-                                MOV                TMP4, 0
+                                   MOV                AX, INDEXSTARTSHOWING
+                                   DEC                AX
+                                   MOV                BL, 2
+                                   MOV                BH, 0
+                                   MUL                BL                                                                                      ;NOW WE HAVE THE SHIFTING IN AX
+                                   MOV                SI, OFFSET TOPLEFTPOWER
+                                   ADD                SI, AX
+                                   MOV                DI, WORD PTR DS:[SI]
+                                   CALL               CALCXY
+                                   MOV                TMP4, 0
 
     ;DECIDING WHICH POWERUP TO DRAW
-                                CALL               GETSYSTEMTIME
+                                   CALL               GETSYSTEMTIME
     ;AND DL, 3
-                                MOV                AL, 4
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                CMP                DL, 0
-                                JNE                HIDNODECSPEED
+                                   MOV                AL, 4
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   CMP                DL, 0
+                                   JNE                HIDNODECSPEED
 
-                                DRAW               DECSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-                                JMP                HIDFINISHPOWER
-    HIDNODECSPEED:              
+                                   DRAW               DECSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                   JMP                HIDFINISHPOWER
+    HIDNODECSPEED:                 
 
-                                CMP                DL, 1
-                                JNE                HIDNOINCSPEED
-                                DRAW               INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-                                JMP                HIDFINISHPOWER
-    HIDNOINCSPEED:              
+                                   CMP                DL, 1
+                                   JNE                HIDNOINCSPEED
+                                   DRAW               INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                   JMP                HIDFINISHPOWER
+    HIDNOINCSPEED:                 
 
-                                CMP                DL, 2
-                                JNE                HIDNOPASSOBST
-                                DRAW               PASSOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-                                JMP                HIDFINISHPOWER
-    HIDNOPASSOBST:              
+                                   CMP                DL, 2
+                                   JNE                HIDNOPASSOBST
+                                   DRAW               PASSOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                   JMP                HIDFINISHPOWER
+    HIDNOPASSOBST:                 
 
-                                CMP                DL, 3
-                                JNE                HIDFINISHPOWER
-                                DRAW               CREATEOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                   CMP                DL, 3
+                                   JNE                HIDFINISHPOWER
+                                   DRAW               CREATEOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
 
-    HIDFINISHPOWER:             
+    HIDFINISHPOWER:                
             
-                                RET
+                                   RET
 SHOWHIDDENPOWER ENDP
 
 WHICHPOWERIMG PROC
-                                CHECKCANDRAWPOWER  POWERW, POWERH, TEMPX, TEMPY                                                            ;IF IT WILL BE DRAWN ON THE OBST IT WILL NOT BE DRAWN AT ALL (SKIPPED)
+                                   CHECKCANDRAWPOWER  POWERW, POWERH, TEMPX, TEMPY                                                            ;IF IT WILL BE DRAWN ON THE OBST IT WILL NOT BE DRAWN AT ALL (SKIPPED)
     
-                                CALL               RANDOMIZEPERCENTAGE
-                                CMP                DL, POWERPROBABILITY
-                                JA                 FINISHPOWER
+                                   CALL               RANDOMIZEPERCENTAGE
+                                   CMP                DL, POWERPROBABILITY
+                                   JA                 FINISHPOWER
 
-                                MOV                DI, TEMPY
-                                MOV                AX, SCREENWIDTH
-                                MUL                DI
-                                MOV                DI, AX
-                                ADD                DI, TEMPX
+                                   MOV                DI, TEMPY
+                                   MOV                AX, SCREENWIDTH
+                                   MUL                DI
+                                   MOV                DI, AX
+                                   ADD                DI, TEMPX
 
     ;STORING THE TOP LEFT CORNER AND THE ROAD UNDER THE POWER UP
-                                MOV                SI, OFFSET TOPLEFTPOWER
-                                MOV                AL, 2
-                                MOV                BX, POWERUPCOUNTER
-                                MOV                BH, 0
-                                MUL                BL
-                                ADD                SI, AX
-                                MOV                WORD PTR DS:[SI], DI
+                                   MOV                SI, OFFSET TOPLEFTPOWER
+                                   MOV                AL, 2
+                                   MOV                BX, POWERUPCOUNTER
+                                   MOV                BH, 0
+                                   MUL                BL
+                                   ADD                SI, AX
+                                   MOV                WORD PTR DS:[SI], DI
 
-                                MOV                SI, OFFSET ROADUNDERPOWER
-                                MOV                AL, POWERW * POWERH
-                                MOV                BX, POWERUPCOUNTER
-                                MOV                BH, 0
-                                MUL                BL
-                                ADD                SI, AX
-                                CALL               STORINGROADUNDERPOWER
+                                   MOV                SI, OFFSET ROADUNDERPOWER
+                                   MOV                AL, POWERW * POWERH
+                                   MOV                BX, POWERUPCOUNTER
+                                   MOV                BH, 0
+                                   MUL                BL
+                                   ADD                SI, AX
+                                   CALL               STORINGROADUNDERPOWER
     
     ;RANDOMIZING WHETHER TO DRAW OR MAKE IT HIDDEN UNTIL WE SHOW IT DURING THE GAME
-                                CALL               RANDOMIZEPERCENTAGE
-                                MOV                SI, OFFSET ISVISIBLEPOWER
-                                ADD                SI, POWERUPCOUNTER
-                                INC                POWERUPCOUNTER                                                                          ; WE MOVE THAT LINE HERE AS WE NEEDED IT IN THE PREVIOUS LINE
-                                CMP                DL, POWERVISIBPROBABILITY
-                                JBE                VISIBLE
-                                MOV                BYTE PTR DS:[SI], 0
-                                JMP                FINISHPOWER
+                                   CALL               RANDOMIZEPERCENTAGE
+                                   MOV                SI, OFFSET ISVISIBLEPOWER
+                                   ADD                SI, POWERUPCOUNTER
+                                   INC                POWERUPCOUNTER                                                                          ; WE MOVE THAT LINE HERE AS WE NEEDED IT IN THE PREVIOUS LINE
+                                   CMP                DL, POWERVISIBPROBABILITY
+                                   JBE                VISIBLE
+                                   MOV                BYTE PTR DS:[SI], 0
+                                   JMP                FINISHPOWER
     
-    VISIBLE:                    
-                                MOV                BYTE PTR DS:[SI], 1
-                                CALL               GETSYSTEMTIME
+    VISIBLE:                       
+                                   MOV                BYTE PTR DS:[SI], 1
+                                   CALL               GETSYSTEMTIME
     ;AND DL, 3
-                                MOV                AL, 4
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                CMP                DL, 0
-                                JNE                NODECSPEED
+                                   MOV                AL, 4
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   CMP                DL, 0
+                                   JNE                NODECSPEED
 
-                                DRAW               DECSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-                                JMP                FINISHPOWER
-    NODECSPEED:                 
+                                   DRAW               DECSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                   JMP                FINISHPOWER
+    NODECSPEED:                    
 
-                                CMP                DL, 1
-                                JNE                NOINCSPEED
-                                DRAW               INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-                                JMP                FINISHPOWER
-    NOINCSPEED:                 
+                                   CMP                DL, 1
+                                   JNE                NOINCSPEED
+                                   DRAW               INCSPEEDPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                   JMP                FINISHPOWER
+    NOINCSPEED:                    
 
-                                CMP                DL, 2
-                                JNE                NOPASSOBST
-                                DRAW               PASSOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
-                                JMP                FINISHPOWER
-    NOPASSOBST:                 
+                                   CMP                DL, 2
+                                   JNE                NOPASSOBST
+                                   DRAW               PASSOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                   JMP                FINISHPOWER
+    NOPASSOBST:                    
 
-                                CMP                DL, 3
-                                JNE                FINISHPOWER
-                                DRAW               CREATEOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
+                                   CMP                DL, 3
+                                   JNE                FINISHPOWER
+                                   DRAW               CREATEOBSTPOWER, POWERW, POWERH, TEMPX, TEMPY, TMP4
 
-    FINISHPOWER:                
+    FINISHPOWER:                   
 
-                                RET
+                                   RET
 WHICHPOWERIMG ENDP
 
 
 
 OBSTRANDANDDRAW PROC
-                                CALL               RANDOMIZEPERCENTAGE
-                                CMP                DL, OBSTPROBABILITY
-                                JA                 FINISHOBST
-                                DRAW               OBSTACLE, OBSTACLEW, OBSTACLEH, TEMPX, TEMPY, TMP4
-    FINISHOBST:                 
-                                RET
+                                   CALL               RANDOMIZEPERCENTAGE
+                                   CMP                DL, OBSTPROBABILITY
+                                   JA                 FINISHOBST
+                                   DRAW               OBSTACLE, OBSTACLEW, OBSTACLEH, TEMPX, TEMPY, TMP4
+    FINISHOBST:                    
+                                   RET
 OBSTRANDANDDRAW ENDP
 
 RANGINGRAND PROC
-                                MOV                AL, DL
-                                MOV                AH, 0
-                                MOV                BL, RANGEOFRAND
-                                DIV                BL
-                                MOV                DL, AH
-                                MOV                DH, 0
-                                RET
+                                   MOV                AL, DL
+                                   MOV                AH, 0
+                                   MOV                BL, RANGEOFRAND
+                                   DIV                BL
+                                   MOV                DL, AH
+                                   MOV                DH, 0
+                                   RET
 RANGINGRAND ENDP
 
 
     ;PROC TO DRAW THE END RACE LINE
 DRAWENDLINE PROC
     ;THIS CAN BE EDITED INTO THE PROC CALCXY(OPTIMIZATION)
-                                MOV                AX, LASTDI
-                                MOV                DX, 0
-                                MOV                BX, SCREENWIDTH
-                                DIV                BX
-                                MOV                TEMPX, DX
-                                MOV                TEMPY, AX
-                                MOV                TMP4, 0
+                                   MOV                AX, LASTDI
+                                   MOV                DX, 0
+                                   MOV                BX, SCREENWIDTH
+                                   DIV                BX
+                                   MOV                TEMPX, DX
+                                   MOV                TEMPY, AX
+                                   MOV                TMP4, 0
 
-                                CMP                LASTDIR, 0
-                                JNE                NOTLASTUP
-                                SUB                TEMPX, VERROADIMGW
-                                SUB                TEMPY, HORENDFLAGIMGH
-                                DRAW               HORENDFLAGIMG, HORENDFLAGIMGW, HORENDFLAGIMGH, TEMPX, TEMPY, TMP4
-                                JMP                FINISHDRAWENDLINE
-    NOTLASTUP:                  
+                                   CMP                LASTDIR, 0
+                                   JNE                NOTLASTUP
+                                   SUB                TEMPX, VERROADIMGW
+                                   SUB                TEMPY, HORENDFLAGIMGH
+                                   DRAW               HORENDFLAGIMG, HORENDFLAGIMGW, HORENDFLAGIMGH, TEMPX, TEMPY, TMP4
+                                   JMP                FINISHDRAWENDLINE
+    NOTLASTUP:                     
 
-                                CMP                LASTDIR, 1
-                                JNE                NOTLASTRIGHT
-                                DRAW               VERENDFLAGIMG, VERENDFLAGIMGW, VERENDFLAGIMGH, TEMPX, TEMPY, TMP4
-                                JMP                FINISHDRAWENDLINE
-    NOTLASTRIGHT:               
+                                   CMP                LASTDIR, 1
+                                   JNE                NOTLASTRIGHT
+                                   DRAW               VERENDFLAGIMG, VERENDFLAGIMGW, VERENDFLAGIMGH, TEMPX, TEMPY, TMP4
+                                   JMP                FINISHDRAWENDLINE
+    NOTLASTRIGHT:                  
 
-                                CMP                LASTDIR, 2
-                                JNE                NOTLASTDOWN
-                                SUB                TEMPX, VERROADIMGW
-                                ADD                TEMPY, VERROADIMGH
-                                DRAW               HORENDFLAGIMG, HORENDFLAGIMGW, HORENDFLAGIMGH, TEMPX, TEMPY, TMP4
-                                JMP                FINISHDRAWENDLINE
-    NOTLASTDOWN:                
+                                   CMP                LASTDIR, 2
+                                   JNE                NOTLASTDOWN
+                                   SUB                TEMPX, VERROADIMGW
+                                   ADD                TEMPY, VERROADIMGH
+                                   DRAW               HORENDFLAGIMG, HORENDFLAGIMGW, HORENDFLAGIMGH, TEMPX, TEMPY, TMP4
+                                   JMP                FINISHDRAWENDLINE
+    NOTLASTDOWN:                   
     
-                                SUB                TEMPX, HORROADIMGW + VERENDFLAGIMGW
-                                DRAW               VERENDFLAGIMG, VERENDFLAGIMGW, VERENDFLAGIMGH, TEMPX, TEMPY, TMP4
+                                   SUB                TEMPX, HORROADIMGW + VERENDFLAGIMGW
+                                   DRAW               VERENDFLAGIMG, VERENDFLAGIMGW, VERENDFLAGIMGH, TEMPX, TEMPY, TMP4
     
-    FINISHDRAWENDLINE:          
-                                RET
+    FINISHDRAWENDLINE:             
+                                   RET
 DRAWENDLINE ENDP
 
     ;prints character by character in video game mode in order to display string with font
 char_display proc  FAR
-                                mov                ah, 9
-                                mov                bh, 0
-                                mov                bl, 93H                                                                                 ;ANY COLOR.
-                                mov                cx, 1                                                                                   ;HOW MANY TIMES TO DISPLAY CHAR.
-                                int                10h 
-                                ret
+                                   mov                ah, 9
+                                   mov                bh, 0
+                                   mov                bl, 93H                                                                                 ;ANY COLOR.
+                                   mov                cx, 1                                                                                   ;HOW MANY TIMES TO DISPLAY CHAR.
+                                   int                10h
+                                   ret
 char_display endp
 STORECHECKLINEVERTIX PROC
-                                MOV                SI, OFFSET CHECKLINESVERTICIES
-                                MOV                AX, 2
-                                MOV                DX, INDEXOFPART
-                                MUL                DL
-                                ADD                SI, AX
-                                MOV                WORD PTR DS:[SI], BX 
-                                INC                INDEXOFPART
-                                RET
-STORECHECKLINEVERTIX ENDP                                
+                                   MOV                SI, OFFSET CHECKLINESVERTICIES
+                                   MOV                AX, 2
+                                   MOV                DX, INDEXOFPART
+                                   MUL                DL
+                                   ADD                SI, AX
+                                   MOV                WORD PTR DS:[SI], BX
+                                   INC                INDEXOFPART
+                                   RET
+STORECHECKLINEVERTIX ENDP
 
 DRAWCHECKLINE PROC
-                                PUSH               TEMPX
-                                PUSH               TEMPY
-                                MOV                TMP4, 0
+                                   PUSH               TEMPX
+                                   PUSH               TEMPY
+                                   MOV                TMP4, 0
 
-                                CMP                LASTDIR, 0
-                                JNE                NOTLASTUPCHECK
-                                SUB                TEMPX, VERROADIMGW
-                                DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
-                                MOV                BX, DI
-                                SUB                BX, HORCHECKLINEIMGW ; CHECKED
-                                CALL               STORECHECKLINEVERTIX
-                                JMP                FINISHDRAWCHECKLINE
-    NOTLASTUPCHECK:                  
+                                   CMP                LASTDIR, 0
+                                   JNE                NOTLASTUPCHECK
+                                   SUB                TEMPX, VERROADIMGW
+                                   DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                   MOV                BX, DI
+                                   SUB                BX, HORCHECKLINEIMGW                                                                    ; CHECKED
+                                   CALL               STORECHECKLINEVERTIX
+                                   JMP                FINISHDRAWCHECKLINE
+    NOTLASTUPCHECK:                
 
-                                CMP                LASTDIR, 1
-                                JNE                NOTLASTRIGHTCHECK
-                                ADD                TEMPX, HORROADIMGW - 1
-                                DRAW               CHECKLINEIMG, VERCHECKLINEIMGW, VERCHECKLINEIMGH, TEMPX, TEMPY, TMP4
-                                MOV                BX, DI
-                                DEC                BX
-                                CALL               STORECHECKLINEVERTIX
-                                JMP                FINISHDRAWCHECKLINE
-    NOTLASTRIGHTCHECK:               
+                                   CMP                LASTDIR, 1
+                                   JNE                NOTLASTRIGHTCHECK
+                                   ADD                TEMPX, HORROADIMGW - 1
+                                   DRAW               CHECKLINEIMG, VERCHECKLINEIMGW, VERCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                   MOV                BX, DI
+                                   DEC                BX
+                                   CALL               STORECHECKLINEVERTIX
+                                   JMP                FINISHDRAWCHECKLINE
+    NOTLASTRIGHTCHECK:             
 
-                                CMP                LASTDIR, 2
-                                JNE                NOTLASTDOWNCHECK
-                                SUB                TEMPX, VERROADIMGW
-                                ADD                TEMPY, VERROADIMGH - 1
-                                DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
-                                MOV                BX, DI
-                                SUB                BX, HORCHECKLINEIMGW ;CHECKED
-                                CALL               STORECHECKLINEVERTIX
-                                JMP                FINISHDRAWCHECKLINE
-    NOTLASTDOWNCHECK:                
+                                   CMP                LASTDIR, 2
+                                   JNE                NOTLASTDOWNCHECK
+                                   SUB                TEMPX, VERROADIMGW
+                                   ADD                TEMPY, VERROADIMGH - 1
+                                   DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                   MOV                BX, DI
+                                   SUB                BX, HORCHECKLINEIMGW                                                                    ;CHECKED
+                                   CALL               STORECHECKLINEVERTIX
+                                   JMP                FINISHDRAWCHECKLINE
+    NOTLASTDOWNCHECK:              
     
-                                SUB                TEMPX, HORROADIMGW
-                                DRAW               CHECKLINEIMG, VERCHECKLINEIMGW, VERCHECKLINEIMGH, TEMPX, TEMPY, TMP4
-                                MOV                BX, DI
-                                DEC                BX
-                                CALL               STORECHECKLINEVERTIX
-    FINISHDRAWCHECKLINE:          
-                                POP                TEMPY
-                                POP                TEMPX
-                                RET
+                                   SUB                TEMPX, HORROADIMGW
+                                   DRAW               CHECKLINEIMG, VERCHECKLINEIMGW, VERCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                   MOV                BX, DI
+                                   DEC                BX
+                                   CALL               STORECHECKLINEVERTIX
+    FINISHDRAWCHECKLINE:           
+                                   POP                TEMPY
+                                   POP                TEMPX
+                                   RET
 DRAWCHECKLINE ENDP
 
 
 PRINTTHREEDIGITNUMBER PROC FAR
-    MOV BL,100
-    DIV BL;;al = ax / bl, ah = ax & bl
-    MOV DL,AL
-    PUSH AX ;To save remainder
-    ADD DL,30h ; Add 30h to print ASCII
-    MOV AH, 02h ; Print a character in dl
-    INT 21h
-    POP AX
-    MOV BL,10
-    MOV AL, AH
-    MOV AH,0
-    DIV BL
-    MOV DL, AL
-    PUSH AX
-    ADD DL,30h
-    MOV AH,02h
-    INT 21h
-    POP AX
-    MOV DL,AH
-    ADD DL,30h
-    MOV AH, 02h
-    INT 21h
-    RET
+                                   MOV                BL,100
+                                   DIV                BL                                                                                      ;;al = ax / bl, ah = ax & bl
+                                   MOV                DL,AL
+                                   PUSH               AX                                                                                      ;To save remainder
+                                   ADD                DL,30h                                                                                  ; Add 30h to print ASCII
+                                   MOV                AH, 02h                                                                                 ; Print a character in dl
+                                   INT                21h
+                                   POP                AX
+                                   MOV                BL,10
+                                   MOV                AL, AH
+                                   MOV                AH,0
+                                   DIV                BL
+                                   MOV                DL, AL
+                                   PUSH               AX
+                                   ADD                DL,30h
+                                   MOV                AH,02h
+                                   INT                21h
+                                   POP                AX
+                                   MOV                DL,AH
+                                   ADD                DL,30h
+                                   MOV                AH, 02h
+                                   INT                21h
+                                   RET
 PRINTTHREEDIGITNUMBER ENDP
 
 UPDATESCORE PROC FAR
-    MOV BX, CHECKLINEVERTEX
-    MOV SI, OFFSET CHECKLINESVERTICIES
-    MOV CX, INDEXOFPART
-    SEARCHCHECKVERTIX:
-    CMP WORD PTR DS:[SI], BX
-    JE FOUNDCHECKVERTIX  
-    ADD SI, 2
-    LOOP SEARCHCHECKVERTIX
+                                   MOV                BX, CHECKLINEVERTEX
+                                   MOV                SI, OFFSET CHECKLINESVERTICIES
+                                   MOV                CX, INDEXOFPART
+    SEARCHCHECKVERTIX:             
+                                   CMP                WORD PTR DS:[SI], BX
+                                   JE                 FOUNDCHECKVERTIX
+                                   ADD                SI, 2
+                                   LOOP               SEARCHCHECKVERTIX
 
-    FOUNDCHECKVERTIX:
-    MOV DX, INDEXOFPART
-    SUB DX, CX ;DX NOW HAS THE INDEX OF THE VERTIX
-    CMP CX, 0
-    JBE FINISHUPDATESCORE
+    FOUNDCHECKVERTIX:              
+                                   MOV                DX, INDEXOFPART
+                                   SUB                DX, CX                                                                                  ;DX NOW HAS THE INDEX OF THE VERTIX
+                                   CMP                CX, 0
+                                   JBE                FINISHUPDATESCORE
 
-    CMP CarToScan, 0
-    JNE SECONDCARVIS
-    MOV SI, OFFSET CAR1VIS
-    ADD SI, DX
-    CMP BYTE PTR DS:[SI], 1
-    JE UPDATETHESCORES
-    MOV BYTE PTR DS:[SI], 1
-    INC CAR1PARTSVIS
-    JMP UPDATETHESCORES
+                                   CMP                CarToScan, 0
+                                   JNE                SECONDCARVIS
+                                   MOV                SI, OFFSET CAR1VIS
+                                   ADD                SI, DX
+                                   CMP                BYTE PTR DS:[SI], 1
+                                   JE                 UPDATETHESCORES
+                                   MOV                BYTE PTR DS:[SI], 1
+                                   INC                CAR1PARTSVIS
+                                   JMP                UPDATETHESCORES
     
-    SECONDCARVIS:
-    MOV SI, OFFSET CAR2VIS
-    ADD SI, DX
-    CMP BYTE PTR DS:[SI], 1
-    JE UPDATETHESCORES
-    MOV BYTE PTR DS:[SI], 1
-    INC CAR2PARTSVIS
+    SECONDCARVIS:                  
+                                   MOV                SI, OFFSET CAR2VIS
+                                   ADD                SI, DX
+                                   CMP                BYTE PTR DS:[SI], 1
+                                   JE                 UPDATETHESCORES
+                                   MOV                BYTE PTR DS:[SI], 1
+                                   INC                CAR2PARTSVIS
 
-    UPDATETHESCORES:
-    MOV AX, CAR1PARTSVIS
-    MOV BL, 100
-    MUL BL
-    MOV BX, INDEXOFPART
-    DIV BL
-    MOV AH, 0
-    PUSH AX
-    MOV AH,2
-    MOV BH, 0
-    MOV DH, player1PosY
-    MOV DL, player1PosX
-    ADD DL, 14
-    INT 10H
-    POP AX
-    CALL PRINTTHREEDIGITNUMBER
+    UPDATETHESCORES:               
+                                   MOV                AX, CAR1PARTSVIS
+                                   MOV                BL, 100
+                                   MUL                BL
+                                   MOV                BX, INDEXOFPART
+                                   DIV                BL
+                                   MOV                AH, 0
+                                   PUSH               AX
+                                   MOV                AH,2
+                                   MOV                BH, 0
+                                   MOV                DH, player1PosY
+                                   MOV                DL, player1PosX
+                                   ADD                DL, 14
+                                   INT                10H
+                                   POP                AX
+                                   CALL               PRINTTHREEDIGITNUMBER
    
 
-    MOV AX, CAR2PARTSVIS
-    MOV BL, 100
-    MUL BL
-    MOV BX, INDEXOFPART
-    DIV BL
-    MOV AH, 0
-    PUSH AX
-    MOV AH,2
-    MOV BH, 0
-    MOV DH, player2PosY
-    MOV DL, player2PosX
-    ADD DL, 11
-    INT 10H
-    POP AX
-    CALL PRINTTHREEDIGITNUMBER
+                                   MOV                AX, CAR2PARTSVIS
+                                   MOV                BL, 100
+                                   MUL                BL
+                                   MOV                BX, INDEXOFPART
+                                   DIV                BL
+                                   MOV                AH, 0
+                                   PUSH               AX
+                                   MOV                AH,2
+                                   MOV                BH, 0
+                                   MOV                DH, player2PosY
+                                   MOV                DL, player2PosX
+                                   ADD                DL, 11
+                                   INT                10H
+                                   POP                AX
+                                   CALL               PRINTTHREEDIGITNUMBER
    
 
 
@@ -3431,67 +3388,67 @@ UPDATESCORE PROC FAR
     ; MOV AH, 2
     ; INT 21H
 
-    FINISHUPDATESCORE:
-    RET
+    FINISHUPDATESCORE:             
+                                   RET
 UPDATESCORE ENDP
 
 GETCHECKLINEVERTIX PROC FAR
 
-MOV BX, DI
-ADD BX, 7
-; CMP BYTE PTR ES:[BX], 19
-; JE ISHORIZONTAL
-; SUB BX, 14
-; CMP BYTE PTR ES:[BX], 19
-; JE ISHORIZONTAL
-CMP ISVERTICALCHECKLINE, 0
-JE ISHORIZONTAL
-JMP ISVERTICAL
+                                   MOV                BX, DI
+                                   ADD                BX, 7
+    ; CMP BYTE PTR ES:[BX], 19
+    ; JE ISHORIZONTAL
+    ; SUB BX, 14
+    ; CMP BYTE PTR ES:[BX], 19
+    ; JE ISHORIZONTAL
+                                   CMP                ISVERTICALCHECKLINE, 0
+                                   JE                 ISHORIZONTAL
+                                   JMP                ISVERTICAL
 
-ISHORIZONTAL:
-MOV BX, DI
-LEFTVERTIX:
-DEC BX
-CMP BYTE PTR ES:[BX], 20
-JE LEFTVERTIX
-CMP BYTE PTR ES:[BX], 19
-JE LEFTVERTIX
-CMP BYTE PTR ES:[BX], 17
-JE LEFTVERTIX
-CMP BYTE PTR ES:[BX], 192
-JE LEFTVERTIX
-CMP BYTE PTR ES:[BX], 122
-JE LEFTVERTIX
-CMP BYTE PTR ES:[BX], 9
-JE LEFTVERTIX
-CMP BYTE PTR ES:[DI], 43
-JE LEFTVERTIX
-INC BX
-JMP FINISHUPDATING
+    ISHORIZONTAL:                  
+                                   MOV                BX, DI
+    LEFTVERTIX:                    
+                                   DEC                BX
+                                   CMP                BYTE PTR ES:[BX], 20
+                                   JE                 LEFTVERTIX
+                                   CMP                BYTE PTR ES:[BX], 19
+                                   JE                 LEFTVERTIX
+                                   CMP                BYTE PTR ES:[BX], 17
+                                   JE                 LEFTVERTIX
+                                   CMP                BYTE PTR ES:[BX], 192
+                                   JE                 LEFTVERTIX
+                                   CMP                BYTE PTR ES:[BX], 122
+                                   JE                 LEFTVERTIX
+                                   CMP                BYTE PTR ES:[BX], 9
+                                   JE                 LEFTVERTIX
+                                   CMP                BYTE PTR ES:[DI], 43
+                                   JE                 LEFTVERTIX
+                                   INC                BX
+                                   JMP                FINISHUPDATING
 
-ISVERTICAL:
-MOV BX, DI
-UPVERTIX:
-SUB BX, SCREEN_WIDTH
-CMP BYTE PTR ES:[BX], 20
-JE UPVERTIX
-CMP BYTE PTR ES:[BX], 19
-JE UPVERTIX
-CMP BYTE PTR ES:[BX], 17
-JE UPVERTIX
-CMP BYTE PTR ES:[BX], 192
-JE UPVERTIX
-CMP BYTE PTR ES:[BX], 122
-JE UPVERTIX
-CMP BYTE PTR ES:[BX], 9
-JE UPVERTIX
-CMP BYTE PTR ES:[DI], 43
-JE UPVERTIX
-ADD BX, SCREEN_WIDTH
-FINISHUPDATING:
+    ISVERTICAL:                    
+                                   MOV                BX, DI
+    UPVERTIX:                      
+                                   SUB                BX, SCREEN_WIDTH
+                                   CMP                BYTE PTR ES:[BX], 20
+                                   JE                 UPVERTIX
+                                   CMP                BYTE PTR ES:[BX], 19
+                                   JE                 UPVERTIX
+                                   CMP                BYTE PTR ES:[BX], 17
+                                   JE                 UPVERTIX
+                                   CMP                BYTE PTR ES:[BX], 192
+                                   JE                 UPVERTIX
+                                   CMP                BYTE PTR ES:[BX], 122
+                                   JE                 UPVERTIX
+                                   CMP                BYTE PTR ES:[BX], 9
+                                   JE                 UPVERTIX
+                                   CMP                BYTE PTR ES:[DI], 43
+                                   JE                 UPVERTIX
+                                   ADD                BX, SCREEN_WIDTH
+    FINISHUPDATING:                
 
-MOV CHECKLINEVERTEX, BX
-RET
+                                   MOV                CHECKLINEVERTEX, BX
+                                   RET
 GETCHECKLINEVERTIX ENDP
 
 
@@ -3499,69 +3456,69 @@ GETCHECKLINEVERTIX ENDP
     ;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 MAIN PROC FAR
-                                MOV                AX, @DATA
-                                MOV                DS, AX
+                                   MOV                AX, @DATA
+                                   MOV                DS, AX
 
 
-                                MOV                AH,0
-                                MOV                AL,13H
-                                INT                10H
+                                   MOV                AH,0
+                                   MOV                AL,13H
+                                   INT                10H
 
-                                MOV                AX, 0A000H
-                                MOV                ES, AX
+                                   MOV                AX, 0A000H
+                                   MOV                ES, AX
 
-                                CALL               INTERFACESTAGE
+                                   CALL               INTERFACESTAGE
 
     ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
-    TAKINGNEXTSTAGE:            
-                                MOV                AH, 0
-                                INT                16H
-                                CMP                AH, 28
-                                JE                 STARTPROGRAM
-                                CMP                AH, 1
-                                JE                 exit
-                                JMP                TAKINGNEXTSTAGE
+    TAKINGNEXTSTAGE:               
+                                   MOV                AH, 0
+                                   INT                16H
+                                   CMP                AH, 28
+                                   JE                 STARTPROGRAM
+                                   CMP                AH, 1
+                                   JE                 exit
+                                   JMP                TAKINGNEXTSTAGE
 
 
-    STARTPROGRAM:               
+    STARTPROGRAM:                  
     ;Multiplayers' Names
-                                MOV                AH,2
-                                MOV                DH , player1PosY
-                                MOV                DL , player1PosX
-                                INT                10H
+                                   MOV                AH,2
+                                   MOV                DH , player1PosY
+                                   MOV                DL , player1PosX
+                                   INT                10H
 
-                                MOV                AH ,9
-                                LEA                DX , player1Name
-                                INT                21H
+                                   MOV                AH ,9
+                                   LEA                DX , player1Name
+                                   INT                21H
 
-                                MOV                AH ,2
-                                MOV                DH , player2PosY
-                                MOV                DL , player2PosX
-                                INT                10H
+                                   MOV                AH ,2
+                                   MOV                DH , player2PosY
+                                   MOV                DL , player2PosX
+                                   INT                10H
 
-                                MOV                AH ,9
-                                LEA                DX , player2Name
-                                INT                21H
+                                   MOV                AH ,9
+                                   LEA                DX , player2Name
+                                   INT                21H
 
-                                MOV                AH ,2
-                                MOV                DH , player1PosY
-                                ADD                DH ,1
-                                MOV                DL , player1PosX
-                                INT                10H
+                                   MOV                AH ,2
+                                   MOV                DH , player1PosY
+                                   ADD                DH ,1
+                                   MOV                DL , player1PosX
+                                   INT                10H
 
-                                MOV                AH , 09
-                                LEA                DX , powerupMessage
-                                INT                21H
+                                   MOV                AH , 09
+                                   LEA                DX , powerupMessage
+                                   INT                21H
 
-                                MOV                AH ,2
-                                MOV                DH , player2PosY
-                                ADD                dh , 1
-                                MOV                DL , player2PosX
-                                INT                10H
+                                   MOV                AH ,2
+                                   MOV                DH , player2PosY
+                                   ADD                dh , 1
+                                   MOV                DL , player2PosX
+                                   INT                10H
 
-                                MOV                AH , 09
-                                LEA                DX , powerupMessage
-                                INT                21H
+                                   MOV                AH , 09
+                                   LEA                DX , powerupMessage
+                                   INT                21H
 
     ;;;;;;;;;; DRAWING ROAD ;;;;;;;;;;;;
 
@@ -3570,137 +3527,137 @@ MAIN PROC FAR
     ;DRAW BACKGROUNDIMAGE, SCREENWIDTH, SCREENHEIGHT, 0, 0
 
 
-    STARTROAD:                  
-                                MOV                CANTUP, 0
-                                MOV                CANTRIGHT, 0
-                                MOV                CANTDOWN, 0
-                                MOV                CANTLEFT, 0
-                                MOV                POWERUPCOUNTER, 0                                                                       ;ADDED THAT WHEN ADDED START PROGRAM
-                                MOV                CURPOWERINDEX, 0
-                                MOV                CX, 11
-                                MOV                TEMPX, 0
-                                MOV                TEMPY, 0
-    OUTERLOOP:                  
-                                PUSH               CX
-                                MOV                CX, 20
-    INNERLOOP:                  
-                                MOV                TMP4, 0
-                                DRAW               BACKGROUNDIMAGEPART , BACKGROUNDIMAGEPARTW, BACKGROUNDIMAGEPARTH, TEMPX, TEMPY, TMP4
-                                ADD                TEMPX, BACKGROUNDIMAGEPARTW
-                                LOOP               INNERLOOP
-                                MOV                TEMPX, 0
-                                ADD                TEMPY, BACKGROUNDIMAGEPARTH
-                                POP                CX
-                                LOOP               OUTERLOOP
+    STARTROAD:                     
+                                   MOV                CANTUP, 0
+                                   MOV                CANTRIGHT, 0
+                                   MOV                CANTDOWN, 0
+                                   MOV                CANTLEFT, 0
+                                   MOV                POWERUPCOUNTER, 0                                                                       ;ADDED THAT WHEN ADDED START PROGRAM
+                                   MOV                CURPOWERINDEX, 0
+                                   MOV                CX, 11
+                                   MOV                TEMPX, 0
+                                   MOV                TEMPY, 0
+    OUTERLOOP:                     
+                                   PUSH               CX
+                                   MOV                CX, 20
+    INNERLOOP:                     
+                                   MOV                TMP4, 0
+                                   DRAW               BACKGROUNDIMAGEPART , BACKGROUNDIMAGEPARTW, BACKGROUNDIMAGEPARTH, TEMPX, TEMPY, TMP4
+                                   ADD                TEMPX, BACKGROUNDIMAGEPARTW
+                                   LOOP               INNERLOOP
+                                   MOV                TEMPX, 0
+                                   ADD                TEMPY, BACKGROUNDIMAGEPARTH
+                                   POP                CX
+                                   LOOP               OUTERLOOP
     ;CALL DRAWBCKGROUND
 
-                                MOV                TMP4, 0
-                                MOV                CX, 0
-                                DRAW               HORROADIMG , HORROADIMGW, HORROADIMGH, STARTROADX, STARTROADY, TMP4
-                                CALL               POINTSAFTERRIGHT
-                                DRAW               STARTFLAGIMG, STARTFLAGIMGW, STARTFLAGIMGH, STARTROADX, STARTROADY, TMP4
+                                   MOV                TMP4, 0
+                                   MOV                CX, 0
+                                   DRAW               HORROADIMG , HORROADIMGW, HORROADIMGH, STARTROADX, STARTROADY, TMP4
+                                   CALL               POINTSAFTERRIGHT
+                                   DRAW               STARTFLAGIMG, STARTFLAGIMGW, STARTFLAGIMGH, STARTROADX, STARTROADY, TMP4
 
 
     ;Drawing Status Bar
-                                CalcStatBarStPts
-                                CALL               DrawStatBar
+                                   CalcStatBarStPts
+                                   CALL               DrawStatBar
     ;THIS IS TO RANDOMIZE NUMBER FROM 0 TO 3 TO SPECIFY THE DIRECTON
-                                MOV                CX, NUMBEROFPARTS
-    RANDOMIZEPART:              
-                                CHECKPOSSIBILITIES
-    START:                      
-                                PUSH               CX
-                                CALL               GETSYSTEMTIME
-                                POP                CX
-                                AND                DL, 3
-                                CMP                DL, 0                                                                                   ;UP
-                                JE                 CHECKUP
-                                CMP                DL, 1                                                                                   ;RIGHT
-                                JE                 CHECKRIGHT
-                                CMP                DL, 2                                                                                   ;DOWN
-                                JE                 CHECKDOWN
-                                JMP                CHECKLEFT                                                                               ;left
+                                   MOV                CX, NUMBEROFPARTS
+    RANDOMIZEPART:                 
+                                   CHECKPOSSIBILITIES
+    START:                         
+                                   PUSH               CX
+                                   CALL               GETSYSTEMTIME
+                                   POP                CX
+                                   AND                DL, 3
+                                   CMP                DL, 0                                                                                   ;UP
+                                   JE                 CHECKUP
+                                   CMP                DL, 1                                                                                   ;RIGHT
+                                   JE                 CHECKRIGHT
+                                   CMP                DL, 2                                                                                   ;DOWN
+                                   JE                 CHECKDOWN
+                                   JMP                CHECKLEFT                                                                               ;left
 
-    CHECKUP:                    
-                                CMP                UPDIR, 0
-                                JNE                CONTUP
-                                MOV                CANTUP, 1
-                                JMP                RANDOMIZEPART
-    CONTUP:                     
+    CHECKUP:                       
+                                   CMP                UPDIR, 0
+                                   JNE                CONTUP
+                                   MOV                CANTUP, 1
+                                   JMP                RANDOMIZEPART
+    CONTUP:                        
 
-                                MOV                AX, UPDIR
-                                MOV                DX, 0
-                                MOV                BX, SCREENWIDTH
-                                DIV                BX
-                                MOV                TEMPX, DX
-                                MOV                TEMPY, AX
-                                CMP                TEMPY, YNOUP
-                                JB                 NOTHANDLEUP
-                                JMP                HANDLEUP
-    NOTHANDLEUP:                
-                                MOV                CANTUP, 1
-                                JMP                RANDOMIZEPART
+                                   MOV                AX, UPDIR
+                                   MOV                DX, 0
+                                   MOV                BX, SCREENWIDTH
+                                   DIV                BX
+                                   MOV                TEMPX, DX
+                                   MOV                TEMPY, AX
+                                   CMP                TEMPY, YNOUP
+                                   JB                 NOTHANDLEUP
+                                   JMP                HANDLEUP
+    NOTHANDLEUP:                   
+                                   MOV                CANTUP, 1
+                                   JMP                RANDOMIZEPART
 
 
-    CHECKRIGHT:                 
-                                CMP                RIGHTDIR, 0
-                                JNE                CONTRIGHT
-                                MOV                CANTRIGHT, 1
-                                JMP                RANDOMIZEPART
-    CONTRIGHT:                  
+    CHECKRIGHT:                    
+                                   CMP                RIGHTDIR, 0
+                                   JNE                CONTRIGHT
+                                   MOV                CANTRIGHT, 1
+                                   JMP                RANDOMIZEPART
+    CONTRIGHT:                     
 
-                                MOV                AX, RIGHTDIR
-                                MOV                DX, 0
-                                MOV                BX, SCREENWIDTH
-                                DIV                BX
-                                MOV                TEMPX, DX
-                                MOV                TEMPY, AX
-                                CMP                TEMPX, XNORIGHT
-                                JA                 NOTHANDLERIGHT
-                                JMP                HANDLERIGHT
-    NOTHANDLERIGHT:             
-                                MOV                CANTRIGHT, 1
-                                JMP                RANDOMIZEPART
+                                   MOV                AX, RIGHTDIR
+                                   MOV                DX, 0
+                                   MOV                BX, SCREENWIDTH
+                                   DIV                BX
+                                   MOV                TEMPX, DX
+                                   MOV                TEMPY, AX
+                                   CMP                TEMPX, XNORIGHT
+                                   JA                 NOTHANDLERIGHT
+                                   JMP                HANDLERIGHT
+    NOTHANDLERIGHT:                
+                                   MOV                CANTRIGHT, 1
+                                   JMP                RANDOMIZEPART
     
-    CHECKDOWN:                  
-                                CMP                DOWNDIR, 0
-                                JNE                CONTDOWN
-                                MOV                CANTDOWN, 1
-                                JMP                RANDOMIZEPART
-    CONTDOWN:                   
+    CHECKDOWN:                     
+                                   CMP                DOWNDIR, 0
+                                   JNE                CONTDOWN
+                                   MOV                CANTDOWN, 1
+                                   JMP                RANDOMIZEPART
+    CONTDOWN:                      
 
-                                MOV                AX, DOWNDIR
-                                MOV                DX, 0
-                                MOV                BX, SCREENWIDTH
-                                DIV                BX
-                                MOV                TEMPX, DX
-                                MOV                TEMPY, AX
-                                CMP                TEMPY, YNODOWN
-                                JA                 NOTHANDLEDOWN
-                                JMP                HANDLEDOWN
-    NOTHANDLEDOWN:              
-                                MOV                CANTDOWN, 1
-                                JMP                RANDOMIZEPART
+                                   MOV                AX, DOWNDIR
+                                   MOV                DX, 0
+                                   MOV                BX, SCREENWIDTH
+                                   DIV                BX
+                                   MOV                TEMPX, DX
+                                   MOV                TEMPY, AX
+                                   CMP                TEMPY, YNODOWN
+                                   JA                 NOTHANDLEDOWN
+                                   JMP                HANDLEDOWN
+    NOTHANDLEDOWN:                 
+                                   MOV                CANTDOWN, 1
+                                   JMP                RANDOMIZEPART
     
-    CHECKLEFT:                  
-                                CMP                LEFTDIR, 0
-                                JNE                CONTLEFT
-                                MOV                CANTLEFT, 1
-                                JMP                RANDOMIZEPART
-    CONTLEFT:                   
+    CHECKLEFT:                     
+                                   CMP                LEFTDIR, 0
+                                   JNE                CONTLEFT
+                                   MOV                CANTLEFT, 1
+                                   JMP                RANDOMIZEPART
+    CONTLEFT:                      
 
-                                MOV                AX, LEFTDIR
-                                MOV                DX, 0
-                                MOV                BX, SCREENWIDTH
-                                DIV                BX
-                                MOV                TEMPX, DX
-                                MOV                TEMPY, AX
-                                CMP                TEMPX, XNOLEFT
-                                JB                 NOTHANDLELEFT
-                                JMP                HANDLELEFT
-    NOTHANDLELEFT:              
-                                MOV                CANTLEFT, 1
-                                JMP                RANDOMIZEPART
+                                   MOV                AX, LEFTDIR
+                                   MOV                DX, 0
+                                   MOV                BX, SCREENWIDTH
+                                   DIV                BX
+                                   MOV                TEMPX, DX
+                                   MOV                TEMPY, AX
+                                   CMP                TEMPX, XNOLEFT
+                                   JB                 NOTHANDLELEFT
+                                   JMP                HANDLELEFT
+    NOTHANDLELEFT:                 
+                                   MOV                CANTLEFT, 1
+                                   JMP                RANDOMIZEPART
 
 
 
@@ -3708,58 +3665,58 @@ MAIN PROC FAR
 
     ;THIS PART OF HANDLES WAS REVISED
     ;WE CHECK AGAIN HERE FOR THE SCREEN EDGES
-    HANDLEUP:                   
-                                MOV                TMP, 0
+    HANDLEUP:                      
+                                   MOV                TMP, 0
     ;THIS IS TO LEAVE SOME SPACE FOR A ORTHOGONAL PART TO BE DRAWN
-                                MOV                TMP1, VERROADIMGH + HORROADIMGH + 2
-                                SUB                TEMPY, HORROADIMGH + 2
-                                CHECKCANDRAW       VERROADIMGW, TMP1, TEMPX, TEMPY, TMP
-                                ADD                TEMPY, HORROADIMGH + 2
-                                MOV                TMP4, 1
-                                DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
-                                CALL               POINTSAFTERUP
-                                MOV                LASTDIR, 0
-                                CALL               DRAWCHECKLINE
+                                   MOV                TMP1, VERROADIMGH + HORROADIMGH + 2
+                                   SUB                TEMPY, HORROADIMGH + 2
+                                   CHECKCANDRAW       VERROADIMGW, TMP1, TEMPX, TEMPY, TMP
+                                   ADD                TEMPY, HORROADIMGH + 2
+                                   MOV                TMP4, 1
+                                   DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
+                                   CALL               POINTSAFTERUP
+                                   MOV                LASTDIR, 0
+                                   CALL               DRAWCHECKLINE
 
     ;OBSTACLE RANDOMIZATION
-                                PUSH               CX
-                                PUSH               TEMPX
-                                PUSH               TEMPY
-                                CALL               GETSYSTEMTIME
-                                AND                DL, VERROADIMGW - OBSTACLEW
-                                MOV                DH, 0
-                                SUB                TEMPX, OBSTACLEW
-                                SUB                TEMPX, DX
-                                CALL               GETSYSTEMTIME
-                                AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD                                                 ; THIS THRESHOLD TO START FROM 10 TO 40 TO NOT MAKE TWO OBSTACLES IN THE CORNER TOGETHER
-                                MOV                DH, 0
-                                ADD                TEMPY, THRESHOLD / 2                                                                    ;AS THRESHOLD IS 20 TO START FROM 10
-                                ADD                TEMPY, DX
-                                MOV                TMP4, 0
-                                CALL               OBSTRANDANDDRAW
+                                   PUSH               CX
+                                   PUSH               TEMPX
+                                   PUSH               TEMPY
+                                   CALL               GETSYSTEMTIME
+                                   AND                DL, VERROADIMGW - OBSTACLEW
+                                   MOV                DH, 0
+                                   SUB                TEMPX, OBSTACLEW
+                                   SUB                TEMPX, DX
+                                   CALL               GETSYSTEMTIME
+                                   AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD                                                 ; THIS THRESHOLD TO START FROM 10 TO 40 TO NOT MAKE TWO OBSTACLES IN THE CORNER TOGETHER
+                                   MOV                DH, 0
+                                   ADD                TEMPY, THRESHOLD / 2                                                                    ;AS THRESHOLD IS 20 TO START FROM 10
+                                   ADD                TEMPY, DX
+                                   MOV                TMP4, 0
+                                   CALL               OBSTRANDANDDRAW
     
     ;POWERUPRANDOMIZATION
-                                POP                TEMPY
-                                POP                TEMPX
-                                CALL               GETSYSTEMTIME
-                                MOV                AL, VERROADIMGW - POWERW
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                SUB                TEMPX, POWERW
-                                SUB                TEMPX, DX
-                                CALL               GETSYSTEMTIME
-                                MOV                AL, VERROADIMGH - POWERH - THRESHOLD
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                ADD                TEMPY, THRESHOLD / 2                                                                    ;AS THRESHOLD IS 20 TO START FROM 10
-                                ADD                TEMPY, DX
-                                MOV                TMP4, 0
+                                   POP                TEMPY
+                                   POP                TEMPX
+                                   CALL               GETSYSTEMTIME
+                                   MOV                AL, VERROADIMGW - POWERW
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   SUB                TEMPX, POWERW
+                                   SUB                TEMPX, DX
+                                   CALL               GETSYSTEMTIME
+                                   MOV                AL, VERROADIMGH - POWERH - THRESHOLD
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   ADD                TEMPY, THRESHOLD / 2                                                                    ;AS THRESHOLD IS 20 TO START FROM 10
+                                   ADD                TEMPY, DX
+                                   MOV                TMP4, 0
 
     ;WHICH POWERUP
-                                CALL               WHICHPOWERIMG
+                                   CALL               WHICHPOWERIMG
     
-                                POP                CX
-                                JMP                FINISH
+                                   POP                CX
+                                   JMP                FINISH
 
 
 
@@ -3767,213 +3724,213 @@ MAIN PROC FAR
 
 
     ;THIS THE ONLY DIRECTION WE DONT CALL XY IN IT SO THE DI IS STILL ON TOP LEFT AFTER FINISH DRAWING
-    HANDLERIGHT:                
-                                MOV                TMP, 1
-                                MOV                TMP1, HORROADIMGW + VERROADIMGW + 2
-                                CHECKCANDRAW       TMP1, HORROADIMGH, TEMPX, TEMPY, TMP
-                                MOV                TMP4, 1
-                                DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
-                                CALL               POINTSAFTERRIGHT
-                                MOV                LASTDIR, 1
-                                CALL               DRAWCHECKLINE
+    HANDLERIGHT:                   
+                                   MOV                TMP, 1
+                                   MOV                TMP1, HORROADIMGW + VERROADIMGW + 2
+                                   CHECKCANDRAW       TMP1, HORROADIMGH, TEMPX, TEMPY, TMP
+                                   MOV                TMP4, 1
+                                   DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
+                                   CALL               POINTSAFTERRIGHT
+                                   MOV                LASTDIR, 1
+                                   CALL               DRAWCHECKLINE
 
-                                CMP                CX, 0                                                                                   ;HANDLING FIRST SEGMENT NO OBSTACLES
-                                JNE                NOTFIRSTSEGMENT
-                                JMP                FIRSTSEGMENT
-    NOTFIRSTSEGMENT:            
+                                   CMP                CX, 0                                                                                   ;HANDLING FIRST SEGMENT NO OBSTACLES
+                                   JNE                NOTFIRSTSEGMENT
+                                   JMP                FIRSTSEGMENT
+    NOTFIRSTSEGMENT:               
 
     ;OBSTACLE RANDOMIZATION
-                                PUSH               CX
-                                PUSH               TEMPX
-                                PUSH               TEMPY
-                                CALL               GETSYSTEMTIME
-                                AND                DL, HORROADIMGW - OBSTACLEW - THRESHOLD
-                                MOV                DH, 0
-                                ADD                TEMPX, THRESHOLD / 2
-                                ADD                TEMPX, DX
-                                CALL               GETSYSTEMTIME
-                                AND                DL, HORROADIMGH - OBSTACLEH
-                                MOV                DH, 0
-                                ADD                TEMPY, DX
-                                MOV                TMP4, 0
-                                CALL               OBSTRANDANDDRAW
+                                   PUSH               CX
+                                   PUSH               TEMPX
+                                   PUSH               TEMPY
+                                   CALL               GETSYSTEMTIME
+                                   AND                DL, HORROADIMGW - OBSTACLEW - THRESHOLD
+                                   MOV                DH, 0
+                                   ADD                TEMPX, THRESHOLD / 2
+                                   ADD                TEMPX, DX
+                                   CALL               GETSYSTEMTIME
+                                   AND                DL, HORROADIMGH - OBSTACLEH
+                                   MOV                DH, 0
+                                   ADD                TEMPY, DX
+                                   MOV                TMP4, 0
+                                   CALL               OBSTRANDANDDRAW
 
 
     ;POWERUPRANDOMIZATION
-                                POP                TEMPY
-                                POP                TEMPX
-                                CALL               GETSYSTEMTIME
-                                MOV                AL, HORROADIMGW - POWERW - THRESHOLD
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                ADD                TEMPX, THRESHOLD / 2
-                                ADD                TEMPX, DX
-                                CALL               GETSYSTEMTIME
-                                MOV                AL, HORROADIMGH - POWERH
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                ADD                TEMPY, DX
-                                MOV                TMP4, 0
+                                   POP                TEMPY
+                                   POP                TEMPX
+                                   CALL               GETSYSTEMTIME
+                                   MOV                AL, HORROADIMGW - POWERW - THRESHOLD
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   ADD                TEMPX, THRESHOLD / 2
+                                   ADD                TEMPX, DX
+                                   CALL               GETSYSTEMTIME
+                                   MOV                AL, HORROADIMGH - POWERH
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   ADD                TEMPY, DX
+                                   MOV                TMP4, 0
 
     ;WHICH POWERUP
-                                CALL               WHICHPOWERIMG
+                                   CALL               WHICHPOWERIMG
 
 
-                                POP                CX
+                                   POP                CX
 
-    FIRSTSEGMENT:               
-                                JMP                FINISH
+    FIRSTSEGMENT:                  
+                                   JMP                FINISH
     
 
 
 
 
 
-    HANDLEDOWN:                 
-                                MOV                TMP, 2
-                                MOV                TMP1, VERROADIMGH + HORROADIMGH + 2
-                                CHECKCANDRAW       VERROADIMGW, TMP1, TEMPX, TEMPY, TMP
-                                MOV                TMP4, 1
-                                DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
-                                MOV                LASTDIR, 2
-                                CALL               POINTSAFTERDOWN
-                                CALL               DRAWCHECKLINE
+    HANDLEDOWN:                    
+                                   MOV                TMP, 2
+                                   MOV                TMP1, VERROADIMGH + HORROADIMGH + 2
+                                   CHECKCANDRAW       VERROADIMGW, TMP1, TEMPX, TEMPY, TMP
+                                   MOV                TMP4, 1
+                                   DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
+                                   MOV                LASTDIR, 2
+                                   CALL               POINTSAFTERDOWN
+                                   CALL               DRAWCHECKLINE
 
     ;OBSTACLE RANDOMIZATION
-                                PUSH               CX
-                                PUSH               TEMPX
-                                PUSH               TEMPY
-                                CALL               GETSYSTEMTIME
-                                AND                DL, VERROADIMGW - OBSTACLEW
-                                MOV                DH, 0
-                                SUB                TEMPX, OBSTACLEW
-                                SUB                TEMPX, DX
-                                CALL               GETSYSTEMTIME
-                                AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD
-                                MOV                DH, 0
-                                ADD                TEMPY, THRESHOLD / 2
-                                ADD                TEMPY, DX
-                                MOV                TMP4, 0
-                                CALL               OBSTRANDANDDRAW
+                                   PUSH               CX
+                                   PUSH               TEMPX
+                                   PUSH               TEMPY
+                                   CALL               GETSYSTEMTIME
+                                   AND                DL, VERROADIMGW - OBSTACLEW
+                                   MOV                DH, 0
+                                   SUB                TEMPX, OBSTACLEW
+                                   SUB                TEMPX, DX
+                                   CALL               GETSYSTEMTIME
+                                   AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD
+                                   MOV                DH, 0
+                                   ADD                TEMPY, THRESHOLD / 2
+                                   ADD                TEMPY, DX
+                                   MOV                TMP4, 0
+                                   CALL               OBSTRANDANDDRAW
 
     ;POWERUPRANDOMIZATION
-                                POP                TEMPY
-                                POP                TEMPX
-                                CALL               GETSYSTEMTIME
-                                MOV                AL, VERROADIMGW - POWERW
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                SUB                TEMPX, POWERW
-                                SUB                TEMPX, DX
-                                CALL               GETSYSTEMTIME
-                                MOV                AL, VERROADIMGH - POWERH - THRESHOLD
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                ADD                TEMPY, THRESHOLD / 2
-                                ADD                TEMPY, DX
-                                MOV                TMP4, 0
+                                   POP                TEMPY
+                                   POP                TEMPX
+                                   CALL               GETSYSTEMTIME
+                                   MOV                AL, VERROADIMGW - POWERW
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   SUB                TEMPX, POWERW
+                                   SUB                TEMPX, DX
+                                   CALL               GETSYSTEMTIME
+                                   MOV                AL, VERROADIMGH - POWERH - THRESHOLD
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   ADD                TEMPY, THRESHOLD / 2
+                                   ADD                TEMPY, DX
+                                   MOV                TMP4, 0
 
     ;WHICH POWERUP
-                                CALL               WHICHPOWERIMG
+                                   CALL               WHICHPOWERIMG
 
 
-                                POP                CX
-                                JMP                FINISH
+                                   POP                CX
+                                   JMP                FINISH
 
 
 
     
-    HANDLELEFT:                 
-                                MOV                TMP, 3
-                                MOV                TMP1, HORROADIMGW + VERROADIMGW + 2
-                                SUB                TEMPX, VERROADIMGW + 2
-                                CHECKCANDRAW       TMP1, HORROADIMGH, TEMPX, TEMPY, TMP
-                                ADD                TEMPX, VERROADIMGW + 2
-                                MOV                TMP4, 1
-                                DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
-                                MOV                LASTDIR, 3
-                                CALL               POINTSAFTERLEFT
-                                CALL               DRAWCHECKLINE
+    HANDLELEFT:                    
+                                   MOV                TMP, 3
+                                   MOV                TMP1, HORROADIMGW + VERROADIMGW + 2
+                                   SUB                TEMPX, VERROADIMGW + 2
+                                   CHECKCANDRAW       TMP1, HORROADIMGH, TEMPX, TEMPY, TMP
+                                   ADD                TEMPX, VERROADIMGW + 2
+                                   MOV                TMP4, 1
+                                   DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
+                                   MOV                LASTDIR, 3
+                                   CALL               POINTSAFTERLEFT
+                                   CALL               DRAWCHECKLINE
 
     ;OBSTACLE RANDOMIZATION
-                                PUSH               CX
-                                PUSH               TEMPX
-                                PUSH               TEMPY
-                                CALL               GETSYSTEMTIME
-                                AND                DL, HORROADIMGW - OBSTACLEW - THRESHOLD
-                                MOV                DH, 0
-                                SUB                TEMPX, OBSTACLEW  + THRESHOLD / 2
-                                SUB                TEMPX, DX
-                                CALL               GETSYSTEMTIME
-                                AND                DL, HORROADIMGH - OBSTACLEH
-                                MOV                DH, 0
-                                ADD                TEMPY, DX
-                                MOV                TMP4, 0
-                                CALL               OBSTRANDANDDRAW
+                                   PUSH               CX
+                                   PUSH               TEMPX
+                                   PUSH               TEMPY
+                                   CALL               GETSYSTEMTIME
+                                   AND                DL, HORROADIMGW - OBSTACLEW - THRESHOLD
+                                   MOV                DH, 0
+                                   SUB                TEMPX, OBSTACLEW  + THRESHOLD / 2
+                                   SUB                TEMPX, DX
+                                   CALL               GETSYSTEMTIME
+                                   AND                DL, HORROADIMGH - OBSTACLEH
+                                   MOV                DH, 0
+                                   ADD                TEMPY, DX
+                                   MOV                TMP4, 0
+                                   CALL               OBSTRANDANDDRAW
 
 
     ;POWERUPRANDOMIZATION
-                                POP                TEMPY
-                                POP                TEMPX
-                                CALL               GETSYSTEMTIME
-                                MOV                AL, HORROADIMGW - POWERW - THRESHOLD
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                SUB                TEMPX, POWERW  + THRESHOLD / 2
-                                SUB                TEMPX, DX
-                                CALL               GETSYSTEMTIME
-                                MOV                AL, HORROADIMGH - POWERH
-                                MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND
-                                ADD                TEMPY, DX
-                                MOV                TMP4, 0
+                                   POP                TEMPY
+                                   POP                TEMPX
+                                   CALL               GETSYSTEMTIME
+                                   MOV                AL, HORROADIMGW - POWERW - THRESHOLD
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   SUB                TEMPX, POWERW  + THRESHOLD / 2
+                                   SUB                TEMPX, DX
+                                   CALL               GETSYSTEMTIME
+                                   MOV                AL, HORROADIMGH - POWERH
+                                   MOV                RANGEOFRAND, AL
+                                   CALL               RANGINGRAND
+                                   ADD                TEMPY, DX
+                                   MOV                TMP4, 0
 
     ;WHICH POWERUP
-                                CALL               WHICHPOWERIMG
+                                   CALL               WHICHPOWERIMG
 
 
-                                POP                CX
+                                   POP                CX
 
-    FINISH:                     
+    FINISH:                        
     ;INITIALIZING CANT DRAW ARRAY
-                                MOV                CANTUP, 0
-                                MOV                CANTRIGHT, 0
-                                MOV                CANTDOWN, 0
-                                MOV                CANTLEFT, 0
+                                   MOV                CANTUP, 0
+                                   MOV                CANTRIGHT, 0
+                                   MOV                CANTDOWN, 0
+                                   MOV                CANTLEFT, 0
 
-                                DEC                CX
-                                JNZ                GOUP
-                                JMP                LAST
-    GOUP:                       
-                                JMP                FAR PTR RANDOMIZEPART
+                                   DEC                CX
+                                   JNZ                GOUP
+                                   JMP                LAST
+    GOUP:                          
+                                   JMP                FAR PTR RANDOMIZEPART
 
 
-    LAST:                       
-                                CMP                CX, NUMBEROFPARTS - MINNUMOFPARTS
-                                JBE                NOTSTARTPROGRAM
-                                CALL               GETSYSTEMTIME2
-                                JMP                STARTROAD
-    NOTSTARTPROGRAM:            
-                                CALL               DRAWENDLINE
+    LAST:                          
+                                   CMP                CX, NUMBEROFPARTS - MINNUMOFPARTS
+                                   JBE                NOTSTARTPROGRAM
+                                   CALL               GETSYSTEMTIME2
+                                   JMP                STARTROAD
+    NOTSTARTPROGRAM:               
+                                   CALL               DRAWENDLINE
 
     ; MOV CURPOWERINDEX, 4
     ; CALL RETRIEVEROAD
 
     ; set initial pos of first car in the game
-                                MOV                PosXfirst , STARTROADX
-                                MOV                PosYfirst , STARTROADY + 1
-                                Draw_Car           CarImg1, CAR_SIZE, PosXfirst , PosYfirst, 1
+                                   MOV                PosXfirst , STARTROADX
+                                   MOV                PosYfirst , STARTROADY + 1
+                                   Draw_Car           CarImg1, CAR_SIZE, PosXfirst , PosYfirst, 1
 
     ; set initial pos of second car in the game
-                                MOV                PosXsecond , STARTROADX
-                                MOV                PosYsecond , STARTROADY + HORROADIMGH - Car_Size - 1
-                                Draw_Car           CarImg2, CAR_SIZE, PosXsecond , PosYsecond, 2
+                                   MOV                PosXsecond , STARTROADX
+                                   MOV                PosYsecond , STARTROADY + HORROADIMGH - Car_Size - 1
+                                   Draw_Car           CarImg2, CAR_SIZE, PosXsecond , PosYsecond, 2
 
-                                MOV                DX , PosXfirst
-                                MOV                PosX, DX
+                                   MOV                DX , PosXfirst
+                                   MOV                PosX, DX
 
-                                MOV                DX , PosYfirst
-                                MOV                PosY, DX
+                                   MOV                DX , PosYfirst
+                                   MOV                PosY, DX
 
 
 
@@ -3988,88 +3945,83 @@ MAIN PROC FAR
     ; ClearPower
  
 
-    mainLoop:                   
+                                   MOV                DI ,2*SCREEN_WIDTH
+    mainLoop:                      
+    ;CALL               ShowCurrentTime
 
-                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
-                                INT                21H
-                                ; CALL               CheckSpeedUpTimer
-                                CALL               ShowCurrentTime
+                                   MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                   INT                21H
 
-    ;                             MOV                AX, POWERUPCOUNTER
-    ;                             CMP                INDEXSTARTSHOWING, AX
-    ;                             JAE                DONTSHOWPOWER
+                                   CMP                DH , PreviousSecond
+                                   JNE                HEREWEGO
+                                   JMP                ContinueLooping22
 
-    ;                             MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
-    ;                             INT                21H
-
-    ;                             CMP                DH, CURSECOND
-    ;                             JE                 DONTSHOWPOWER
-    ;                             MOV                CURSECOND, DH
-
-    ;                             MOV                AL, DH
-    ;                             MOV                AH, 0
-    ;                             MOV                BL, DURATIONTOSHOWPOWER
-    ;                             DIV                BL
-    ;                             CMP                AH, 0
-    ;                             JNE                DONTSHOWPOWER
-    ;                             MOV                SI, OFFSET ISVISIBLEPOWER
-    ;                             ADD                SI, INDEXSTARTSHOWING
-    ;                             INC                INDEXSTARTSHOWING
-    ;                             CMP                BYTE PTR DS:[SI], 0
-    ;                             JNE                DONTSHOWPOWER
-    ;                             CALL               SHOWHIDDENPOWER
+    HEREWEGO:                      
+                                   MOV                BYTE PTR ES:[DI],04H
+                                   INC                DI
 
 
-    ; DONTSHOWPOWER:              
+                                   MOV                PreviousSecond , DH
+                                   INC                TotalSeconds
+                                   MOV                AL , TotalSeconds
+                                   MOV                BL , 60
+                                   DIV                BL
+                                
+                                   MOV                CountSecond , AH                                                                        ; Current Seconds
+                                   MOV                CountMinute , AL                                                                        ; Current Minutes
 
-    ;                             MOV                DX , PosXfirst
-    ;                             MOV                PrevPosXfirst, DX
+                                   CMP                TotalSeconds , 120                                                                      ; 2 minutes are achieved
+                                   JE                exit
 
-    ;                             MOV                DX, PosYfirst
-    ;                             MOV                PrevPosYfirst, DX
-
-    ;                             MOV                DX , PosXsecond
-    ;                             MOV                PrevPosXsecond, DX
-
-    ;                             MOV                DX , PosYsecond
-    ;                             MOV                PrevPosYsecond ,DX
-
-
-    ; ;--------------    Overriding INT 9H   ---------------
-    ; ;Disable interrrupts
-    ;                             CLI
-                       
-    ; ;Saving DS it will be the base of the addressing mode inside the interrupt
-    ;                             PUSH               DS
-    ;                             MOV                AX , CS
-    ;                             MOV                DS , AX
-
-    ; ;changing interrup vector
-    ;                             MOV                AX , 2509H
-    ;                             LEA                DX , INT09H
-    ;                             INT                21H
-                
-    ; ;re-enabling interrupts
-    ;                             POP                DS
-    ;                             STI
-            
-                
-    ;                             CALL               CheckArrowFlags
-    ;                             CALL               checkingPositionChange1
-
-    ;                             CALL               CheckWASDFlags
-    ;                             CALL               checkingPositionChange2
+    CheckTimeFinish:               
 
 
-    ; ;Delay
-    ;                             MOV                CX , 0
-    ;                             MOV                DX , 64000D
-    ;                             MOV                AH , 86H
-    ;                             INT                15H
 
-                                JMP                mainLoop                                                                                ; keep looping
-    exit:                       
-                                HLT
+
+                                   MOV                AH , 2
+                                   MOV                DL , 50
+                                   MOV                DH , 0                                                                                  ;ANY COLOR.
+                                   MOV                BH,0
+                                   INT                10H
+                                
+                                   MOV                AH , 2
+                                   MOV                BH,0
+                                   MOV                BL ,0H
+                                   MOV                DL , CountMinute
+                                   ADD                DL ,30H
+                                   MOV                CX , 1
+                                   INT                21H
+
+                                   MOV                AH , 2
+                                   MOV                DL , 51
+                                   MOV                DH , 0                                                                                  ;ANY COLOR.
+                                   MOV                BH,0
+                                   INT                10H
+                                
+                                   MOV                AH , 2
+                                   MOV                BH,0
+                                   MOV                BL ,0H
+                                   MOV                DL , ':'
+                                   MOV                CX , 1
+                                   INT                21H
+
+                                   MOV                AH , 2
+                                   MOV                DL , 52
+                                   MOV                DH , 0                                                                                  ;ANY COLOR.
+                                   MOV                BH,0
+                                   INT                10H
+                                
+                                   MOV                AH , 2
+                                   MOV                BH,0
+                                   MOV                BL ,0H
+                                   MOV                DL , CountSecond
+                                   ADD                DL ,30H
+                                   MOV                CX , 1
+                                   INT                21H
+    ContinueLooping22:             
+                                   JMP                mainLoop                                                                                ; keep looping
+    exit:                          
+                                   HLT
 
 MAIN ENDP
 
