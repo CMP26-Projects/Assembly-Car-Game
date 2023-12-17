@@ -969,9 +969,12 @@ ENDM
     OBSTACLEW                 EQU 5
     OBSTACLEH                 EQU 5
     OBSTACLE                  DB  16, 16, 16, 16, 16, 16, 28, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16
+    TEMP_OBSTACLE             DB  17, 17, 17, 17, 17, 17, 26, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17
     XOBSTACLE                 DW  ?
     YOBSTACLE                 DW  ?
     CanPassObs                DB  0
+    ;Boolean variable which detects if the passing powerup is invoked, theere is an obstacle a car have passed it or not
+    ObstFlag                  DB  0
     ;POWERUPS
     POWERW                    EQU 3
     POWERH                    EQU 3
@@ -1003,6 +1006,7 @@ ENDM
     POWERUPCOUNTER            DW  0
     CURPOWERINDEX             DW  0
     POWERTOPLEFTBYTE          DW  ?
+    POWERTOPLEFTBYTE_OBSTACLE DW  ?
     INDEXSTARTSHOWING         DW  0                                                                                                                                                                                                      ; INDEX TO START SHOWING THE HIDDEN POWER FROM
 
     ;CURRENT SECOND
@@ -1072,8 +1076,8 @@ ENDM
     ;STARTdd
     STARTROADX                EQU 2
     STARTROADY                EQU 2
-    NUMBEROFPARTS             EQU 6
-    MINNUMOFPARTS             EQU 5
+    NUMBEROFPARTS             EQU 10
+    MINNUMOFPARTS             EQU 10
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
     IMGTODRAW                 DW  ?
@@ -1337,7 +1341,7 @@ DrawCar PROC FAR
                                 MOV                DL , 0
                                 CALL               CalculateBoxVertex
                                 CALL               CheckCarToDraw
-                             
+                            
                                 CMP                CarToScan , 1
                                 JNE                GetCar2Img
                                 CALL               ChooseCar1Image
@@ -1477,6 +1481,10 @@ CreateObstacle PROC FAR
                                 RET
 CreateObstacle ENDP
 
+
+
+
+
 ApplyPowerUpLogic PROC FAR
 
     ;Getting the middle byte of the powerup to detect it's type
@@ -1503,6 +1511,7 @@ ApplyPowerUpLogic PROC FAR
                                 JNE                IsCreateObsPowerUp
                                 
                                 MOV                CanPassObs, 1
+                                MOV                ObstFlag ,  0
                                 JMP                PowerUpLogicFinish
     IsCreateObsPowerUp:         
                                 CMP                BYTE PTR ES:[DI] ,17
@@ -1875,6 +1884,25 @@ UpdateCarPos PROC FAR
                                 RET
 UpdateCarPos ENDP
 
+Manipulate_Obstacle PROC FAR
+                                CALL GETTOPLEFTOBSTACLE
+                                MOV DI , POWERTOPLEFTBYTE_OBSTACLE
+                                CALL CALCXY
+                                MOV TMP4 , 0
+                                DRAW TEMP_OBSTACLE,OBSTACLEW,OBSTACLEH,TEMPX,TEMPY,TMP4
+Manipulate_Obstacle ENDP
+
+EnforcePosition PROC FAR
+                                CALL GETTOPLEFTOBSTACLE
+                                MOV DI , POWERTOPLEFTBYTE_OBSTACLE
+                                CALL CALCXY
+                                MOV DI , TEMPX
+                                MOV CarToDrawX , DI
+                                MOV DI , TEMPY
+                                MOV CarToDrawY , DI
+EnforcePosition ENDP
+
+
     ;description
 ScanYmovement PROC FAR
     
@@ -1909,7 +1937,11 @@ ScanYmovement PROC FAR
     CheckY:                     
     ; CMP BYTE PTR ES:[DI] , 142
     ; JNE NoObstacleDetected
-                                CMP                BYTE PTR ES:[DI], 36
+                                CMP                BYTE PTR ES:[DI], 16
+                                JE                 Validate_Passing_The_Obstacle
+                                CMP                BYTE PTR ES:[DI], 28
+                                JE                 Validate_Passing_The_Obstacle
+                                CMP                BYTE PTR ES:[DI],  36
                                 JE                 POWERUPDETECTED
                                 CMP                BYTE PTR ES:[DI] , 20                                                                   ; 20 is the GREY color degree of the road
                                 JE                 NoObstacleDetected
@@ -1917,7 +1949,11 @@ ScanYmovement PROC FAR
                                 JE                 NoObstacleDetected
                                 CMP                BYTE PTR ES:[DI] , 40                                                                   ; 40 is one of the color degrees for the end line
                                 JE                 NoObstacleDetected
-               
+
+    Validate_Passing_The_Obstacle:
+                                CMP                CanPassObs , 1
+                                JE                 Edit_Obstacle
+
                                 POP                DI
                                 POP                CX
                                 RET
@@ -1925,7 +1961,7 @@ ScanYmovement PROC FAR
     POWERUPDETECTED:            
                                 PUSH               CX
                                 PUSH               DI
-                                CALL               GetTopLeftPower
+                                CALL               GETTOPLEFTPOWER
                                 
                                 MOV                BX,POWERTOPLEFTBYTE
                                 INC                BX
@@ -1995,6 +2031,18 @@ ScanYmovement PROC FAR
                                 CALL               SEARCHTORETRIEVE
                                 POP                DI
                                 POP                CX
+                                JMP               NoObstacleDetected
+
+    Edit_Obstacle:
+
+                                PUSH               CX
+                                PUSH               DI
+                                CALL EnforcePosition
+                                POP DI
+                                POP CX
+                                MOV CanPassObs , 0
+                                JMP checkYFinish
+                                
     NoObstacleDetected:         
                                 INC                DI
                                 DEC                CX
@@ -2052,6 +2100,10 @@ ScanXmovement PROC FAR
     CheckX:                     
     ;CMP BYTE PTR ES:[DI] , 142
     ;JNE NoObstacleDetected2
+                                CMP                BYTE PTR ES:[DI], 16
+                                JE                 Validate_Passing_The_Obstacle2
+                                CMP                BYTE PTR ES:[DI], 28
+                                JE                 Validate_Passing_The_Obstacle2 
                                 CMP                BYTE PTR ES:[DI], 36
                                 JE                 POWERUPDETECTED2
                                 CMP                BYTE PTR ES:[DI] , 20                                                                   ; 20 is the GREY color degree of the road
@@ -2061,7 +2113,11 @@ ScanXmovement PROC FAR
                                 CMP                BYTE PTR ES:[DI] , 40                                                                   ; 40 is one of the color degrees for the end line
                                 JE                 NoObstacleDetected2
 
+    Validate_Passing_The_Obstacle2:
 
+                                CMP                CanPassObs , 1
+                                JE                 Edit_Obstacle2
+                                
                                 POP                DI
                                 POP                cx
                                 RET
@@ -2069,7 +2125,7 @@ ScanXmovement PROC FAR
     POWERUPDETECTED2:           
                                 PUSH               CX
                                 PUSH               DI
-                                CALL               GetTopLeftPower
+                                CALL               GETTOPLEFTPOWER
                 
                                 MOV                BX,POWERTOPLEFTBYTE
                                 INC                BX
@@ -2133,13 +2189,27 @@ ScanXmovement PROC FAR
                                 MOV                TMP4 , 0
 
                                 DrawPower          TEMPX,TEMPY, powerupType
-
+                                JMP NoObstacleDetected2
 
     COLLECTPOWER2:              
                                 CALL               SEARCHTORETRIEVE
                                 POP                DI
                                 POP                CX
+                                JMP                NoObstacleDetected2
+
+    Edit_Obstacle2:
+                                    
+                                PUSH               CX
+                                PUSH               DI
+                                CALL EnforcePosition
+                                POP DI
+                                POP CX
+                                MOV CanPassObs , 0
+                                JMP checkXFinish
+
+
     NoObstacleDetected2:        
+
                                 ADD                DI , SCREEN_WIDTH
                                 DEC                CX
                                 CMP                CX , 0
@@ -2162,6 +2232,7 @@ ScanXmovement PROC FAR
                                 DEC                CX
                                 CMP                CX , 0
                                 JNE                NextRow2
+
     checkXFinish:               
                                 MOV                horizontalFlag ,0
                                 RET
@@ -2705,6 +2776,41 @@ GETTOPLEFTPOWER PROC
                                 MOV                POWERTOPLEFTBYTE, DI
                                 RET
 GETTOPLEFTPOWER ENDP
+
+GETTOPLEFTOBSTACLE PROC FAR
+                                GOLEFTBYTE_OBSTACLE:                 
+                                MOV                BX, DI
+                                DEC                BX
+                                CMP                BYTE PTR ES:[BX], 16
+                                JE                 STILLLEFT_OBSTACLE
+                                CMP                BYTE PTR ES:[BX], 28
+                                JE                 STILLLEFT_OBSTACLE
+                                JMP                GOUPBYTE_OBSTACLE
+
+    STILLLEFT_OBSTACLE:                  
+                                DEC                DI
+                                JMP                GOLEFTBYTE_OBSTACLE
+    GOUPBYTE_OBSTACLE:                   
+                                MOV                BX, DI
+                                SUB                BX, SCREEN_WIDTH
+                                CMP                BYTE PTR ES:[BX], 16
+                                JE                 STILLUP_OBSTACLE
+                                CMP                BYTE PTR ES:[BX], 28
+                                JE                 STILLUP_OBSTACLE
+                                JMP                FINISHGETTOPLEFT_OBSTACLE
+        
+    STILLUP_OBSTACLE:                    
+                                SUB                DI, SCREEN_WIDTH
+                                JMP                GOUPBYTE_OBSTACLE
+
+    FINISHGETTOPLEFT_OBSTACLE:           
+                                MOV                POWERTOPLEFTBYTE_OBSTACLE, DI
+                                RET
+
+GETTOPLEFTOBSTACLE ENDP
+
+
+
 
 STORINGROADUNDERPOWER PROC
                                 MOV                AX, POWERH
