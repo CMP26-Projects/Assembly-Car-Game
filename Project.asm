@@ -3540,7 +3540,7 @@ MAIN PROC FAR
 
                                 CALL               CheckWASDFlags
                                 CALL               checkingPositionChange2
-
+0
 
     ;Delay
                                 MOV                CX , 0
