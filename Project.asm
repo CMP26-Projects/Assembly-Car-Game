@@ -776,14 +776,14 @@ ENDM
     CarImg2                   DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 43, 43, 122, 0, 0, 0, 122, 43, 192, 192, 192, 17, 0, 122, 43, 43, 122, 0, 0, 17, 122, 122, 122, 122
                               DB  192, 0, 17, 192, 17, 192, 17, 192, 0
 
-    CarImg1Up                 DB  0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 122, 122, 122
-                              DB  122, 192, 17, 17, 0, 0, 0, 17, 17
-    CarImg1Right              DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
-                              DB  192, 0, 17, 192, 17, 192, 17, 192, 0
-    CarImg1Down               DB  17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 42, 42, 42, 122, 17, 192, 122, 42, 192, 42, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
-                              DB  192, 192, 0, 0, 0, 17, 0, 0, 0
-    CarImg1Left               DB  0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 9, 9, 122, 0, 17, 192, 192, 192, 9, 122, 0, 0, 0, 122, 9, 9, 122, 0, 0, 192, 122, 122, 122
-                              DB  122, 17, 0, 192, 17, 192, 17, 192, 17
+    CarImg1Up             DB  0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 122, 122, 122
+                          DB  122, 192, 17, 17, 0, 0, 0, 17, 17
+    CarImg1Right          DB  17, 192, 17, 192, 17, 192, 0, 17, 122, 122, 122, 122, 192, 0, 0, 122, 9, 9, 122, 0, 0, 0, 122, 9, 192, 192, 192, 17, 0, 122, 9, 9, 122, 0, 0, 17, 122, 122, 122, 122
+                          DB  192, 0, 17, 192, 17, 192, 17, 192, 0
+    CarImg1Down           DB  17, 17, 0, 0, 0, 17, 17, 192, 122, 122, 122, 122, 122, 192, 17, 122, 9, 9, 9, 122, 17, 192, 122, 9, 192, 9, 122, 192, 17, 122, 122, 192, 122, 122, 17, 192, 192, 0, 192, 0
+                          DB  192, 192, 0, 0, 0, 17, 0, 0, 0
+    CarImg1Left           DB  0, 192, 17, 192, 17, 192, 17, 0, 192, 122, 122, 122, 122, 17, 0, 0, 122, 9, 9, 122, 0, 17, 192, 192, 192, 9, 122, 0, 0, 0, 122, 9, 9, 122, 0, 0, 192, 122, 122, 122
+                          DB  122, 17, 0, 192, 17, 192, 17, 192, 17
 
     CarImg2Up                 DB  0, 0, 0, 17, 0, 0, 0, 192, 192, 0, 192, 0, 192, 192, 17, 122, 122, 192, 122, 122, 17, 192, 122, 43, 192, 43, 122, 192, 17, 122, 43, 43, 43, 122, 17, 192, 122, 122, 122, 122
                               DB  122, 192, 17, 17, 0, 0, 0, 17, 17
@@ -905,9 +905,9 @@ ENDM
    
 
     ;Data for the status bar (Second Player's data)
-    player2PosX               DB  65
-    player2PosY               DB  22
-    player2Name               DB  'Ahmed', '$'
+    player2PosX           EQU  65
+    player2PosY           EQU  22
+    player2Name           DB  'Ahmed', '$'
 
 
     ; Data for the powerups
@@ -1074,10 +1074,10 @@ ENDM
     RANGEOFRAND               DB  ?
 
     ;STARTdd
-    STARTROADX                EQU 2
-    STARTROADY                EQU 2
-    NUMBEROFPARTS             EQU 10
-    MINNUMOFPARTS             EQU 10
+    STARTROADX            EQU 2
+    STARTROADY            EQU 2
+    NUMBEROFPARTS         EQU 18
+    MINNUMOFPARTS         EQU 10
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
     IMGTODRAW                 DW  ?
@@ -1093,10 +1093,29 @@ ENDM
     YNODOWN                   EQU 124
 
     ;DIRECTIONS
-    UPDIR                     DW  ?
-    RIGHTDIR                  DW  ?
-    DOWNDIR                   DW  ?
-    LEFTDIR                   DW  ?
+    UPDIR                 DW  ?
+    RIGHTDIR              DW  ?
+    DOWNDIR               DW  ?
+    LEFTDIR               DW  ?
+
+    ;TMP
+    TMPIMG                DB  4, 4, 4, 4
+
+    ;CHECKLINE IMAGES
+    VERCHECKLINEIMGW      EQU 1
+    VERCHECKLINEIMGH      EQU 20
+    HORCHECKLINEIMGW      EQU 20
+    HORCHECKLINEIMGH      EQU 1
+    CHECKLINEIMG          DB  0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0
+    ISVERTICALCHECKLINE   DW  ?
+
+    CHECKLINESVERTICIES   DW  NUMBEROFPARTS DUP('?')
+    CHECKLINEVERTEX       DW  ?
+    INDEXOFPART           DW  0
+    CAR1PARTSVIS          DW  0
+    CAR2PARTSVIS          DW  0
+    CAR1VIS               DB  NUMBEROFPARTS DUP(0)
+    CAR2VIS               DB  NUMBEROFPARTS DUP(0)
 
     ;ROAD IMAGES
     VERROADIMGW               EQU 20
@@ -1937,6 +1956,8 @@ ScanYmovement PROC FAR
     CheckY:                     
     ; CMP BYTE PTR ES:[DI] , 142
     ; JNE NoObstacleDetected
+                                CMP                BYTE PTR ES:[DI], 19 ; THIS IS TO CHECK FOR CHECKLINES
+                                JE                 CHECKLINEDETECTED
                                 CMP                BYTE PTR ES:[DI], 16
                                 JE                 Validate_Passing_The_Obstacle
                                 CMP                BYTE PTR ES:[DI], 28
@@ -1957,7 +1978,15 @@ ScanYmovement PROC FAR
                                 POP                DI
                                 POP                CX
                                 RET
-
+    CHECKLINEDETECTED:
+                                PUSH               CX
+                                PUSH               DI
+                                MOV                ISVERTICALCHECKLINE, 0
+                                CALL               GETCHECKLINEVERTIX   
+                                CALL               UPDATESCORE       
+                                POP                DI
+                                POP                CX 
+                                JMP                NoObstacleDetected
     POWERUPDETECTED:            
                                 PUSH               CX
                                 PUSH               DI
@@ -2100,6 +2129,8 @@ ScanXmovement PROC FAR
     CheckX:                     
     ;CMP BYTE PTR ES:[DI] , 142
     ;JNE NoObstacleDetected2
+                                CMP                BYTE PTR ES:[DI], 19 ; THIS IS TO CHECK FOR CHECKLINES
+                                JE                 CHECKLINEDETECTED2
                                 CMP                BYTE PTR ES:[DI], 16
                                 JE                 Validate_Passing_The_Obstacle2
                                 CMP                BYTE PTR ES:[DI], 28
@@ -2122,6 +2153,15 @@ ScanXmovement PROC FAR
                                 POP                cx
                                 RET
 
+    CHECKLINEDETECTED2:
+                                PUSH               CX
+                                PUSH               DI
+                                MOV                ISVERTICALCHECKLINE, 1
+                                CALL               GETCHECKLINEVERTIX   
+                                CALL               UPDATESCORE       
+                                POP                DI
+                                POP                CX 
+                                JMP                NoObstacleDetected2
     POWERUPDETECTED2:           
                                 PUSH               CX
                                 PUSH               DI
@@ -2331,9 +2371,6 @@ ENTERPLAYERNAME PROC
     FIRSTCHARLOOP:              
                                 MOV                AH, 0
                                 INT                16H
-                                MOV                DL, AL
-                                MOV                AH, 2
-                                INT                21H
                                 CMP                AL, 'A'
                                 JB                 FIRSTCHARLOOP
                                 CMP                AL, 'Z'
@@ -2344,17 +2381,33 @@ ENTERPLAYERNAME PROC
                                 CMP                AL, 'z'
                                 JBE                RESTOFCHARS
 
+                                JMP                FIRSTCHARLOOP
+
     RESTOFCHARS:                
+                                MOV                DL, AL
+                                MOV                AH, 2
+                                INT                21H
+
+    RESTOFCHARSLOOP:
+                                CMP                AL, 8
+                                JE                 DONTSTORECHAR
                                 MOV                BYTE PTR DS:[SI], AL
                                 INC                SI
+                                DONTSTORECHAR:
                                 MOV                AH, 0
                                 INT                16H
                                 CMP                AH, 28
                                 JE                 FINISHENTERNAME
+                                CMP                AH, 14
+                                JNE                NOTBACKSPACE
+                                INC                CX
+                                INC                CX
+                                DEC                SI
+                                NOTBACKSPACE:
                                 MOV                DL, AL
                                 MOV                AH, 2
                                 INT                21H
-                                LOOP               RESTOFCHARS
+                                LOOP               RESTOFCHARSLOOP
     FINISHENTERNAME:            
                                 RET
 ENTERPLAYERNAME ENDP
@@ -3082,9 +3135,227 @@ char_display proc  FAR
                                 int                10h
                                 ret
 char_display endp
+STORECHECKLINEVERTIX PROC
+                                MOV                SI, OFFSET CHECKLINESVERTICIES
+                                MOV                AX, 2
+                                MOV                DX, INDEXOFPART
+                                MUL                DL
+                                ADD                SI, AX
+                                MOV                WORD PTR DS:[SI], BX 
+                                INC                INDEXOFPART
+                                RET
+STORECHECKLINEVERTIX ENDP                                
+
+DRAWCHECKLINE PROC
+                                PUSH               TEMPX
+                                PUSH               TEMPY
+                                MOV                TMP4, 0
+
+                                CMP                LASTDIR, 0
+                                JNE                NOTLASTUPCHECK
+                                SUB                TEMPX, VERROADIMGW
+                                DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                MOV                BX, DI
+                                SUB                BX, HORCHECKLINEIMGW ; CHECKED
+                                CALL               STORECHECKLINEVERTIX
+                                JMP                FINISHDRAWCHECKLINE
+    NOTLASTUPCHECK:                  
+
+                                CMP                LASTDIR, 1
+                                JNE                NOTLASTRIGHTCHECK
+                                ADD                TEMPX, HORROADIMGW - 1
+                                DRAW               CHECKLINEIMG, VERCHECKLINEIMGW, VERCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                MOV                BX, DI
+                                DEC                BX
+                                CALL               STORECHECKLINEVERTIX
+                                JMP                FINISHDRAWCHECKLINE
+    NOTLASTRIGHTCHECK:               
+
+                                CMP                LASTDIR, 2
+                                JNE                NOTLASTDOWNCHECK
+                                SUB                TEMPX, VERROADIMGW
+                                ADD                TEMPY, VERROADIMGH - 1
+                                DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                MOV                BX, DI
+                                SUB                BX, HORCHECKLINEIMGW ;CHECKED
+                                CALL               STORECHECKLINEVERTIX
+                                JMP                FINISHDRAWCHECKLINE
+    NOTLASTDOWNCHECK:                
+    
+                                SUB                TEMPX, HORROADIMGW
+                                DRAW               CHECKLINEIMG, VERCHECKLINEIMGW, VERCHECKLINEIMGH, TEMPX, TEMPY, TMP4
+                                MOV                BX, DI
+                                DEC                BX
+                                CALL               STORECHECKLINEVERTIX
+    FINISHDRAWCHECKLINE:          
+                                POP                TEMPY
+                                POP                TEMPX
+                                RET
+DRAWCHECKLINE ENDP
 
 
+PRINTTHREEDIGITNUMBER PROC FAR
+    MOV BL,100
+    DIV BL;;al = ax / bl, ah = ax & bl
+    MOV DL,AL
+    PUSH AX ;To save remainder
+    ADD DL,30h ; Add 30h to print ASCII
+    MOV AH, 02h ; Print a character in dl
+    INT 21h
+    POP AX
+    MOV BL,10
+    MOV AL, AH
+    MOV AH,0
+    DIV BL
+    MOV DL, AL
+    PUSH AX
+    ADD DL,30h
+    MOV AH,02h
+    INT 21h
+    POP AX
+    MOV DL,AH
+    ADD DL,30h
+    MOV AH, 02h
+    INT 21h
+    RET
+PRINTTHREEDIGITNUMBER ENDP
 
+UPDATESCORE PROC FAR
+    MOV BX, CHECKLINEVERTEX
+    MOV SI, OFFSET CHECKLINESVERTICIES
+    MOV CX, INDEXOFPART
+    SEARCHCHECKVERTIX:
+    CMP WORD PTR DS:[SI], BX
+    JE FOUNDCHECKVERTIX  
+    ADD SI, 2
+    LOOP SEARCHCHECKVERTIX
+
+    FOUNDCHECKVERTIX:
+    MOV DX, INDEXOFPART
+    SUB DX, CX ;DX NOW HAS THE INDEX OF THE VERTIX
+    CMP CX, 0
+    JBE FINISHUPDATESCORE
+
+    CMP CarToScan, 0
+    JNE SECONDCARVIS
+    MOV SI, OFFSET CAR1VIS
+    ADD SI, DX
+    CMP BYTE PTR DS:[SI], 1
+    JE UPDATETHESCORES
+    MOV BYTE PTR DS:[SI], 1
+    INC CAR1PARTSVIS
+    JMP UPDATETHESCORES
+    
+    SECONDCARVIS:
+    MOV SI, OFFSET CAR2VIS
+    ADD SI, DX
+    CMP BYTE PTR DS:[SI], 1
+    JE UPDATETHESCORES
+    MOV BYTE PTR DS:[SI], 1
+    INC CAR2PARTSVIS
+
+    UPDATETHESCORES:
+    MOV AX, CAR1PARTSVIS
+    MOV BL, 100
+    MUL BL
+    MOV BX, INDEXOFPART
+    DIV BL
+    MOV AH, 0
+    PUSH AX
+    MOV AH,2
+    MOV BH, 0
+    MOV DH, player1PosY
+    MOV DL, player1PosX
+    ADD DL, 14
+    INT 10H
+    POP AX
+    CALL PRINTTHREEDIGITNUMBER
+   
+
+    MOV AX, CAR2PARTSVIS
+    MOV BL, 100
+    MUL BL
+    MOV BX, INDEXOFPART
+    DIV BL
+    MOV AH, 0
+    PUSH AX
+    MOV AH,2
+    MOV BH, 0
+    MOV DH, player2PosY
+    MOV DL, player2PosX
+    ADD DL, 11
+    INT 10H
+    POP AX
+    CALL PRINTTHREEDIGITNUMBER
+   
+
+
+    ; MOV DL, AL
+    ; MOV AH, 2
+    ; INT 21H
+
+    FINISHUPDATESCORE:
+    RET
+UPDATESCORE ENDP
+
+GETCHECKLINEVERTIX PROC FAR
+
+MOV BX, DI
+ADD BX, 7
+; CMP BYTE PTR ES:[BX], 19
+; JE ISHORIZONTAL
+; SUB BX, 14
+; CMP BYTE PTR ES:[BX], 19
+; JE ISHORIZONTAL
+CMP ISVERTICALCHECKLINE, 0
+JE ISHORIZONTAL
+JMP ISVERTICAL
+
+ISHORIZONTAL:
+MOV BX, DI
+LEFTVERTIX:
+DEC BX
+CMP BYTE PTR ES:[BX], 20
+JE LEFTVERTIX
+CMP BYTE PTR ES:[BX], 19
+JE LEFTVERTIX
+CMP BYTE PTR ES:[BX], 17
+JE LEFTVERTIX
+CMP BYTE PTR ES:[BX], 192
+JE LEFTVERTIX
+CMP BYTE PTR ES:[BX], 122
+JE LEFTVERTIX
+CMP BYTE PTR ES:[BX], 9
+JE LEFTVERTIX
+CMP BYTE PTR ES:[DI], 43
+JE LEFTVERTIX
+INC BX
+JMP FINISHUPDATING
+
+ISVERTICAL:
+MOV BX, DI
+UPVERTIX:
+SUB BX, SCREEN_WIDTH
+CMP BYTE PTR ES:[BX], 20
+JE UPVERTIX
+CMP BYTE PTR ES:[BX], 19
+JE UPVERTIX
+CMP BYTE PTR ES:[BX], 17
+JE UPVERTIX
+CMP BYTE PTR ES:[BX], 192
+JE UPVERTIX
+CMP BYTE PTR ES:[BX], 122
+JE UPVERTIX
+CMP BYTE PTR ES:[BX], 9
+JE UPVERTIX
+CMP BYTE PTR ES:[DI], 43
+JE UPVERTIX
+ADD BX, SCREEN_WIDTH
+FINISHUPDATING:
+
+MOV CHECKLINEVERTEX, BX
+RET
+GETCHECKLINEVERTIX ENDP
 
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3311,6 +3582,7 @@ MAIN PROC FAR
                                 DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
                                 CALL               POINTSAFTERUP
                                 MOV                LASTDIR, 0
+                                CALL               DRAWCHECKLINE
 
     ;OBSTACLE RANDOMIZATION
                                 PUSH               CX
@@ -3366,6 +3638,7 @@ MAIN PROC FAR
                                 DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
                                 CALL               POINTSAFTERRIGHT
                                 MOV                LASTDIR, 1
+                                CALL               DRAWCHECKLINE
 
                                 CMP                CX, 0                                                                                   ;HANDLING FIRST SEGMENT NO OBSTACLES
                                 JNE                NOTFIRSTSEGMENT
@@ -3427,6 +3700,7 @@ MAIN PROC FAR
                                 DRAW               VERROADIMG, VERROADIMGW, VERROADIMGH, TEMPX, TEMPY, TMP4
                                 MOV                LASTDIR, 2
                                 CALL               POINTSAFTERDOWN
+                                CALL               DRAWCHECKLINE
 
     ;OBSTACLE RANDOMIZATION
                                 PUSH               CX
@@ -3482,6 +3756,7 @@ MAIN PROC FAR
                                 DRAW               HORROADIMG, HORROADIMGW, HORROADIMGH, TEMPX, TEMPY, TMP4
                                 MOV                LASTDIR, 3
                                 CALL               POINTSAFTERLEFT
+                                CALL               DRAWCHECKLINE
 
     ;OBSTACLE RANDOMIZATION
                                 PUSH               CX
