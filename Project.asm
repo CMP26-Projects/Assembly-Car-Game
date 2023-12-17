@@ -766,8 +766,18 @@ ENDM
     INSTRUCTION1              DB  'TO START THE GAME PRESS ENTER...', '$'
     INSTRUCTION2              DB  'TO END THE PROGRAM PRESS ESC...', '$'
 
+
+    ;TIMER AREA
+    PreviousMinute            DB  0
+    PreviousSecond            DB  0
+    CountMinute               DB  0
+    CountSecond               DB  0
+    TotalSeconds              DB  0
+    TimerStartX               DW  0
+    TimerStartY               DW  0
+
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;;;;;;;;;;;;   car data   ;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;   car data   ;;;;;;;;SHOW;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     ;CarImage
@@ -2313,6 +2323,147 @@ INT09H PROC FAR
 INT09H ENDP
 
 
+ShowCurrentTime PROC FAR
+                                ;Drawing the timer-area box
+                                MOV CarToDrawX, SCREEN_WIDTH - 30
+                                MOV  CarToDrawY ,0
+                                CALL CalculateBoxVertex
+                                MOV CX , 30
+                                
+        DrawTimerAreaBackground_COLS:
+                                PUSH CX
+                                PUSH DI
+                                MOV CX , 30
+
+        DrawTimerAreaBackground_ROWS:
+                                MOV BYTE PTR ES:[DI] , 0
+                                INC DI
+                                LOOP DrawTimerAreaBackground_ROWS
+
+                                POP DI
+                                POP CX
+                                ADD DI , SCREEN_WIDTH
+                                LOOP DrawTimerAreaBackground_COLS
+
+                                ; ;Drawing the timer text
+                                ; AND DL , 0
+                                ; MOV BX ,CX     ;Moving the CL(Minutes) to BX register
+                                ; MOV AX ,60
+                                ; MUL BL
+                                ; ADD AX ,DX     ;AX = Minutes*60 + Seconds
+                                ; ; MOV DX ,AX     ;DX = AX (Preserving the time)
+                                ; ; XOR AH ,AH
+                                ; ; MOV AX,DX
+                                ; MOV BX ,60
+                                ; DIV BX          ; AX = AX/60 (Minutes) , DX = AX%60 (Seconds)
+                                ; ADD AL , '0'    ;    Converting the minutes to ASCII   
+                                ; ADD DL , '0'    ;    Converting the seconds to ASCII
+
+
+                                ; MOV BX ,DX       ;BX = DX (Preserving the time)  IN BX = Seconds
+                                ; MOV CX , AX      ; CX = AX (Preserving the time)    IN CX = Minutes
+
+                                ; MOV AH , 2
+                                ; MOV DH ,0
+                                ; MOV DL , 90
+                                ; INT 10H
+
+                                ; mov                ah, 9
+                                ; mov                bh, 0 ; page number
+                                ; MOV                AL ,CL
+                                ; mov                bl, 93H                                                                                 ;ANY COLOR.
+                                ; mov                cx, 1                                                                                   ;HOW MANY TIMES TO DISPLAY CHAR.
+                                ; int                10h
+
+                                ; MOV AH , 2
+                                ; MOV DH ,0
+                                ; MOV DL , 91
+                                ; INT 10H
+
+                                ; mov                ah, 9
+                                ; mov                bh, 0 ; page number
+                                ; MOV                AL ,BL
+                                ; mov                bl, 93H                                                                                 ;ANY COLOR.
+                                ; mov                cx, 1                                                                                   ;HOW MANY TIMES TO DISPLAY CHAR.
+                                ; int                10h
+
+                                ; MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                ; INT                21H
+
+                                CMP DH , PreviousSecond
+                                JE CheckTimeFinish
+
+
+                                MOV DI ,0
+                                MOV CX,5
+                                JUMPER:
+                                MOV BYTE PTR ES:[DI],04H
+                                INC DI
+                                LOOP JUMPER
+
+
+                                MOV PreviousSecond , DH
+                                INC TotalSeconds
+                                AND DX ,DX
+                                MOV AL , TotalSeconds
+                                MOV BL , 60
+                                DIV BL
+                                
+                                MOV CountSecond , AH        ; Current Seconds
+                                MOV CountMinute , AL        ; Current Minutes
+
+                                CMP TotalSeconds , 120      ; 2 minutes are achieved
+                                JMP exit
+
+    CheckTimeFinish:             
+
+
+
+
+                                MOV AH , 2
+                                MOV DL , 50
+                                MOV DH , 0                                                                              ;ANY COLOR.
+                                MOV BH,0
+                                INT 10H
+                                
+                                MOV AH , 2
+                                MOV BH,0
+                                MOV BL ,0H
+                                MOV DL , CountMinute
+                                ADD DL ,'0'
+                                MOV CX , 1
+                                INT 21H
+
+                                MOV AH , 2
+                                MOV DL , 51
+                                MOV DH , 0                                                                               ;ANY COLOR.
+                                MOV BH,0
+                                INT 10H
+                                
+                                MOV AH , 2
+                                MOV BH,0
+                                MOV BL ,0H
+                                MOV DL , ':'
+                                MOV CX , 1
+                                INT 21H
+
+                                MOV AH , 2
+                                MOV DL , 52
+                                MOV DH , 0                                                                                 ;ANY COLOR.
+                                MOV BH,0
+                                INT 10H
+                                
+                                MOV AH , 2
+                                MOV BH,0
+                                MOV BL ,0H
+                                MOV DL , 10
+                                ADD DL ,'0'
+                                MOV CX , 1
+                                INT 21H
+
+                                RET
+ShowCurrentTime ENDP
+
 
 
 
@@ -2619,7 +2770,7 @@ PrintStringWithColor PROC FAR
     printOneByOne:              
     ;--Setting Cursor position
                                 MOV                AH , 2
-                                MOV                BH, 0
+                                MOV                BH, 0 
                                 INT                10H
     ;--Start printing
                                 MOV                AL , [SI]
@@ -3118,7 +3269,7 @@ char_display proc  FAR
                                 mov                bh, 0
                                 mov                bl, 93H                                                                                 ;ANY COLOR.
                                 mov                cx, 1                                                                                   ;HOW MANY TIMES TO DISPLAY CHAR.
-                                int                10h
+                                int                10h 
                                 ret
 char_display endp
 STORECHECKLINEVERTIX PROC
@@ -3838,82 +3989,83 @@ MAIN PROC FAR
  
 
     mainLoop:                   
-                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
-                                INT                21H
-
-                                CALL               CheckSpeedUpTimer
-
-                                MOV                AX, POWERUPCOUNTER
-                                CMP                INDEXSTARTSHOWING, AX
-                                JAE                DONTSHOWPOWER
 
                                 MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
                                 INT                21H
+                                ; CALL               CheckSpeedUpTimer
+                                CALL               ShowCurrentTime
 
-                                CMP                DH, CURSECOND
-                                JE                 DONTSHOWPOWER
-                                MOV                CURSECOND, DH
+    ;                             MOV                AX, POWERUPCOUNTER
+    ;                             CMP                INDEXSTARTSHOWING, AX
+    ;                             JAE                DONTSHOWPOWER
 
-                                MOV                AL, DH
-                                MOV                AH, 0
-                                MOV                BL, DURATIONTOSHOWPOWER
-                                DIV                BL
-                                CMP                AH, 0
-                                JNE                DONTSHOWPOWER
-                                MOV                SI, OFFSET ISVISIBLEPOWER
-                                ADD                SI, INDEXSTARTSHOWING
-                                INC                INDEXSTARTSHOWING
-                                CMP                BYTE PTR DS:[SI], 0
-                                JNE                DONTSHOWPOWER
-                                CALL               SHOWHIDDENPOWER
+    ;                             MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+    ;                             INT                21H
 
+    ;                             CMP                DH, CURSECOND
+    ;                             JE                 DONTSHOWPOWER
+    ;                             MOV                CURSECOND, DH
 
-    DONTSHOWPOWER:              
-
-                                MOV                DX , PosXfirst
-                                MOV                PrevPosXfirst, DX
-
-                                MOV                DX, PosYfirst
-                                MOV                PrevPosYfirst, DX
-
-                                MOV                DX , PosXsecond
-                                MOV                PrevPosXsecond, DX
-
-                                MOV                DX , PosYsecond
-                                MOV                PrevPosYsecond ,DX
+    ;                             MOV                AL, DH
+    ;                             MOV                AH, 0
+    ;                             MOV                BL, DURATIONTOSHOWPOWER
+    ;                             DIV                BL
+    ;                             CMP                AH, 0
+    ;                             JNE                DONTSHOWPOWER
+    ;                             MOV                SI, OFFSET ISVISIBLEPOWER
+    ;                             ADD                SI, INDEXSTARTSHOWING
+    ;                             INC                INDEXSTARTSHOWING
+    ;                             CMP                BYTE PTR DS:[SI], 0
+    ;                             JNE                DONTSHOWPOWER
+    ;                             CALL               SHOWHIDDENPOWER
 
 
-    ;--------------    Overriding INT 9H   ---------------
-    ;Disable interrrupts
-                                CLI
+    ; DONTSHOWPOWER:              
+
+    ;                             MOV                DX , PosXfirst
+    ;                             MOV                PrevPosXfirst, DX
+
+    ;                             MOV                DX, PosYfirst
+    ;                             MOV                PrevPosYfirst, DX
+
+    ;                             MOV                DX , PosXsecond
+    ;                             MOV                PrevPosXsecond, DX
+
+    ;                             MOV                DX , PosYsecond
+    ;                             MOV                PrevPosYsecond ,DX
+
+
+    ; ;--------------    Overriding INT 9H   ---------------
+    ; ;Disable interrrupts
+    ;                             CLI
                        
-    ;Saving DS it will be the base of the addressing mode inside the interrupt
-                                PUSH               DS
-                                MOV                AX , CS
-                                MOV                DS , AX
+    ; ;Saving DS it will be the base of the addressing mode inside the interrupt
+    ;                             PUSH               DS
+    ;                             MOV                AX , CS
+    ;                             MOV                DS , AX
 
-    ;changing interrup vector
-                                MOV                AX , 2509H
-                                LEA                DX , INT09H
-                                INT                21H
+    ; ;changing interrup vector
+    ;                             MOV                AX , 2509H
+    ;                             LEA                DX , INT09H
+    ;                             INT                21H
                 
-    ;re-enabling interrupts
-                                POP                DS
-                                STI
+    ; ;re-enabling interrupts
+    ;                             POP                DS
+    ;                             STI
             
                 
-                                CALL               CheckArrowFlags
-                                CALL               checkingPositionChange1
+    ;                             CALL               CheckArrowFlags
+    ;                             CALL               checkingPositionChange1
 
-                                CALL               CheckWASDFlags
-                                CALL               checkingPositionChange2
+    ;                             CALL               CheckWASDFlags
+    ;                             CALL               checkingPositionChange2
 
 
-    ;Delay
-                                MOV                CX , 0
-                                MOV                DX , 64000D
-                                MOV                AH , 86H
-                                INT                15H
+    ; ;Delay
+    ;                             MOV                CX , 0
+    ;                             MOV                DX , 64000D
+    ;                             MOV                AH , 86H
+    ;                             INT                15H
 
                                 JMP                mainLoop                                                                                ; keep looping
     exit:                       
