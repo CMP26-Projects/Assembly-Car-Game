@@ -1103,6 +1103,7 @@ ENDM
     HORCHECKLINEIMGW      EQU 20
     HORCHECKLINEIMGH      EQU 1
     CHECKLINEIMG          DB  0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0
+    ISVERTICALCHECKLINE   DW  ?
 
     CHECKLINESVERTICIES   DW  NUMBEROFPARTS DUP('?')
     CHECKLINEVERTEX       DW  ?
@@ -1944,6 +1945,7 @@ ScanYmovement PROC FAR
     CHECKLINEDETECTED:
                                 PUSH               CX
                                 PUSH               DI
+                                MOV                ISVERTICALCHECKLINE, 0
                                 CALL               GETCHECKLINEVERTIX   
                                 CALL               UPDATESCORE       
                                 POP                DI
@@ -2098,6 +2100,7 @@ ScanXmovement PROC FAR
     CHECKLINEDETECTED2:
                                 PUSH               CX
                                 PUSH               DI
+                                MOV                ISVERTICALCHECKLINE, 1
                                 CALL               GETCHECKLINEVERTIX   
                                 CALL               UPDATESCORE       
                                 POP                DI
@@ -3179,10 +3182,12 @@ GETCHECKLINEVERTIX PROC FAR
 
 MOV BX, DI
 ADD BX, 7
-CMP BYTE PTR ES:[BX], 19
-JE ISHORIZONTAL
-SUB BX, 14
-CMP BYTE PTR ES:[BX], 19
+; CMP BYTE PTR ES:[BX], 19
+; JE ISHORIZONTAL
+; SUB BX, 14
+; CMP BYTE PTR ES:[BX], 19
+; JE ISHORIZONTAL
+CMP ISVERTICALCHECKLINE, 0
 JE ISHORIZONTAL
 JMP ISVERTICAL
 
@@ -3194,6 +3199,16 @@ CMP BYTE PTR ES:[BX], 20
 JE LEFTVERTIX
 CMP BYTE PTR ES:[BX], 19
 JE LEFTVERTIX
+CMP BYTE PTR ES:[BX], 17
+JE LEFTVERTIX
+CMP BYTE PTR ES:[BX], 192
+JE LEFTVERTIX
+CMP BYTE PTR ES:[BX], 122
+JE LEFTVERTIX
+CMP BYTE PTR ES:[BX], 9
+JE LEFTVERTIX
+CMP BYTE PTR ES:[DI], 43
+JE LEFTVERTIX
 INC BX
 JMP FINISHUPDATING
 
@@ -3204,6 +3219,16 @@ SUB BX, SCREEN_WIDTH
 CMP BYTE PTR ES:[BX], 20
 JE UPVERTIX
 CMP BYTE PTR ES:[BX], 19
+JE UPVERTIX
+CMP BYTE PTR ES:[BX], 17
+JE UPVERTIX
+CMP BYTE PTR ES:[BX], 192
+JE UPVERTIX
+CMP BYTE PTR ES:[BX], 122
+JE UPVERTIX
+CMP BYTE PTR ES:[BX], 9
+JE UPVERTIX
+CMP BYTE PTR ES:[DI], 43
 JE UPVERTIX
 ADD BX, SCREEN_WIDTH
 FINISHUPDATING:
