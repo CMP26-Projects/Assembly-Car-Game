@@ -1124,7 +1124,7 @@ ENDM
     ;ROAD IMAGES
     VERROADIMGW               EQU 20
     VERROADIMGH               EQU 30
-    VERROADIMG                 DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
+    VERROADIMG                DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
                               DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
                               DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20
                               DB  20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 31, 31, 20, 20, 20, 20, 20, 20, 20, 20, 20
@@ -1918,47 +1918,47 @@ UpdateCarPos PROC FAR
 UpdateCarPos ENDP
 
     ;description
-PassObsLogic1 PROC FAR
+    ; PassObsLogic1 PROC FAR
                              
-                                CALL               GetTopLeftObstacle
-                                MOV                DX , TopleftObstX                                                                       ;(DH->X , DL->Y)
+    ;                                 CALL               GetTopLeftObstacle
+    ;                                 MOV                DX , TopleftObstX                                                                       ;(DH->X , DL->Y)
     
-    ;--Getting xright corner of the obst in AH
-    ;--DH Already contains xleft of the obst
-                                ADD                DX , OBSTACLEW-1
+    ;     ;--Getting xright corner of the obst in AH
+    ;     ;--DH Already contains xleft of the obst
+    ;                                 ADD                DX , OBSTACLEW-1
                                 
-    ;ObstacleRight >=CarLeft
+    ;     ;ObstacleRight >=CarLeft
                                                                                                        
-                                CMP                DX , CarToDrawX
-                                JB                 GotOutOfObstacle
+    ;                                 CMP                DX , CarToDrawX
+    ;                                 JB                 GotOutOfObstacle
                                
-                                MOV                AX , CarToDrawX
-                                ADD                AX , CAR_SIZE-1
-    ;CarRight >= ObstacleLeft
-                                CMP                AX , TopleftObstX
-                                JB                 GotOutOfObstacle
+    ;                                 MOV                AX , CarToDrawX
+    ;                                 ADD                AX , CAR_SIZE-1
+    ;     ;CarRight >= ObstacleLeft
+    ;                                 CMP                AX , TopleftObstX
+    ;                                 JB                 GotOutOfObstacle
 
-                                MOV                DX , TopleftObstY
-                                ADD                DX , OBSTACLEH-1
-    ;ObstacleDown >= CarUp
-                                CMP                DX , CarToDrawY
-                                JB                 GotOutOfObstacle
+    ;                                 MOV                DX , TopleftObstY
+    ;                                 ADD                DX , OBSTACLEH-1
+    ;     ;ObstacleDown >= CarUp
+    ;                                 CMP                DX , CarToDrawY
+    ;                                 JB                 GotOutOfObstacle
 
-                                MOV                AX , CarToDrawY
-                                ADD                AX , CAR_SIZE-1
-    ;CarDown >= ObstacleUp
-                                CMP                AX , TopleftObstY
-                                JB                 GotOutOfObstacle
+    ;                                 MOV                AX , CarToDrawY
+    ;                                 ADD                AX , CAR_SIZE-1
+    ;     ;CarDown >= ObstacleUp
+    ;                                 CMP                AX , TopleftObstY
+    ;                                 JB                 GotOutOfObstacle
 
-                                JMP                PassObsLogicFinish1
+    ;                                 JMP                PassObsLogicFinish1
 
-    GotOutOfObstacle:           
-                                MOV                Touching1 , 0
-                                mov                InObstacle1 , 0
-    PassObsLogicFinish1:        
+    ;     GotOutOfObstacle:
+    ;                                 MOV                Touching1 , 0
+    ;                                 mov                InObstacle1 , 0
+    ;     PassObsLogicFinish1:
                                 
-                                RET
-PassObsLogic1 ENDP
+    ;                                 RET
+    ; PassObsLogic1 ENDP
 
     ;description
 ScanYmovement PROC FAR
@@ -2012,6 +2012,7 @@ ScanYmovement PROC FAR
                                 JE                 NoObstacleDetected
 
                                 JMP                NormalObstacle
+
     ObstacleDetected:           
                                 INC                ObstacleCollisionCount
                                 cmp                CarToScan , 1
@@ -2025,6 +2026,9 @@ ScanYmovement PROC FAR
 
     IsTouching2:                
                                 CMP                Touching2 , 1
+                                JNE                NormalObstacle
+                                MOV                InObstacle2 ,1
+                                JMP                NoObstacleDetected
 
     ; CALL               PassObsLogic2
     NormalObstacle:             
@@ -2120,17 +2124,8 @@ ScanYmovement PROC FAR
                                 DEC                CX
                                 CMP                CX , 0
                                 JNE                CheckY
-    
-                                CMP                InObstacle1 , 1
-                                JNE                TouchingInactive
-
-                                CMP                ObstacleCollisionCount , 0
-                                JNE                TouchingInactive
-
-                                MOV                InObstacle1 , 0
-                                MOV                Touching1 , 0
-    ;CALL               PassObsLogic1
-    TouchingInactive:           
+                                
+                                CALL               TurnOffPassingObst
 
                                 POP                DI
                                 POP                CX
@@ -2179,10 +2174,14 @@ ScanXmovement PROC FAR
                                 PUSH               CX
                                 PUSH               DI
                                 MOV                CX, CAR_SIZE
-
+                                MOV                ObstacleCollisionCount , 0
     CheckX:                     
-    ;CMP BYTE PTR ES:[DI] , 142
-    ;JNE NoObstacleDetected2
+    ;Checking for obstacle
+                                CMP                BYTE PTR ES:[DI] , 16
+                                JE                 ObstacleDetected2
+                                CMP                BYTE PTR ES:[DI] , 28
+                                JE                 ObstacleDetected2
+    ;Non obstacle checks
                                 CMP                BYTE PTR ES:[DI], 19                                                                    ; THIS IS TO CHECK FOR CHECKLINES
                                 JE                 CHECKLINEDETECTED2
                                 CMP                BYTE PTR ES:[DI], 36
@@ -2193,22 +2192,27 @@ ScanXmovement PROC FAR
                                 JE                 NoObstacleDetected2
                                 CMP                BYTE PTR ES:[DI] , 40                                                                   ; 40 is one of the color degrees for the end line
                                 JE                 NoObstacleDetected2
-
-                                CMP                CarToScan, 1
+                          
+                                JMP                NormalObstacle2
+    ObstacleDetected2:          
+                                INC                ObstacleCollisionCount
+                                cmp                CarToScan , 1
                                 JNE                IsTouching22
 
                                 CMP                Touching1 , 1
                                 JNE                NormalObstacle2
-                              
-                                CALL               PassObsLogic1
-                                JMP                NormalObstacle2
+
+                                MOV                InObstacle1,1
+                                JMP                NoObstacleDetected2
+
     IsTouching22:               
                                 CMP                Touching2 , 1
                                 JNE                NormalObstacle2
+                                MOV                InObstacle2 ,1
+                                JMP                NoObstacleDetected2
 
-    ; CALL               PassObsLogic2
     NormalObstacle2:            
-   
+
                                 POP                DI
                                 POP                cx
                                 RET
@@ -2301,6 +2305,8 @@ ScanXmovement PROC FAR
                                 CMP                CX , 0
                                 JNE                CheckX
 
+                                CALL               TurnOffPassingObst
+
                                 POP                DI
                                 POP                CX
 
@@ -2322,6 +2328,38 @@ ScanXmovement PROC FAR
                                 MOV                horizontalFlag ,0
                                 RET
 ScanXmovement ENDP
+
+    ;Cars checking out of the obstacle
+TurnOffPassingObst PROC FAR
+                                 
+                                CMP                CarToScan , 1
+                                JNE                IsCar2Touched
+                               
+                                CMP                InObstacle1 , 1
+                                JNE                TouchingInactive2
+
+                                CMP                ObstacleCollisionCount , 0
+                                JNE                TouchingInactive2
+
+                                MOV                InObstacle1 , 0
+                                MOV                Touching1 , 0
+
+                                JMP                TouchingInactive2
+
+    IsCar2Touched:              
+                                CMP                InObstacle2 , 1
+                                JNE                TouchingInactive2
+
+                                CMP                ObstacleCollisionCount , 0
+                                JNE                TouchingInactive2
+
+                                MOV                InObstacle2 , 0
+                                MOV                Touching2 , 0
+
+    TouchingInactive2:          
+                                RET
+   
+TurnOffPassingObst ENDP
 
     ;description
 checkingPositionChange1 PROC FAR
