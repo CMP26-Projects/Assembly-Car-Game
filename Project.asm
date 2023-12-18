@@ -3577,6 +3577,9 @@ ENDGAME PROC
     MOV AH, 2
     MOV DL, ' '
     INT 21H
+    
+    MOV AX, CAR2SCORE;WE FLIPPED THEM DUE TO LATE SUMBISSION
+    CALL PRINTTHREEDIGITNUMBER
 
     ; SECOND PLAYER SCORE 
     MOV AH, 2H
@@ -3596,6 +3599,9 @@ ENDGAME PROC
     MOV AH, 2
     MOV DL, ' '
     INT 21H
+
+    MOV AX, CAR1SCORE
+    CALL PRINTTHREEDIGITNUMBER
 
     FINISHENDGAME:
     RET
@@ -3971,7 +3977,6 @@ STATUSBARANDROAD ENDP
     ;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 MAIN PROC FAR
-
                                 MOV                AX, @DATA
                                 MOV                DS, AX
 
@@ -4062,7 +4067,7 @@ LOOP INITIALIZE2
                                 CMP                LetterF2Flag, 1
                                 JE                 STARTPROGRAM
                                 CMP                LetterEscFlag, 1
-                                JE                 exit
+                                JE                 HLTPROGRAM
                                 JMP                TAKINGNEXTSTAGE
 
 
@@ -4282,6 +4287,11 @@ LOOP INITIALIZE2
     INT                15H           
     JMP FAR PTR STARTTHEWHOLEPROGRAM
 
+
+    HLTPROGRAM:
+    MOV AH, 4CH
+    INT 21H
+    HLT
 MAIN ENDP
 
 
