@@ -776,6 +776,8 @@ ENDM
     TimerStartX               DW  0
     TimerStartY               DW  0
 
+    TimerMsg                  DB    'TIME:', '$'
+
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;   car data   ;;;;;;;;SHOW;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2325,18 +2327,18 @@ INT09H ENDP
 
 ShowCurrentTime PROC FAR
     ;Drawing the timer-area box
-                                   MOV                CarToDrawX, SCREEN_WIDTH - 30
+                                   MOV                CarToDrawX, SCREEN_WIDTH - 40
                                    MOV                CarToDrawY ,0
                                    CALL               CalculateBoxVertex
-                                   MOV                CX , 30
+                                   MOV                CX , 20
                                 
     DrawTimerAreaBackground_COLS:  
                                    PUSH               CX
                                    PUSH               DI
-                                   MOV                CX , 30
+                                   MOV                CX , 40
 
     DrawTimerAreaBackground_ROWS:  
-                                   MOV                BYTE PTR ES:[DI] , 0
+                                   MOV                BYTE PTR ES:[DI] , 18
                                    INC                DI
                                    LOOP               DrawTimerAreaBackground_ROWS
 
@@ -2345,41 +2347,50 @@ ShowCurrentTime PROC FAR
                                    ADD                DI , SCREEN_WIDTH
                                    LOOP               DrawTimerAreaBackground_COLS
 
+
+
+    ;Drawing the timer-area text
+                                     MOV                AH , 2
+                                     MOV                DL , 75
+                                     MOV                DH , 0                                                                                  ;ANY COLOR.
+                                     MOV                BH,0
+                                     INT                10H
+
+                                     MOV DX, OFFSET TimerMsg
+                                     MOV AH, 9
+                                     INT 21H
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                             
                                    MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
                                    INT                21H
 
                                    CMP                DH , PreviousSecond
-                                   JE                 CheckTimeFinish
+                                   JNE                HEREWEGO
+                                   JMP                CheckTimeFinish
 
-
-                                   MOV                DI ,2*SCREEN_WIDTH
+    HEREWEGO:                      
                                    MOV                BYTE PTR ES:[DI],04H
                                    INC                DI
 
 
                                    MOV                PreviousSecond , DH
                                    INC                TotalSeconds
-                                   AND                DX ,DX
+                                   MOV                AH , 0
                                    MOV                AL , TotalSeconds
                                    MOV                BL , 60
                                    DIV                BL
+                                   
                                 
                                    MOV                CountSecond , AH                                                                        ; Current Seconds
                                    MOV                CountMinute , AL                                                                        ; Current Minutes
 
                                    CMP                TotalSeconds , 120                                                                      ; 2 minutes are achieved
-                                   JMP                exit
+                                   JE                 exit
 
-    ; CheckTimeFinish:
-
-
-
-
+    CheckTimeFinish:
                                    MOV                AH , 2
-                                   MOV                DL , 50
-                                   MOV                DH , 0                                                                                  ;ANY COLOR.
+                                   MOV                DL , 75
+                                   MOV                DH , 2                                                                                  ;ANY COLOR.
                                    MOV                BH,0
                                    INT                10H
                                 
@@ -2387,13 +2398,13 @@ ShowCurrentTime PROC FAR
                                    MOV                BH,0
                                    MOV                BL ,0H
                                    MOV                DL , CountMinute
-                                   ADD                DL ,'0'
+                                   ADD                DL ,30H
                                    MOV                CX , 1
                                    INT                21H
 
                                    MOV                AH , 2
-                                   MOV                DL , 51
-                                   MOV                DH , 0                                                                                  ;ANY COLOR.
+                                   MOV                DL , 76
+                                   MOV                DH , 2                                                                                 ;ANY COLOR.
                                    MOV                BH,0
                                    INT                10H
                                 
@@ -2405,18 +2416,23 @@ ShowCurrentTime PROC FAR
                                    INT                21H
 
                                    MOV                AH , 2
-                                   MOV                DL , 52
-                                   MOV                DH , 0                                                                                  ;ANY COLOR.
+                                   MOV                DL , 77
+                                   MOV                DH , 2                                                                                  ;ANY COLOR.
                                    MOV                BH,0
                                    INT                10H
                                 
-                                   MOV                AH , 2
-                                   MOV                BH,0
-                                   MOV                BL ,0H
-                                   MOV                DL , 10
-                                   ADD                DL ,'0'
-                                   MOV                CX , 1
-                                   INT                21H
+                                ;    MOV                AH , 2
+                                ;    MOV                BH,0
+                                ;    MOV                BL ,0H
+                                ;    MOV                DL , CountSecond
+                                ;    ADD                DL ,30H
+                                ;    MOV                CX , 1
+                                ;    INT                21H
+                                MOV AX , 0
+                                ADD AL , CountSecond
+                                CALL PRINTTHREEDIGITNUMBER
+
+
 
                                    RET
 ShowCurrentTime ENDP
@@ -3945,88 +3961,87 @@ MAIN PROC FAR
     ; ClearPower
  
 
-                                   MOV                DI ,2*SCREEN_WIDTH
     mainLoop:                      
-    ;CALL               ShowCurrentTime
+                                CALL               CheckSpeedUpTimer
+                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                INT                21H
+                                CALL               ShowCurrentTime
 
-                                   MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
-                                   INT                21H
+                                MOV                AX, POWERUPCOUNTER
+                                CMP                INDEXSTARTSHOWING, AX
+                                JAE                DONTSHOWPOWER
 
-                                   CMP                DH , PreviousSecond
-                                   JNE                HEREWEGO
-                                   JMP                ContinueLooping22
+                                MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
+                                INT                21H
 
-    HEREWEGO:                      
-                                   MOV                BYTE PTR ES:[DI],04H
-                                   INC                DI
+                                CMP                DH, CURSECOND
+                                JE                 DONTSHOWPOWER
+                                MOV                CURSECOND, DH
 
-
-                                   MOV                PreviousSecond , DH
-                                   INC                TotalSeconds
-                                   MOV                AH , 0
-                                   MOV                AL , TotalSeconds
-                                   MOV                BL , 60
-                                   DIV                BL
-                                   
-                                
-                                   MOV                CountSecond , AH                                                                        ; Current Seconds
-                                   MOV                CountMinute , AL                                                                        ; Current Minutes
-
-                                   CMP                TotalSeconds , 120                                                                      ; 2 minutes are achieved
-                                   JE                 exit
-
-    CheckTimeFinish:               
-
+                                MOV                AL, DH
+                                MOV                AH, 0
+                                MOV                BL, DURATIONTOSHOWPOWER
+                                DIV                BL
+                                CMP                AH, 0
+                                JNE                DONTSHOWPOWER
+                                MOV                SI, OFFSET ISVISIBLEPOWER
+                                ADD                SI, INDEXSTARTSHOWING
+                                INC                INDEXSTARTSHOWING
+                                CMP                BYTE PTR DS:[SI], 0
+                                JNE                DONTSHOWPOWER
+                                CALL               SHOWHIDDENPOWER
 
 
+    DONTSHOWPOWER:              
 
-                                   MOV                AH , 2
-                                   MOV                DL , 50
-                                   MOV                DH , 0                                                                                  ;ANY COLOR.
-                                   MOV                BH,0
-                                   INT                10H
-                                
-                                   MOV                AH , 2
-                                   MOV                BH,0
-                                   MOV                BL ,0H
-                                   MOV                DL , CountMinute
-                                   ADD                DL ,30H
-                                   MOV                CX , 1
-                                   INT                21H
+                                MOV                DX , PosXfirst
+                                MOV                PrevPosXfirst, DX
 
-                                   MOV                AH , 2
-                                   MOV                DL , 51
-                                   MOV                DH , 0                                                                                  ;ANY COLOR.
-                                   MOV                BH,0
-                                   INT                10H
-                                
-                                   MOV                AH , 2
-                                   MOV                BH,0
-                                   MOV                BL ,0H
-                                   MOV                DL , ':'
-                                   MOV                CX , 1
-                                   INT                21H
+                                MOV                DX, PosYfirst
+                                MOV                PrevPosYfirst, DX
 
-                                   MOV                AH , 2
-                                   MOV                DL , 52
-                                   MOV                DH , 0                                                                                  ;ANY COLOR.
-                                   MOV                BH,0
-                                   INT                10H
-                                
-                                   MOV                AH , 2
-                                   MOV                BH,0
-                                   MOV                BL ,0H
-                                   MOV                DL , CountSecond
-                                   ADD                DL ,30H
-                                   MOV                CX , 1
-                                   INT                21H
-    ContinueLooping22:             
-                                   MOV                CX , 0
-                                   MOV                DX , 64000D
-                                   MOV                AH , 86H
-                                   INT                15H
-                                   JMP                mainLoop                                                                                ; keep looping
-    exit:                          
+                                MOV                DX , PosXsecond
+                                MOV                PrevPosXsecond, DX
+
+                                MOV                DX , PosYsecond
+                                MOV                PrevPosYsecond ,DX
+
+
+    ;--------------    Overriding INT 9H   ---------------
+    ;Disable interrrupts
+                                CLI
+                       
+    ;Saving DS it will be the base of the addressing mode inside the interrupt
+                                PUSH               DS
+                                MOV                AX , CS
+                                MOV                DS , AX
+
+    ;changing interrup vector
+                                MOV                AX , 2509H
+                                LEA                DX , INT09H
+                                INT                21H
+                
+    ;re-enabling interrupts
+                                POP                DS
+                                STI
+            
+                
+                                CALL               CheckArrowFlags
+                                CALL               checkingPositionChange1
+
+                                CALL               CheckWASDFlags
+                                CALL               checkingPositionChange2
+
+
+    Delay:
+                                MOV                CX , 0
+                                MOV                DX , 65535D
+                                MOV                AH , 86H
+                                INT                15H
+
+                                JMP                mainLoop                                                                                ; keep looping
+    exit:                       
+	
                                    HLT
 
 MAIN ENDP
