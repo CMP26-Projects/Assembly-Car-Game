@@ -152,7 +152,7 @@ ClearPower MACRO
 
 ENDM
 
-SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2, F4
+SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2, F4, F2, Escape
 
             MOV DL , Up
             MOV UpKeyCode , DL
@@ -175,12 +175,18 @@ SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2, F4
             MOV DL , F4
             MOV F4KeyCode , DL
 
+            MOV DL , Escape
+            MOV EscKeyCode , DL
+
+            MOV DL , F2
+            MOV F2KeyCode , DL
+
 
     ; CALL InputButtonSwitchCase
 ENDM
 
     ;Setting Flags to be checked while movement
-SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6, f7
+SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6, f7, f8, f9
 
              MOV DL , f1
              MOV UpFlag , DL
@@ -202,6 +208,12 @@ SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6, f7
 
              MOV DL , f7
              MOV F4Flag  , DL
+
+             MOV DL , f8
+             MOV F2Flag , DL
+
+             MOV DL , f9
+             MOV EscFlag  , DL
 
 
 ENDM
@@ -769,7 +781,7 @@ ENDM
     NOTE2                     DB  "DON'T START WITH NUMBERS, SPECIAL CHARS", '$'
 
     ;INSTRUCTIONS
-    INSTRUCTION1              DB  'TO START THE GAME PRESS ENTER...', '$'
+    INSTRUCTION1              DB  'TO START THE GAME PRESS F2...', '$'
     INSTRUCTION2              DB  'TO END THE PROGRAM PRESS ESC...', '$'
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -852,6 +864,8 @@ ENDM
     KFlag                     DB  ?
     MFlag                     DB  ?
     F4Flag                    DB  ?
+    F2Flag                    DB  ?
+    EscFlag                   DB  ?
 
     ;Arrow flags to check whether this key is pressed down or not
     ArrowUpFlag               DB  0
@@ -860,7 +874,9 @@ ENDM
     ArrowRightFlag            DB  0
     LetterKFlag               DB  0
     LetterMFlag               DB  0
-    LetterF4Flag              Db  0
+    LetterF4Flag              DB  0
+    LetterF2Flag              DB  0
+    LetterEscFlag             DB  0
    
     ;WASD flags to check whether this key is pressed down or not
     WFlag                     DB  0
@@ -876,6 +892,8 @@ ENDM
     LetterK                   DB  25h
     LetterM                   DB  32H
     LetterF4                  DB  3EH
+    LetterF2                  DB  60
+    LetterEsc                 DB  1H
 
     ;WASD keys for movement
     WKey                      db  11h
@@ -891,6 +909,8 @@ ENDM
     DeletePower1Key           DB  ?
     DeletePower2Key           DB  ?
     F4KeyCode                 DB  ?
+    F2KeyCode                 DB  ?
+    EscKeyCode                DB  ?
 
     ;Boolean to indicate if the path the car is going to move in is safe or not
     ;0 -> Safe , 1->Not Safe
@@ -1717,8 +1737,20 @@ InputButtonSwitchCase PROC  FAR
                                 JMP                Default
     CheckLetterF4:               
                                 CMP                AL , F4KeyCode
-                                JNE                DEFAULT
+                                JNE                CheckLetterF2
                                 MOV                F4Flag , 1
+                                JMP                DEFAULT
+
+    CheckLetterF2:               
+                                CMP                AL , F2KeyCode
+                                JNE                CheckLetterEsc
+                                MOV                F2Flag , 1
+                                JMP                DEFAULT
+
+    CheckLetterEsc:               
+                                CMP                AL , EscKeyCode
+                                JNE                DEFAULT
+                                MOV                EscFlag , 1
     
     Default:                    
     
@@ -1835,6 +1867,12 @@ UpdateArrowFlags PROC FAR
                                 MOV                BL , F4Flag
                                 MOV                LetterF4Flag , BL
 
+                                MOV                BL , F2Flag
+                                MOV                LetterF2Flag , BL
+
+                                MOV                BL , EscFlag
+                                MOV                LetterEscFlag , BL
+
                                 RET
 
 UpdateArrowFlags ENDP
@@ -1866,8 +1904,8 @@ UpdateWASDFlags ENDP
 
     ;procedure calls all arrow keys functions
 CheckArrowKeys PROC FAR
-                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4
-                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag, LetterF4Flag
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag, LetterF4Flag, LetterF2Flag, LetterEscFlag
                                 CALL               InputButtonSwitchCase
                                 CALL               UpdateArrowFlags
                                 RET
@@ -1875,8 +1913,8 @@ CheckArrowKeys ENDP
 
     ;procedure calls all WASD keys functions
 CheckWASDKeys PROC FAR
-                                SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM,LetterF4
-                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag
+                                SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM,LetterF4, LetterF2, LetterEsc
+                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterEscFlag
                                 CALL               InputButtonSwitchCase
                                 CALL               UpdateWASDFlags
                                 RET
@@ -3412,11 +3450,9 @@ MAIN PROC FAR
 
     ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
     TAKINGNEXTSTAGE:            
-                                MOV                AH, 0
-                                INT                16H
-                                CMP                AH, 28
+                                CMP                LetterF2Flag, 1
                                 JE                 STARTPROGRAM
-                                CMP                AH, 1
+                                CMP                LetterEscFlag, 1
                                 JE                 exit
                                 JMP                TAKINGNEXTSTAGE
 
@@ -3989,7 +4025,7 @@ MAIN PROC FAR
     MOV                DX, 4B40H                                                                          ;63997
     MOV                AH, 86H
     INT                15H           
-    JMP FAR PTR STARTTHEWHOLEPROGRAM
+    JMP STARTTHEWHOLEPROGRAM
 
 MAIN ENDP
 
