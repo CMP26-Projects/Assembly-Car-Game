@@ -4159,6 +4159,15 @@ MOV     InObstacle1 , 0
                                                                                                                                                                                                     ;(XY)
 MOV    ObstacleCollisionCount , 0
 
+MOV PreviousMinute,  0
+MOV PreviousSecond,  0
+MOV CountMinute,  0
+MOV CountSecond,  0
+MOV TotalSeconds,  0
+MOV TimerFinished ,  0
+
+
+
 MOV CX, NUMBEROFPARTS
 MOV SI, OFFSET CAR1VIS
 INITIALIZE1:
@@ -4302,6 +4311,17 @@ LOOP INITIALIZE2
                                  CALL               ShowCurrentTime
                                  CMP                TimerFinished , 1
                                  JNE                mainLoopBegins
+                                MOV EXITSTATUS, 2
+
+                                MOV AX, CAR2SCORE
+                                CMP CAR1SCORE , AX
+                                JB  SECONDPLAYERWON
+                                MOV WINNER, 1
+                                JMP FINISHDECIDING
+                                SECONDPLAYERWON:
+                                MOV WINNER, 2
+                                FINISHDECIDING:
+                                CALL ENDGAME
                                  JMP                exit
     mainLoopBegins:              
 
@@ -4393,6 +4413,7 @@ LOOP INITIALIZE2
                                 MOV WINNER, 1
                                 CALL ENDGAME
                                 JMP exit
+
                                 CHECKSECONDPLAYER:
                                 CMP                 CAR2SCORE, 100
                                 JNE                 GOTOMAINLOOP
@@ -4400,7 +4421,10 @@ LOOP INITIALIZE2
                                 MOV WINNER, 2
                                 CALL ENDGAME
                                 JMP exit
+
                                 GOTOMAINLOOP:
+
+
                                 JMP                mainLoop                                                                                ; keep looping
     exit:   
     MOV                CX, 4CH
