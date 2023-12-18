@@ -152,7 +152,7 @@ ClearPower MACRO
 
 ENDM
 
-SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2
+SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2, F4, F2, Escape
 
             MOV DL , Up
             MOV UpKeyCode , DL
@@ -172,12 +172,21 @@ SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2
             MOV DL , DeletePower2
             MOV DeletePower2Key , DL
 
+            MOV DL , F4
+            MOV F4KeyCode , DL
+
+            MOV DL , Escape
+            MOV EscKeyCode , DL
+
+            MOV DL , F2
+            MOV F2KeyCode , DL
+
 
     ; CALL InputButtonSwitchCase
 ENDM
 
     ;Setting Flags to be checked while movement
-SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6
+SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6, f7, f8, f9
 
              MOV DL , f1
              MOV UpFlag , DL
@@ -196,6 +205,15 @@ SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6
 
              MOV DL , f6
              MOV MFlag , DL
+
+             MOV DL , f7
+             MOV F4Flag  , DL
+
+             MOV DL , f8
+             MOV F2Flag , DL
+
+             MOV DL , f9
+             MOV EscFlag  , DL
 
 
 ENDM
@@ -395,7 +413,7 @@ CHECKPOSSIBILITIES MACRO
 ENDM
 
 
-.MODEL COMPACT
+.MODEL SMALL
 .STACK 64
 .DATA
 
@@ -763,7 +781,7 @@ ENDM
     NOTE2                     DB  "DON'T START WITH NUMBERS, SPECIAL CHARS", '$'
 
     ;INSTRUCTIONS
-    INSTRUCTION1              DB  'TO START THE GAME PRESS ENTER...', '$'
+    INSTRUCTION1              DB  'TO START THE GAME PRESS F2...', '$'
     INSTRUCTION2              DB  'TO END THE PROGRAM PRESS ESC...', '$'
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -845,6 +863,9 @@ ENDM
     RightFlag                 DB  ?
     KFlag                     DB  ?
     MFlag                     DB  ?
+    F4Flag                    DB  ?
+    F2Flag                    DB  ?
+    EscFlag                   DB  ?
 
     ;Arrow flags to check whether this key is pressed down or not
     ArrowUpFlag               DB  0
@@ -853,6 +874,9 @@ ENDM
     ArrowRightFlag            DB  0
     LetterKFlag               DB  0
     LetterMFlag               DB  0
+    LetterF4Flag              DB  0
+    LetterF2Flag              DB  0
+    LetterEscFlag             DB  0
    
     ;WASD flags to check whether this key is pressed down or not
     WFlag                     DB  0
@@ -867,6 +891,9 @@ ENDM
     ArrowRight                DB  4DH
     LetterK                   DB  25h
     LetterM                   DB  32H
+    LetterF4                  DB  3EH
+    LetterF2                  DB  60
+    LetterEsc                 DB  1H
 
     ;WASD keys for movement
     WKey                      db  11h
@@ -881,6 +908,9 @@ ENDM
     RightKeyCode              DB  ?
     DeletePower1Key           DB  ?
     DeletePower2Key           DB  ?
+    F4KeyCode                 DB  ?
+    F2KeyCode                 DB  ?
+    EscKeyCode                DB  ?
 
     ;Boolean to indicate if the path the car is going to move in is safe or not
     ;0 -> Safe , 1->Not Safe
@@ -901,13 +931,11 @@ ENDM
     ;Data for the status bar (First Player's data)
     player1PosX               EQU 0
     player1PosY               EQU 22
-    player1Name               DB  'Abd El-Rahman', '$'
    
 
     ;Data for the status bar (Second Player's data)
-    player2PosX               EQU 65
-    player2PosY               EQU 22
-    player2Name               DB  'Ahmed', '$'
+    player2PosX           EQU  65
+    player2PosY           EQU  22
 
 
     ; Data for the powerups
@@ -1027,7 +1055,7 @@ ENDM
 
     ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
     POWERPROBABILITY          DB  100
-    OBSTPROBABILITY           DB  70
+    OBSTPROBABILITY           DB  100
     POWERVISIBPROBABILITY     DB  100
 
 
@@ -1088,8 +1116,8 @@ ENDM
     ;STARTdd
     STARTROADX                EQU 2
     STARTROADY                EQU 2
-    NUMBEROFPARTS             EQU 18
-    MINNUMOFPARTS             EQU 10
+    NUMBEROFPARTS             EQU 100
+    MINNUMOFPARTS             EQU 20
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
     IMGTODRAW                 DW  ?
@@ -1121,13 +1149,21 @@ ENDM
     CHECKLINEIMG              DB  0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0
     ISVERTICALCHECKLINE       DW  ?
 
-    CHECKLINESVERTICIES       DW  NUMBEROFPARTS DUP('?')
-    CHECKLINEVERTEX           DW  ?
-    INDEXOFPART               DW  0
-    CAR1PARTSVIS              DW  0
-    CAR2PARTSVIS              DW  0
-    CAR1VIS                   DB  NUMBEROFPARTS DUP(0)
-    CAR2VIS                   DB  NUMBEROFPARTS DUP(0)
+    CHECKLINESVERTICIES   DW  NUMBEROFPARTS DUP('?')
+    CHECKLINEVERTEX       DW  ?
+    INDEXOFPART           DW  0
+    CAR1PARTSVIS          DW  0
+    CAR2PARTSVIS          DW  0
+    CAR1VIS               DB  NUMBEROFPARTS DUP(0)
+    CAR2VIS               DB  NUMBEROFPARTS DUP(0)
+
+
+    EXITSTATUS            DB  ?
+    WINNER                DB  ?
+    CAR1SCORE             DW  0
+    CAR2SCORE             DW  0
+
+    WONMESSAGE            DB  ' WON', '$'
 
     ;ROAD IMAGES
     VERROADIMGW               EQU 20
@@ -1722,13 +1758,30 @@ InputButtonSwitchCase PROC  FAR
 
     NOTPRESSED6:                 
 
-                                 MOV                BL , DeletePower2Key
-                                 ADD                BL , 80H
-                                 CMP                AL , BL
-                                 JNE                Default
-                                 MOV                MFlag , 0
+                                MOV                BL , DeletePower2Key
+                                ADD                BL , 80H
+                                CMP                AL , BL
+                                JNE                CheckLetterF4
+                                MOV                MFlag , 0
+                                JMP                Default
+    CheckLetterF4:               
+                                CMP                AL , F4KeyCode
+                                JNE                CheckLetterF2
+                                MOV                F4Flag , 1
+                                JMP                DEFAULT
 
-    Default:                     
+    CheckLetterF2:               
+                                CMP                AL , F2KeyCode
+                                JNE                CheckLetterEsc
+                                MOV                F2Flag , 1
+                                JMP                DEFAULT
+
+    CheckLetterEsc:               
+                                CMP                AL , EscKeyCode
+                                JNE                DEFAULT
+                                MOV                EscFlag , 1
+    
+    Default:                    
     
                                  RET
 InputButtonSwitchCase ENDP
@@ -1762,9 +1815,9 @@ CheckArrowFlags PROC FAR
                                  CALL               UpdateCarPos
                                  DEC                PosYfirst
 
-    CmpRight:                    
-                                 CMP                ArrowRightFlag, 1
-                                 JNE                CmpFinish
+    CmpRight:                  
+                                CMP                ArrowRightFlag, 1
+                                JNE                CmpFinish
                          
                                  ScanX              PosXfirst, PosYfirst , 1 ,1, Car1Speed
                                  CALL               ScanXmovement
@@ -1837,8 +1890,17 @@ UpdateArrowFlags PROC FAR
                                  MOV                BL , KFlag
                                  MOV                LetterKFlag , BL
 
-                                 MOV                BL , MFlag
-                                 MOV                LetterMFlag , BL
+                                MOV                BL , MFlag
+                                MOV                LetterMFlag , BL
+
+                                MOV                BL , F4Flag
+                                MOV                LetterF4Flag , BL
+
+                                MOV                BL , F2Flag
+                                MOV                LetterF2Flag , BL
+
+                                MOV                BL , EscFlag
+                                MOV                LetterEscFlag , BL
 
                                  RET
 
@@ -1871,20 +1933,20 @@ UpdateWASDFlags ENDP
 
     ;procedure calls all arrow keys functions
 CheckArrowKeys PROC FAR
-                                 SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM
-                                 SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag
-                                 CALL               InputButtonSwitchCase
-                                 CALL               UpdateArrowFlags
-                                 RET
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag, LetterF4Flag, LetterF2Flag, LetterEscFlag
+                                CALL               InputButtonSwitchCase
+                                CALL               UpdateArrowFlags
+                                RET
 CheckArrowKeys ENDP
 
     ;procedure calls all WASD keys functions
 CheckWASDKeys PROC FAR
-                                 SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM
-                                 SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag
-                                 CALL               InputButtonSwitchCase
-                                 CALL               UpdateWASDFlags
-                                 RET
+                                SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM,LetterF4, LetterF2, LetterEsc
+                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterEscFlag
+                                CALL               InputButtonSwitchCase
+                                CALL               UpdateWASDFlags
+                                RET
 CheckWASDKeys ENDP
 
 Update1 PROC FAR
@@ -2559,9 +2621,13 @@ INTERFACESTAGE PROC
                                  MOV                SI, OFFSET SECONDNAME
                                  CALL               ENTERPLAYERNAME
 
+                                RET
+INTERFACESTAGE ENDP
 
+;description
+MAINMENU PROC
 
-                                 CALL               INTERFACEBACKGROUND
+                                CALL               INTERFACEBACKGROUND
 
     ;FIRST INSTRUCTION
                                  MOV                AH, 2H
@@ -2574,18 +2640,16 @@ INTERFACESTAGE PROC
                                  INT                21H
 
     ;SECOND INSTRUCTION
-                                 MOV                AH, 2H
-                                 MOV                DL, 2
-                                 MOV                DH, 17
-                                 MOV                BH, 0
-                                 INT                10H
-                                 MOV                AH, 9
-                                 MOV                DX, OFFSET INSTRUCTION2
-                                 INT                21H
-                                 RET
-INTERFACESTAGE ENDP
-
-
+                                MOV                AH, 2H
+                                MOV                DL, 2
+                                MOV                DH, 17
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET INSTRUCTION2
+                                INT                21H
+    RET
+MAINMENU ENDP
 
 
 
@@ -3294,6 +3358,32 @@ DRAWCHECKLINE PROC
                                  RET
 DRAWCHECKLINE ENDP
 
+PRINTTWODIGITNUMBER PROC FAR
+                                 MOV                BL,100
+                                 DIV                BL                                                                                      ;;al = ax / bl, ah = ax & bl
+                                 MOV                DL,AL
+                                 PUSH               AX                                                                                      ;To save remainder
+                                 ADD                DL,30h                                                                                  ; Add 30h to print ASCII
+                                 MOV                AH, 02h                                                                                 ; Print a character in dl
+                                 INT                21h
+
+                                 POP                AX
+                                 MOV                BL,10
+                                 MOV                AL, AH
+                                 MOV                AH,0
+                                 DIV                BL
+                                 MOV                DL, AL
+                                 PUSH               AX
+                                 ADD                DL,30h
+                                 MOV                AH,02h
+                                 INT                21h
+                                 POP                AX
+                                 MOV                DL,AH
+                                 ADD                DL,30h
+                                 MOV                AH, 02h
+                                 INT                21h
+                                 RET
+PRINTTWODIGITNUMBER ENDP
 
 PRINTTHREEDIGITNUMBER PROC FAR
                                  MOV                BL,100
@@ -3355,39 +3445,41 @@ UPDATESCORE PROC FAR
                                  MOV                BYTE PTR DS:[SI], 1
                                  INC                CAR2PARTSVIS
 
-    UPDATETHESCORES:             
-                                 MOV                AX, CAR1PARTSVIS
-                                 MOV                BL, 100
-                                 MUL                BL
-                                 MOV                BX, INDEXOFPART
-                                 DIV                BL
-                                 MOV                AH, 0
-                                 PUSH               AX
-                                 MOV                AH,2
-                                 MOV                BH, 0
-                                 MOV                DH, player1PosY
-                                 MOV                DL, player1PosX
-                                 ADD                DL, 14
-                                 INT                10H
-                                 POP                AX
-                                 CALL               PRINTTHREEDIGITNUMBER
+    UPDATETHESCORES:
+    MOV AX, CAR1PARTSVIS
+    MOV BL, 100
+    MUL BL
+    MOV BX, INDEXOFPART
+    DIV BL
+    MOV AH, 0
+    PUSH AX
+    MOV AH,2
+    MOV BH, 0
+    MOV DH, player2PosY
+    MOV DL, 77
+    INT 10H
+    POP AX
+    MOV CAR1SCORE, AX
+
+    CALL PRINTTHREEDIGITNUMBER
    
 
-                                 MOV                AX, CAR2PARTSVIS
-                                 MOV                BL, 100
-                                 MUL                BL
-                                 MOV                BX, INDEXOFPART
-                                 DIV                BL
-                                 MOV                AH, 0
-                                 PUSH               AX
-                                 MOV                AH,2
-                                 MOV                BH, 0
-                                 MOV                DH, player2PosY
-                                 MOV                DL, player2PosX
-                                 ADD                DL, 11
-                                 INT                10H
-                                 POP                AX
-                                 CALL               PRINTTHREEDIGITNUMBER
+    MOV AX, CAR2PARTSVIS
+    MOV BL, 100
+    MUL BL
+    MOV BX, INDEXOFPART
+    DIV BL
+    MOV AH, 0
+    PUSH AX
+    MOV AH,2
+    MOV BH, 0
+    MOV DH, player1PosY
+    MOV DL, 17
+    INT 10H
+    POP AX
+
+    MOV CAR2SCORE, AX;WE FLIPPED THAT AS WE NEED THAT RIGHT NOW
+    CALL PRINTTHREEDIGITNUMBER
    
 
 
@@ -3461,38 +3553,38 @@ GETCHECKLINEVERTIX ENDP
 
 ShowCurrentTime PROC FAR
     ;Drawing the timer-area box
-                                 MOV                CarToDrawX, SCREEN_WIDTH - 40
-                                 MOV                CarToDrawY ,0
-                                 CALL               CalculateBoxVertex
-                                 MOV                CX , 20
+    ;                              MOV                CarToDrawX, SCREEN_WIDTH - 40
+    ;                              MOV                CarToDrawY ,0
+    ;                              CALL               CalculateBoxVertex
+    ;                              MOV                CX , 10
                                 
-    DrawTimerAreaBackground_COLS:
-                                 PUSH               CX
-                                 PUSH               DI
-                                 MOV                CX , 40
+    ; DrawTimerAreaBackground_COLS:
+    ;                              PUSH               CX
+    ;                              PUSH               DI
+    ;                              MOV                CX , 40
 
-    DrawTimerAreaBackground_ROWS:
-                                 MOV                BYTE PTR ES:[DI] , 18
-                                 INC                DI
-                                 LOOP               DrawTimerAreaBackground_ROWS
+    ; DrawTimerAreaBackground_ROWS:
+    ;                              MOV                BYTE PTR ES:[DI] , 18
+    ;                              INC                DI
+    ;                              LOOP               DrawTimerAreaBackground_ROWS
 
-                                 POP                DI
-                                 POP                CX
-                                 ADD                DI , SCREEN_WIDTH
-                                 LOOP               DrawTimerAreaBackground_COLS
+    ;                              POP                DI
+    ;                              POP                CX
+    ;                              ADD                DI , SCREEN_WIDTH
+    ;                              LOOP               DrawTimerAreaBackground_COLS
 
 
 
     ;Drawing the timer-area text
-                                 MOV                AH , 2
-                                 MOV                DL , 75
-                                 MOV                DH , 0                                                                                  ;ANY COLOR.
-                                 MOV                BH,0
-                                 INT                10H
+                                ;  MOV                AH , 2
+                                ;  MOV                DL , 75
+                                ;  MOV                DH , 0                                                                                  ;ANY COLOR.
+                                ;  MOV                BH,0
+                                ;  INT                10H
 
-                                 MOV                DX, OFFSET TimerMsg
-                                 MOV                AH, 9
-                                 INT                21H
+                                ;  MOV                DX, OFFSET TimerMsg
+                                ;  MOV                AH, 9
+                                ;  INT                21H
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                             
                                  MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
@@ -3503,9 +3595,7 @@ ShowCurrentTime PROC FAR
                                  JMP                CheckTimeFinish
 
     HEREWEGO:                    
-                                 MOV                BYTE PTR ES:[DI],04H
-                                 INC                DI
-
+                                
 
                                  MOV                PreviousSecond , DH
                                  INC                TotalSeconds
@@ -3526,7 +3616,7 @@ ShowCurrentTime PROC FAR
     CheckTimeFinish:             
                                  MOV                AH , 2
                                  MOV                DL , 75
-                                 MOV                DH , 2                                                                                  ;ANY COLOR.
+                                 MOV                DH , 0                                                                                 ;ANY COLOR.
                                  MOV                BH,0
                                  INT                10H
                                 
@@ -3540,7 +3630,7 @@ ShowCurrentTime PROC FAR
 
                                  MOV                AH , 2
                                  MOV                DL , 76
-                                 MOV                DH ,2                                                                                   ;ANY COLOR.
+                                 MOV                DH ,0                                                                                   ;ANY COLOR.
                                  MOV                BH,0
                                  INT                10H
                                 
@@ -3553,7 +3643,7 @@ ShowCurrentTime PROC FAR
 
                                  MOV                AH , 2
                                  MOV                DL , 77
-                                 MOV                DH,2                                                                                    ;ANYCOLOR.
+                                 MOV                DH,0                                                                                  ;ANYCOLOR.
                                  MOV                BH,0
                                  INT                10H
 
@@ -3566,112 +3656,102 @@ ShowCurrentTime PROC FAR
                                  RET
 ShowCurrentTime ENDP
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-MAIN PROC FAR
-                                 MOV                AX, @DATA
-                                 MOV                DS, AX
+;description
+ENDGAME PROC
+
+    CALL INTERFACEBACKGROUND
+
+    CMP EXITSTATUS, 2
+    JNE SHOWSCORES
+
+    CMP WINNER, 1
+    JNE SECONDWON
+
+    MOV AH, 2H
+    MOV DL, 16
+    MOV DH, 12
+    MOV BH, 0
+    INT 10H
+
+    MOV AH, 9
+    MOV DX, OFFSET SECONDNAME;WE FLIPPED THAT DUE TO PROJECT SCHEDULE
+    INT 21H
+
+    MOV AH, 9
+    MOV DX, OFFSET WONMESSAGE
+    INT 21H
+    JMP FINISHENDGAME
+    SECONDWON:
+
+    MOV AH, 2H
+    MOV DL, 16
+    MOV DH, 12
+    MOV BH, 0
+    INT 10H
+
+    MOV AH, 9
+    MOV DX, OFFSET FIRSTNAME
+    INT 21H
+
+    MOV AH, 9
+    MOV DX, OFFSET WONMESSAGE
+    INT 21H
+
+    JMP FINISHENDGAME
+
+    SHOWSCORES:
+    MOV AH, 2H
+    MOV DL, 16
+    MOV DH, 12
+    MOV BH, 0
+    INT 10H
+
+    MOV AH, 9
+    MOV DX, OFFSET FIRSTNAME
+    INT 21H
+
+    MOV AH, 2
+    MOV DL, ':'
+    INT 21H
+
+    MOV AH, 2
+    MOV DL, ' '
+    INT 21H
+    
+    MOV AX, CAR2SCORE;WE FLIPPED THEM DUE TO LATE SUMBISSION
+    CALL PRINTTHREEDIGITNUMBER
+
+    ; SECOND PLAYER SCORE 
+    MOV AH, 2H
+    MOV DL, 16
+    MOV DH, 14
+    MOV BH, 0
+    INT 10H
+
+    MOV AH, 9
+    MOV DX, OFFSET SECONDNAME
+    INT 21H
+
+    MOV AH, 2
+    MOV DL, ':'
+    INT 21H
+
+    MOV AH, 2
+    MOV DL, ' '
+    INT 21H
+
+    MOV AX, CAR1SCORE
+    CALL PRINTTHREEDIGITNUMBER
+
+    FINISHENDGAME:
+    RET
+ENDGAME ENDP
 
 
-                                 MOV                AH,0
-                                 MOV                AL,13H
-                                 INT                10H
-
-                                 MOV                AX, 0A000H
-                                 MOV                ES, AX
-
-                                 CALL               INTERFACESTAGE
-
-    ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
-    TAKINGNEXTSTAGE:             
-                                 MOV                AH, 0
-                                 INT                16H
-                                 CMP                AH, 28
-                                 JE                 STARTPROGRAM
-                                 CMP                AH, 1
-                                 JE                 exit
-                                 JMP                TAKINGNEXTSTAGE
-
-
-    STARTPROGRAM:                
-    ;Multiplayers' Names
-                                 MOV                AH,2
-                                 MOV                DH , player1PosY
-                                 MOV                DL , player1PosX
-                                 INT                10H
-
-                                 MOV                AH ,9
-                                 LEA                DX , player1Name
-                                 INT                21H
-
-                                 MOV                AH ,2
-                                 MOV                DH , player2PosY
-                                 MOV                DL , player2PosX
-                                 INT                10H
-
-                                 MOV                AH ,9
-                                 LEA                DX , player2Name
-                                 INT                21H
-
-                                 MOV                AH ,2
-                                 MOV                DH , player1PosY
-                                 ADD                DH ,1
-                                 MOV                DL , player1PosX
-                                 INT                10H
-
-                                 MOV                AH , 09
-                                 LEA                DX , powerupMessage
-                                 INT                21H
-
-                                 MOV                AH ,2
-                                 MOV                DH , player2PosY
-                                 ADD                dh , 1
-                                 MOV                DL , player2PosX
-                                 INT                10H
-
-                                 MOV                AH , 09
-                                 LEA                DX , powerupMessage
-                                 INT                21H
-
-    ;;;;;;;;;; DRAWING ROAD ;;;;;;;;;;;;
-
-
-    ;DRAWING PART OF ROAD
-    ;DRAW BACKGROUNDIMAGE, SCREENWIDTH, SCREENHEIGHT, 0, 0
-
-
-    STARTROAD:                   
-                                 MOV                CANTUP, 0
-                                 MOV                CANTRIGHT, 0
-                                 MOV                CANTDOWN, 0
-                                 MOV                CANTLEFT, 0
-                                 MOV                POWERUPCOUNTER, 0                                                                       ;ADDED THAT WHEN ADDED START PROGRAM
-                                 MOV                CURPOWERINDEX, 0
-                                 MOV                CX, 11
-                                 MOV                TEMPX, 0
-                                 MOV                TEMPY, 0
-    OUTERLOOP:                   
-                                 PUSH               CX
-                                 MOV                CX, 20
-    INNERLOOP:                   
-                                 MOV                TMP4, 0
-                                 DRAW               BACKGROUNDIMAGEPART , BACKGROUNDIMAGEPARTW, BACKGROUNDIMAGEPARTH, TEMPX, TEMPY, TMP4
-                                 ADD                TEMPX, BACKGROUNDIMAGEPARTW
-                                 LOOP               INNERLOOP
-                                 MOV                TEMPX, 0
-                                 ADD                TEMPY, BACKGROUNDIMAGEPARTH
-                                 POP                CX
-                                 LOOP               OUTERLOOP
-    ;CALL DRAWBCKGROUND
-
-                                 MOV                TMP4, 0
-                                 MOV                CX, 0
-                                 DRAW               HORROADIMG , HORROADIMGW, HORROADIMGH, STARTROADX, STARTROADY, TMP4
-                                 CALL               POINTSAFTERRIGHT
-                                 DRAW               STARTFLAGIMG, STARTFLAGIMGW, STARTFLAGIMGH, STARTROADX, STARTROADY, TMP4
-
-
+;description
+STATUSBARANDROAD PROC
+    
+    
     ;Drawing Status Bar
                                  CalcStatBarStPts
                                  CALL               DrawStatBar
@@ -4027,6 +4107,199 @@ MAIN PROC FAR
     NOTSTARTPROGRAM:             
                                  CALL               DRAWENDLINE
 
+
+    RET
+STATUSBARANDROAD ENDP
+
+
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+MAIN PROC FAR
+                                MOV                AX, @DATA
+                                MOV                DS, AX
+
+
+                                MOV                AH,0
+                                MOV                AL,13H
+                                INT                10H
+
+                                MOV                AX, 0A000H
+                                MOV                ES, AX
+
+                                ;;TAKING NAMES STAGE
+                                CALL               INTERFACESTAGE
+                                    ;--------------    Overriding INT 9H   ---------------
+    ;Disable interrrupts
+                                CLI
+                       
+    ;Saving DS it will be the base of the addressing mode inside the interrupt
+                                PUSH               DS
+                                MOV                AX , CS
+                                MOV                DS , AX
+
+    ;changing interrup vector
+                                MOV                AX , 2509H
+                                LEA                DX , INT09H
+                                INT                21H
+                
+    ;re-enabling interrupts
+                                POP                DS
+                                STI
+    STARTTHEWHOLEPROGRAM:
+                                ;INITIALIZATIONS
+                                MOV                CANTUP, 0
+                                MOV                CANTRIGHT, 0
+                                MOV                CANTDOWN, 0
+                                MOV                CANTLEFT, 0
+                                MOV                POWERUPCOUNTER, 0                                                                       ;ADDED THAT WHEN ADDED START PROGRAM
+                                MOV                CURPOWERINDEX, 0
+                                MOV                LetterF4Flag, 0
+                                MOV                LetterF2Flag, 0
+                                MOV                LetterEscFlag, 0
+                                MOV                CAR1SCORE, 0
+                                MOV                CAR2SCORE, 0
+                                MOV Car1Speed , 2
+MOV     Car2Speed , 2
+
+
+MOV    Car1SpeedUpCounter,  0
+MOV    Car2SpeedUpCounter ,  0
+MOV  CanUpdateX ,  0
+MOV    CanUpdateY ,  0
+MOV POWERUPCOUNTER,  0
+MOV CURPOWERINDEX , 0
+MOV INDEXSTARTSHOWING, 0 
+MOV CURSECOND,  61
+MOV    INDEXOFPART,  0
+MOV    CAR1PARTSVIS,  0
+MOV    CAR2PARTSVIS ,  0
+
+MOV  Touching1 ,  0
+MOV    Touching2  ,  0
+MOV     InObstacle1 , 0
+ MOV   InObstacle2 ,  0
+                                                                                                                                                                                                    ;(XY)
+MOV    ObstacleCollisionCount , 0
+
+MOV PreviousMinute,  0
+MOV PreviousSecond,  0
+MOV CountMinute,  0
+MOV CountSecond,  0
+MOV TotalSeconds,  0
+MOV TimerFinished ,  0
+
+
+
+MOV CX, NUMBEROFPARTS
+MOV SI, OFFSET CAR1VIS
+INITIALIZE1:
+MOV BYTE PTR DS:[SI], 0
+INC SI
+LOOP INITIALIZE1
+
+MOV CX, NUMBEROFPARTS
+MOV SI, OFFSET CAR2VIS
+INITIALIZE2:
+MOV BYTE PTR DS:[SI], 0
+INC SI
+LOOP INITIALIZE2
+
+
+
+
+                                CALL               MAINMENU
+
+    ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
+    TAKINGNEXTSTAGE:            
+                                CMP                LetterF2Flag, 1
+                                JE                 STARTPROGRAM
+                                CMP                LetterEscFlag, 1
+                                JE                 HLTPROGRAM
+                                JMP                TAKINGNEXTSTAGE
+
+
+    STARTPROGRAM:               
+    ;Multiplayers' Names
+                                ; MOV                LetterF4Flag, 0
+                                ; MOV                AH,2
+                                ; MOV                DH , player1PosY
+                                ; MOV                DL , player1PosX
+                                ; INT                10H
+
+                                ; MOV                AH ,9
+                                ; LEA                DX , player1Name
+                                ; INT                21H
+
+                                ; MOV                AH ,2
+                                ; MOV                DH , player2PosY
+                                ; MOV                DL , player2PosX
+                                ; INT                10H
+
+                                ; MOV                AH ,9
+                                ; LEA                DX , player2Name
+                                ; INT                21H
+
+                                ; MOV                AH ,2
+                                ; MOV                DH , player1PosY
+                                ; ADD                DH ,1
+                                ; MOV                DL , player1PosX
+                                ; INT                10H
+
+                                ; MOV                AH , 09
+                                ; LEA                DX , powerupMessage
+                                ; INT                21H
+
+                                ; MOV                AH ,2
+                                ; MOV                DH , player2PosY
+                                ; ADD                dh , 1
+                                ; MOV                DL , player2PosX
+                                ; INT                10H
+
+                                ; MOV                AH , 09
+                                ; LEA                DX , powerupMessage
+                                ; INT                21H
+
+    ;;;;;;;;;; DRAWING ROAD ;;;;;;;;;;;;
+
+
+    ;DRAWING PART OF ROAD
+    ;DRAW BACKGROUNDIMAGE, SCREENWIDTH, SCREENHEIGHT, 0, 0
+
+
+    STARTROAD:                  
+                                MOV                CANTUP, 0
+                                MOV                CANTRIGHT, 0
+                                MOV                CANTDOWN, 0
+                                MOV                CANTLEFT, 0
+                                MOV                POWERUPCOUNTER, 0                                                                       ;ADDED THAT WHEN ADDED START PROGRAM
+                                MOV                CURPOWERINDEX, 0
+                                MOV                CX, 11
+                                MOV                TEMPX, 0
+                                MOV                TEMPY, 0
+    OUTERLOOP:                  
+                                PUSH               CX
+                                MOV                CX, 20
+    INNERLOOP:                  
+                                MOV                TMP4, 0
+                                DRAW               BACKGROUNDIMAGEPART , BACKGROUNDIMAGEPARTW, BACKGROUNDIMAGEPARTH, TEMPX, TEMPY, TMP4
+                                ADD                TEMPX, BACKGROUNDIMAGEPARTW
+                                LOOP               INNERLOOP
+                                MOV                TEMPX, 0
+                                ADD                TEMPY, BACKGROUNDIMAGEPARTH
+                                POP                CX
+                                LOOP               OUTERLOOP
+    ;CALL DRAWBCKGROUND
+
+                                MOV                TMP4, 0
+                                MOV                CX, 0
+                                DRAW               HORROADIMG , HORROADIMGW, HORROADIMGH, STARTROADX, STARTROADY, TMP4
+                                CALL               POINTSAFTERRIGHT
+                                DRAW               STARTFLAGIMG, STARTFLAGIMGW, STARTFLAGIMGH, STARTROADX, STARTROADY, TMP4
+
+
+    CALL STATUSBARANDROAD
     ; MOV CURPOWERINDEX, 4
     ; CALL RETRIEVEROAD
 
@@ -4057,12 +4330,22 @@ MAIN PROC FAR
 
     ; MOV powerupParent , 1
     ; ClearPower
- 
 
     mainLoop:                    
                                  CALL               ShowCurrentTime
                                  CMP                TimerFinished , 1
                                  JNE                mainLoopBegins
+                                MOV EXITSTATUS, 2
+
+                                MOV AX, CAR2SCORE
+                                CMP CAR1SCORE , AX
+                                JB  SECONDPLAYERWON
+                                MOV WINNER, 1
+                                JMP FINISHDECIDING
+                                SECONDPLAYERWON:
+                                MOV WINNER, 2
+                                FINISHDECIDING:
+                                CALL ENDGAME
                                  JMP                exit
     mainLoopBegins:              
 
@@ -4111,42 +4394,74 @@ MAIN PROC FAR
                                  MOV                PrevPosYsecond ,DX
 
 
-    ;--------------    Overriding INT 9H   ---------------
-    ;Disable interrrupts
-                                 CLI
+    ; ;--------------    Overriding INT 9H   ---------------
+    ; ;Disable interrrupts
+    ;                             CLI
                        
-    ;Saving DS it will be the base of the addressing mode inside the interrupt
-                                 PUSH               DS
-                                 MOV                AX , CS
-                                 MOV                DS , AX
+    ; ;Saving DS it will be the base of the addressing mode inside the interrupt
+    ;                             PUSH               DS
+    ;                             MOV                AX , CS
+    ;                             MOV                DS , AX
 
-    ;changing interrup vector
-                                 MOV                AX , 2509H
-                                 LEA                DX , INT09H
-                                 INT                21H
+    ; ;changing interrup vector
+    ;                             MOV                AX , 2509H
+    ;                             LEA                DX , INT09H
+    ;                             INT                21H
                 
-    ;re-enabling interrupts
-                                 POP                DS
-                                 STI
+    ; ;re-enabling interrupts
+    ;                             POP                DS
+    ;                             STI
             
-                
-                                 CALL               CheckArrowFlags
-                                 CALL               checkingPositionChange1
+
+                                CMP                LetterF4Flag, 1
+                                JNE                CONTINUEMAINLOOP
+                                MOV                EXITSTATUS, 1
+                                CALL               ENDGAME
+                                JMP                exit
+                                CONTINUEMAINLOOP:
+                                CALL               CheckArrowFlags
+                                CALL               checkingPositionChange1
 
                                  CALL               CheckWASDFlags
                                  CALL               checkingPositionChange2
 
 
     ;Delay
-                                 MOV                CX , 0
-                                 MOV                DX , 64000D
-                                 MOV                AH , 86H
-                                 INT                15H
+                                MOV                CX , 0
+                                MOV                DX , 64000D
+                                MOV                AH , 86H
+                                INT                15H
+                                CMP                CAR1SCORE, 100
+                                JNE CHECKSECONDPLAYER
+                                MOV EXITSTATUS, 2
+                                MOV WINNER, 1
+                                CALL ENDGAME
+                                JMP exit
 
-                                 JMP                mainLoop                                                                                ; keep looping
-    exit:                        
-                                 HLT
+                                CHECKSECONDPLAYER:
+                                CMP                 CAR2SCORE, 100
+                                JNE                 GOTOMAINLOOP
+                                MOV EXITSTATUS, 2
+                                MOV WINNER, 2
+                                CALL ENDGAME
+                                JMP exit
 
+                                GOTOMAINLOOP:
+
+
+                                JMP                mainLoop                                                                                ; keep looping
+    exit:   
+    MOV                CX, 4CH
+    MOV                DX, 4B40H                                                                          ;63997
+    MOV                AH, 86H
+    INT                15H           
+    JMP FAR PTR STARTTHEWHOLEPROGRAM
+
+
+    HLTPROGRAM:
+    MOV AH, 4CH
+    INT 21H
+    HLT
 MAIN ENDP
 
 
