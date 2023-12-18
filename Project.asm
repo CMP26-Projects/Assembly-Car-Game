@@ -1054,9 +1054,9 @@ ENDM
     DURATIONTOSHOWPOWER       EQU 2
 
     ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
-    POWERPROBABILITY          DB  90
-    OBSTPROBABILITY           DB  60
-    POWERVISIBPROBABILITY     DB  60
+    POWERPROBABILITY          DB  100
+    OBSTPROBABILITY           DB  100
+    POWERVISIBPROBABILITY     DB  100
 
 
     ;CAR
@@ -1117,7 +1117,7 @@ ENDM
     STARTROADX                EQU 2
     STARTROADY                EQU 2
     NUMBEROFPARTS             EQU 100
-    MINNUMOFPARTS             EQU 25
+    MINNUMOFPARTS             EQU 20
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
     IMGTODRAW                 DW  ?
@@ -3358,6 +3358,32 @@ DRAWCHECKLINE PROC
                                  RET
 DRAWCHECKLINE ENDP
 
+PRINTTWODIGITNUMBER PROC FAR
+                                 MOV                BL,100
+                                 DIV                BL                                                                                      ;;al = ax / bl, ah = ax & bl
+                                 MOV                DL,AL
+                                 PUSH               AX                                                                                      ;To save remainder
+                                 ADD                DL,30h                                                                                  ; Add 30h to print ASCII
+                                 MOV                AH, 02h                                                                                 ; Print a character in dl
+                                 INT                21h
+
+                                 POP                AX
+                                 MOV                BL,10
+                                 MOV                AL, AH
+                                 MOV                AH,0
+                                 DIV                BL
+                                 MOV                DL, AL
+                                 PUSH               AX
+                                 ADD                DL,30h
+                                 MOV                AH,02h
+                                 INT                21h
+                                 POP                AX
+                                 MOV                DL,AH
+                                 ADD                DL,30h
+                                 MOV                AH, 02h
+                                 INT                21h
+                                 RET
+PRINTTWODIGITNUMBER ENDP
 
 PRINTTHREEDIGITNUMBER PROC FAR
                                  MOV                BL,100
@@ -3527,38 +3553,38 @@ GETCHECKLINEVERTIX ENDP
 
 ShowCurrentTime PROC FAR
     ;Drawing the timer-area box
-                                 MOV                CarToDrawX, SCREEN_WIDTH - 40
-                                 MOV                CarToDrawY ,0
-                                 CALL               CalculateBoxVertex
-                                 MOV                CX , 20
+    ;                              MOV                CarToDrawX, SCREEN_WIDTH - 40
+    ;                              MOV                CarToDrawY ,0
+    ;                              CALL               CalculateBoxVertex
+    ;                              MOV                CX , 10
                                 
-    DrawTimerAreaBackground_COLS:
-                                 PUSH               CX
-                                 PUSH               DI
-                                 MOV                CX , 40
+    ; DrawTimerAreaBackground_COLS:
+    ;                              PUSH               CX
+    ;                              PUSH               DI
+    ;                              MOV                CX , 40
 
-    DrawTimerAreaBackground_ROWS:
-                                 MOV                BYTE PTR ES:[DI] , 18
-                                 INC                DI
-                                 LOOP               DrawTimerAreaBackground_ROWS
+    ; DrawTimerAreaBackground_ROWS:
+    ;                              MOV                BYTE PTR ES:[DI] , 18
+    ;                              INC                DI
+    ;                              LOOP               DrawTimerAreaBackground_ROWS
 
-                                 POP                DI
-                                 POP                CX
-                                 ADD                DI , SCREEN_WIDTH
-                                 LOOP               DrawTimerAreaBackground_COLS
+    ;                              POP                DI
+    ;                              POP                CX
+    ;                              ADD                DI , SCREEN_WIDTH
+    ;                              LOOP               DrawTimerAreaBackground_COLS
 
 
 
     ;Drawing the timer-area text
-                                 MOV                AH , 2
-                                 MOV                DL , 75
-                                 MOV                DH , 0                                                                                  ;ANY COLOR.
-                                 MOV                BH,0
-                                 INT                10H
+                                ;  MOV                AH , 2
+                                ;  MOV                DL , 75
+                                ;  MOV                DH , 0                                                                                  ;ANY COLOR.
+                                ;  MOV                BH,0
+                                ;  INT                10H
 
-                                 MOV                DX, OFFSET TimerMsg
-                                 MOV                AH, 9
-                                 INT                21H
+                                ;  MOV                DX, OFFSET TimerMsg
+                                ;  MOV                AH, 9
+                                ;  INT                21H
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                             
                                  MOV                AH, 2CH                                                                                 ; INTERRUPT to get system time
@@ -3569,9 +3595,7 @@ ShowCurrentTime PROC FAR
                                  JMP                CheckTimeFinish
 
     HEREWEGO:                    
-                                 MOV                BYTE PTR ES:[DI],04H
-                                 INC                DI
-
+                                
 
                                  MOV                PreviousSecond , DH
                                  INC                TotalSeconds
@@ -3592,7 +3616,7 @@ ShowCurrentTime PROC FAR
     CheckTimeFinish:             
                                  MOV                AH , 2
                                  MOV                DL , 75
-                                 MOV                DH , 2                                                                                  ;ANY COLOR.
+                                 MOV                DH , 0                                                                                 ;ANY COLOR.
                                  MOV                BH,0
                                  INT                10H
                                 
@@ -3606,7 +3630,7 @@ ShowCurrentTime PROC FAR
 
                                  MOV                AH , 2
                                  MOV                DL , 76
-                                 MOV                DH ,2                                                                                   ;ANY COLOR.
+                                 MOV                DH ,0                                                                                   ;ANY COLOR.
                                  MOV                BH,0
                                  INT                10H
                                 
@@ -3619,7 +3643,7 @@ ShowCurrentTime PROC FAR
 
                                  MOV                AH , 2
                                  MOV                DL , 77
-                                 MOV                DH,2                                                                                    ;ANYCOLOR.
+                                 MOV                DH,0                                                                                  ;ANYCOLOR.
                                  MOV                BH,0
                                  INT                10H
 
