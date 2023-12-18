@@ -413,7 +413,7 @@ CHECKPOSSIBILITIES MACRO
 ENDM
 
 
-.MODEL COMPACT
+.MODEL SMALL
 .STACK 64
 .DATA
 
@@ -931,13 +931,11 @@ ENDM
     ;Data for the status bar (First Player's data)
     player1PosX               EQU 0
     player1PosY               EQU 22
-    player1Name               DB  'Abd El-Rahman', '$'
    
 
     ;Data for the status bar (Second Player's data)
     player2PosX           EQU  65
     player2PosY           EQU  22
-    player2Name           DB  'Ahmed', '$'
 
 
     ; Data for the powerups
@@ -2461,9 +2459,6 @@ INTERFACESTAGE PROC
                                 MOV                SI, OFFSET SECONDNAME
                                 CALL               ENTERPLAYERNAME
 
-
-
-        
                                 RET
 INTERFACESTAGE ENDP
 
@@ -3410,132 +3405,10 @@ ENDGAME PROC
 ENDGAME ENDP
 
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-MAIN PROC FAR
-
-                                MOV                AX, @DATA
-                                MOV                DS, AX
-
-
-                                MOV                AH,0
-                                MOV                AL,13H
-                                INT                10H
-
-                                MOV                AX, 0A000H
-                                MOV                ES, AX
-
-                                ;;TAKING NAMES STAGE
-                                CALL               INTERFACESTAGE
-                                    ;--------------    Overriding INT 9H   ---------------
-    ;Disable interrrupts
-                                CLI
-                       
-    ;Saving DS it will be the base of the addressing mode inside the interrupt
-                                PUSH               DS
-                                MOV                AX , CS
-                                MOV                DS , AX
-
-    ;changing interrup vector
-                                MOV                AX , 2509H
-                                LEA                DX , INT09H
-                                INT                21H
-                
-    ;re-enabling interrupts
-                                POP                DS
-                                STI
-    STARTTHEWHOLEPROGRAM:
-                                CALL               MAINMENU
-
-    ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
-    TAKINGNEXTSTAGE:            
-                                CMP                LetterF2Flag, 1
-                                JE                 STARTPROGRAM
-                                CMP                LetterEscFlag, 1
-                                JE                 exit
-                                JMP                TAKINGNEXTSTAGE
-
-
-    STARTPROGRAM:               
-    ;Multiplayers' Names
-                                MOV                LetterF4Flag, 0
-                                MOV                AH,2
-                                MOV                DH , player1PosY
-                                MOV                DL , player1PosX
-                                INT                10H
-
-                                MOV                AH ,9
-                                LEA                DX , player1Name
-                                INT                21H
-
-                                MOV                AH ,2
-                                MOV                DH , player2PosY
-                                MOV                DL , player2PosX
-                                INT                10H
-
-                                MOV                AH ,9
-                                LEA                DX , player2Name
-                                INT                21H
-
-                                MOV                AH ,2
-                                MOV                DH , player1PosY
-                                ADD                DH ,1
-                                MOV                DL , player1PosX
-                                INT                10H
-
-                                MOV                AH , 09
-                                LEA                DX , powerupMessage
-                                INT                21H
-
-                                MOV                AH ,2
-                                MOV                DH , player2PosY
-                                ADD                dh , 1
-                                MOV                DL , player2PosX
-                                INT                10H
-
-                                MOV                AH , 09
-                                LEA                DX , powerupMessage
-                                INT                21H
-
-    ;;;;;;;;;; DRAWING ROAD ;;;;;;;;;;;;
-
-
-    ;DRAWING PART OF ROAD
-    ;DRAW BACKGROUNDIMAGE, SCREENWIDTH, SCREENHEIGHT, 0, 0
-
-
-    STARTROAD:                  
-                                MOV                CANTUP, 0
-                                MOV                CANTRIGHT, 0
-                                MOV                CANTDOWN, 0
-                                MOV                CANTLEFT, 0
-                                MOV                POWERUPCOUNTER, 0                                                                       ;ADDED THAT WHEN ADDED START PROGRAM
-                                MOV                CURPOWERINDEX, 0
-                                MOV                CX, 11
-                                MOV                TEMPX, 0
-                                MOV                TEMPY, 0
-    OUTERLOOP:                  
-                                PUSH               CX
-                                MOV                CX, 20
-    INNERLOOP:                  
-                                MOV                TMP4, 0
-                                DRAW               BACKGROUNDIMAGEPART , BACKGROUNDIMAGEPARTW, BACKGROUNDIMAGEPARTH, TEMPX, TEMPY, TMP4
-                                ADD                TEMPX, BACKGROUNDIMAGEPARTW
-                                LOOP               INNERLOOP
-                                MOV                TEMPX, 0
-                                ADD                TEMPY, BACKGROUNDIMAGEPARTH
-                                POP                CX
-                                LOOP               OUTERLOOP
-    ;CALL DRAWBCKGROUND
-
-                                MOV                TMP4, 0
-                                MOV                CX, 0
-                                DRAW               HORROADIMG , HORROADIMGW, HORROADIMGH, STARTROADX, STARTROADY, TMP4
-                                CALL               POINTSAFTERRIGHT
-                                DRAW               STARTFLAGIMG, STARTFLAGIMGW, STARTFLAGIMGH, STARTROADX, STARTROADY, TMP4
-
-
+;description
+STATUSBARANDROAD PROC
+    
+    
     ;Drawing Status Bar
                                 CalcStatBarStPts
                                 CALL               DrawStatBar
@@ -3891,6 +3764,185 @@ MAIN PROC FAR
     NOTSTARTPROGRAM:            
                                 CALL               DRAWENDLINE
 
+
+    RET
+STATUSBARANDROAD ENDP
+
+
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+MAIN PROC FAR
+
+                                MOV                AX, @DATA
+                                MOV                DS, AX
+
+
+                                MOV                AH,0
+                                MOV                AL,13H
+                                INT                10H
+
+                                MOV                AX, 0A000H
+                                MOV                ES, AX
+
+                                ;;TAKING NAMES STAGE
+                                CALL               INTERFACESTAGE
+                                    ;--------------    Overriding INT 9H   ---------------
+    ;Disable interrrupts
+                                CLI
+                       
+    ;Saving DS it will be the base of the addressing mode inside the interrupt
+                                PUSH               DS
+                                MOV                AX , CS
+                                MOV                DS , AX
+
+    ;changing interrup vector
+                                MOV                AX , 2509H
+                                LEA                DX , INT09H
+                                INT                21H
+                
+    ;re-enabling interrupts
+                                POP                DS
+                                STI
+    STARTTHEWHOLEPROGRAM:
+                                ;INITIALIZATIONS
+                                MOV                CANTUP, 0
+                                MOV                CANTRIGHT, 0
+                                MOV                CANTDOWN, 0
+                                MOV                CANTLEFT, 0
+                                MOV                POWERUPCOUNTER, 0                                                                       ;ADDED THAT WHEN ADDED START PROGRAM
+                                MOV                CURPOWERINDEX, 0
+                                MOV                LetterF4Flag, 0
+                                MOV                LetterF2Flag, 0
+                                MOV                LetterEscFlag, 0
+                                MOV                CAR1SCORE, 0
+                                MOV                CAR2SCORE, 0
+                                MOV Car1Speed , 2
+MOV     Car2Speed , 2
+
+
+MOV    Car1SpeedUpCounter,  0
+MOV    Car2SpeedUpCounter ,  0
+MOV  CanUpdateX ,  0
+MOV    CanUpdateY ,  0
+MOV CanPassObs, 0
+MOV POWERUPCOUNTER,  0
+MOV CURPOWERINDEX , 0
+MOV INDEXSTARTSHOWING, 0 
+MOV CURSECOND,  61
+MOV    INDEXOFPART,  0
+MOV    CAR1PARTSVIS,  0
+MOV    CAR2PARTSVIS ,  0
+
+MOV CX, NUMBEROFPARTS
+MOV SI, OFFSET CAR1VIS
+INITIALIZE1:
+MOV BYTE PTR DS:[SI], 0
+INC SI
+LOOP INITIALIZE1
+
+MOV CX, NUMBEROFPARTS
+MOV SI, OFFSET CAR2VIS
+INITIALIZE2:
+MOV BYTE PTR DS:[SI], 0
+INC SI
+LOOP INITIALIZE2
+
+
+
+
+                                CALL               MAINMENU
+
+    ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
+    TAKINGNEXTSTAGE:            
+                                CMP                LetterF2Flag, 1
+                                JE                 STARTPROGRAM
+                                CMP                LetterEscFlag, 1
+                                JE                 exit
+                                JMP                TAKINGNEXTSTAGE
+
+
+    STARTPROGRAM:               
+    ;Multiplayers' Names
+                                ; MOV                LetterF4Flag, 0
+                                ; MOV                AH,2
+                                ; MOV                DH , player1PosY
+                                ; MOV                DL , player1PosX
+                                ; INT                10H
+
+                                ; MOV                AH ,9
+                                ; LEA                DX , player1Name
+                                ; INT                21H
+
+                                ; MOV                AH ,2
+                                ; MOV                DH , player2PosY
+                                ; MOV                DL , player2PosX
+                                ; INT                10H
+
+                                ; MOV                AH ,9
+                                ; LEA                DX , player2Name
+                                ; INT                21H
+
+                                ; MOV                AH ,2
+                                ; MOV                DH , player1PosY
+                                ; ADD                DH ,1
+                                ; MOV                DL , player1PosX
+                                ; INT                10H
+
+                                ; MOV                AH , 09
+                                ; LEA                DX , powerupMessage
+                                ; INT                21H
+
+                                ; MOV                AH ,2
+                                ; MOV                DH , player2PosY
+                                ; ADD                dh , 1
+                                ; MOV                DL , player2PosX
+                                ; INT                10H
+
+                                ; MOV                AH , 09
+                                ; LEA                DX , powerupMessage
+                                ; INT                21H
+
+    ;;;;;;;;;; DRAWING ROAD ;;;;;;;;;;;;
+
+
+    ;DRAWING PART OF ROAD
+    ;DRAW BACKGROUNDIMAGE, SCREENWIDTH, SCREENHEIGHT, 0, 0
+
+
+    STARTROAD:                  
+                                MOV                CANTUP, 0
+                                MOV                CANTRIGHT, 0
+                                MOV                CANTDOWN, 0
+                                MOV                CANTLEFT, 0
+                                MOV                POWERUPCOUNTER, 0                                                                       ;ADDED THAT WHEN ADDED START PROGRAM
+                                MOV                CURPOWERINDEX, 0
+                                MOV                CX, 11
+                                MOV                TEMPX, 0
+                                MOV                TEMPY, 0
+    OUTERLOOP:                  
+                                PUSH               CX
+                                MOV                CX, 20
+    INNERLOOP:                  
+                                MOV                TMP4, 0
+                                DRAW               BACKGROUNDIMAGEPART , BACKGROUNDIMAGEPARTW, BACKGROUNDIMAGEPARTH, TEMPX, TEMPY, TMP4
+                                ADD                TEMPX, BACKGROUNDIMAGEPARTW
+                                LOOP               INNERLOOP
+                                MOV                TEMPX, 0
+                                ADD                TEMPY, BACKGROUNDIMAGEPARTH
+                                POP                CX
+                                LOOP               OUTERLOOP
+    ;CALL DRAWBCKGROUND
+
+                                MOV                TMP4, 0
+                                MOV                CX, 0
+                                DRAW               HORROADIMG , HORROADIMGW, HORROADIMGH, STARTROADX, STARTROADY, TMP4
+                                CALL               POINTSAFTERRIGHT
+                                DRAW               STARTFLAGIMG, STARTFLAGIMGW, STARTFLAGIMGH, STARTROADX, STARTROADY, TMP4
+
+
+    CALL STATUSBARANDROAD
     ; MOV CURPOWERINDEX, 4
     ; CALL RETRIEVEROAD
 
@@ -4025,7 +4077,7 @@ MAIN PROC FAR
     MOV                DX, 4B40H                                                                          ;63997
     MOV                AH, 86H
     INT                15H           
-    JMP STARTTHEWHOLEPROGRAM
+    JMP FAR PTR STARTTHEWHOLEPROGRAM
 
 MAIN ENDP
 
