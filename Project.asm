@@ -1108,8 +1108,8 @@ ENDM
     ;STARTdd
     STARTROADX                EQU 2
     STARTROADY                EQU 2
-    NUMBEROFPARTS             EQU 18
-    MINNUMOFPARTS             EQU 10
+    NUMBEROFPARTS             EQU 5
+    MINNUMOFPARTS             EQU 2
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
     IMGTODRAW                 DW  ?
@@ -3420,9 +3420,8 @@ UPDATESCORE PROC FAR
     PUSH AX
     MOV AH,2
     MOV BH, 0
-    MOV DH, player1PosY
-    MOV DL, player1PosX
-    ADD DL, 14
+    MOV DH, player2PosY
+    MOV DL, 77
     INT 10H
     POP AX
     MOV CAR1SCORE, AX
@@ -3439,13 +3438,12 @@ UPDATESCORE PROC FAR
     PUSH AX
     MOV AH,2
     MOV BH, 0
-    MOV DH, player2PosY
-    MOV DL, player2PosX
-    ADD DL, 11
+    MOV DH, player1PosY
+    MOV DL, 17
     INT 10H
     POP AX
 
-    MOV CAR2SCORE, AX
+    MOV CAR2SCORE, AX;WE FLIPPED THAT AS WE NEED THAT RIGHT NOW
     CALL PRINTTHREEDIGITNUMBER
    
 
@@ -3536,7 +3534,7 @@ ENDGAME PROC
     INT 10H
 
     MOV AH, 9
-    MOV DX, OFFSET FIRSTNAME
+    MOV DX, OFFSET SECONDNAME;WE FLIPPED THAT DUE TO PROJECT SCHEDULE
     INT 21H
 
     MOV AH, 9
@@ -3552,7 +3550,7 @@ ENDGAME PROC
     INT 10H
 
     MOV AH, 9
-    MOV DX, OFFSET SECONDNAME
+    MOV DX, OFFSET FIRSTNAME
     INT 21H
 
     MOV AH, 9
@@ -4025,7 +4023,6 @@ MOV    Car1SpeedUpCounter,  0
 MOV    Car2SpeedUpCounter ,  0
 MOV  CanUpdateX ,  0
 MOV    CanUpdateY ,  0
-MOV CanPassObs, 0
 MOV POWERUPCOUNTER,  0
 MOV CURPOWERINDEX , 0
 MOV INDEXSTARTSHOWING, 0 
@@ -4033,6 +4030,13 @@ MOV CURSECOND,  61
 MOV    INDEXOFPART,  0
 MOV    CAR1PARTSVIS,  0
 MOV    CAR2PARTSVIS ,  0
+
+MOV  Touching1 ,  0
+MOV    Touching2  ,  0
+MOV     InObstacle1 , 0
+ MOV   InObstacle2 ,  0
+                                                                                                                                                                                                    ;(XY)
+MOV    ObstacleCollisionCount , 0
 
 MOV CX, NUMBEROFPARTS
 MOV SI, OFFSET CAR1VIS
