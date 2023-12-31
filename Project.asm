@@ -152,7 +152,7 @@ ClearPower MACRO
 
 ENDM
 
-SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2, F4, F2, Escape
+SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2, F4, F2, F1, Escape
 
             MOV DL , Up
             MOV UpKeyCode , DL
@@ -181,12 +181,15 @@ SETKEYS MACRO Up, Down , Left, Right , DeletePower1 , DeletePower2, F4, F2, Esca
             MOV DL , F2
             MOV F2KeyCode , DL
 
+            MOV DL , F1
+            MOV F1KeyCode , DL
+
 
     ; CALL InputButtonSwitchCase
 ENDM
 
     ;Setting Flags to be checked while movement
-SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6, f7, f8, f9
+SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6, f7, f8, f9, f10
 
              MOV DL , f1
              MOV UpFlag , DL
@@ -213,7 +216,12 @@ SetFlags MACRO f1 , f2 , f3 , f4 , f5 , f6, f7, f8, f9
              MOV F2Flag , DL
 
              MOV DL , f9
+             MOV F1Flag , DL
+
+             MOV DL , f10
              MOV EscFlag  , DL
+
+             
 
 
 ENDM
@@ -701,8 +709,9 @@ ENDM
     NOTE2                     DB  "DON'T START WITH NUMBERS, SPECIAL CHARS", '$'
 
     ;INSTRUCTIONS
-    INSTRUCTION1              DB  'TO START THE GAME PRESS F2...', '$'
-    INSTRUCTION2              DB  'TO END THE PROGRAM PRESS ESC...', '$'
+    INSTRUCTION1              DB  'TO START CHATTING PRESS F1...', '$'
+    INSTRUCTION2              DB  'TO START THE GAME PRESS F2...', '$'
+    INSTRUCTION3              DB  'TO END THE PROGRAM PRESS ESC...', '$'
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;   car data   ;;;;;;;;;;;;;;;;;
@@ -785,6 +794,7 @@ ENDM
     MFlag                     DB  ?
     F4Flag                    DB  ?
     F2Flag                    DB  ?
+    F1Flag                    DB  ?
     EscFlag                   DB  ?
 
     ;Arrow flags to check whether this key is pressed down or not
@@ -796,6 +806,7 @@ ENDM
     LetterMFlag               DB  0
     LetterF4Flag              DB  0
     LetterF2Flag              DB  0
+    LetterF1Flag              DB  0
     LetterEscFlag             DB  0
    
     ;WASD flags to check whether this key is pressed down or not
@@ -813,6 +824,7 @@ ENDM
     LetterM                   DB  32H
     LetterF4                  DB  3EH
     LetterF2                  DB  60
+    LetterF1                  DB  3BH
     LetterEsc                 DB  1H
 
     ;WASD keys for movement
@@ -830,6 +842,7 @@ ENDM
     DeletePower2Key           DB  ?
     F4KeyCode                 DB  ?
     F2KeyCode                 DB  ?
+    F1KeyCode                 DB  ?
     EscKeyCode                DB  ?
 
     ;Boolean to indicate if the path the car is going to move in is safe or not
@@ -1129,36 +1142,36 @@ SearchForLeftVertex PROC FAR
                                 MOV                DX,BX
     ; PUSH BX
     ; MOV BX,DX
-                                SUB                BX , 1                                                                                                                            ;CHECKING whether the collided bit of the powerup is the left one
-                                CMP                BYTE PTR ES:[BX] , 20                                                                                                             ; 20 is the GREY color degree of the road
+                                SUB                BX , 1                                                                                                                                          ;CHECKING whether the collided bit of the powerup is the left one
+                                CMP                BYTE PTR ES:[BX] , 20                                                                                                                           ; 20 is the GREY color degree of the road
                                 JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 31                                                                                                             ; 31 is the WHITE color degree of the road
+                                CMP                BYTE PTR ES:[BX] , 31                                                                                                                           ; 31 is the WHITE color degree of the road
                                 JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 142                                                                                                            ; 142 is COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 142                                                                                                                          ; 142 is COLOR DEGREE FOR THE GRASS
                                 JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 203                                                                                                            ; 203 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 203                                                                                                                          ; 203 is the COLOR DEGREE FOR THE GRASS
                                 JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 71                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 71                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 LEFT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 16                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 16                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 LEFT_CHECKED
                                 MOV                BX ,DX
 
     ; MOV DX,BX
     ; PUSH BX
     ; MOV BX,DX
-                                INC                BX                                                                                                                                ; CHECKING whether the collided bit of the powerup is the right one
-                                CMP                BYTE PTR ES:[BX] , 20                                                                                                             ; 20 is the GREY color degree of the road
+                                INC                BX                                                                                                                                              ; CHECKING whether the collided bit of the powerup is the right one
+                                CMP                BYTE PTR ES:[BX] , 20                                                                                                                           ; 20 is the GREY color degree of the road
                                 JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 31                                                                                                             ; 31 is the WHITE color degree of the road
+                                CMP                BYTE PTR ES:[BX] , 31                                                                                                                           ; 31 is the WHITE color degree of the road
                                 JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 142                                                                                                            ; 142 is COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 142                                                                                                                          ; 142 is COLOR DEGREE FOR THE GRASS
                                 JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 203                                                                                                            ; 203 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 203                                                                                                                          ; 203 is the COLOR DEGREE FOR THE GRASS
                                 JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 71                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 71                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 RIGHT_CHECKED
-                                CMP                BYTE PTR ES:[BX] , 16                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 16                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 RIGHT_CHECKED
     ; POP BX
                                 MOV                BX ,DX
@@ -1168,17 +1181,17 @@ SearchForLeftVertex PROC FAR
     LEFT_CHECKED:               
                                 ADD                BX ,2
                                 SUB                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 20                                                                                                             ; 20 is the GREY color degree of the road
+                                CMP                BYTE PTR ES:[BX] , 20                                                                                                                           ; 20 is the GREY color degree of the road
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 31                                                                                                             ; 31 is the WHITE color degree of the road
+                                CMP                BYTE PTR ES:[BX] , 31                                                                                                                           ; 31 is the WHITE color degree of the road
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 142                                                                                                            ; 142 is COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 142                                                                                                                          ; 142 is COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 203                                                                                                            ; 203 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 203                                                                                                                          ; 203 is the COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 71                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 71                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 16                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 16                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
                                 RET
 
@@ -1190,33 +1203,33 @@ SearchForLeftVertex PROC FAR
     RIGHT_CHECKED:              
                                 SUB                BX ,2
                                 SUB                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 20                                                                                                             ; 20 is the GREY color degree of the road
+                                CMP                BYTE PTR ES:[BX] , 20                                                                                                                           ; 20 is the GREY color degree of the road
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 31                                                                                                             ; 31 is the WHITE color degree of the road
+                                CMP                BYTE PTR ES:[BX] , 31                                                                                                                           ; 31 is the WHITE color degree of the road
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 142                                                                                                            ; 142 is COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 142                                                                                                                          ; 142 is COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 203                                                                                                            ; 203 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 203                                                                                                                          ; 203 is the COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 71                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 71                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 16                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 16                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
                                 RET
 
     MIDDLE_CHECKED:             
                                 SUB                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 20                                                                                                             ; 20 is the GREY color degree of the road
+                                CMP                BYTE PTR ES:[BX] , 20                                                                                                                           ; 20 is the GREY color degree of the road
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 31                                                                                                             ; 31 is the WHITE color degree of the road
+                                CMP                BYTE PTR ES:[BX] , 31                                                                                                                           ; 31 is the WHITE color degree of the road
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 142                                                                                                            ; 142 is COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 142                                                                                                                          ; 142 is COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 203                                                                                                            ; 203 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 203                                                                                                                          ; 203 is the COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 71                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 71                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
-                                CMP                BYTE PTR ES:[BX] , 16                                                                                                             ; 71 is the COLOR DEGREE FOR THE GRASS
+                                CMP                BYTE PTR ES:[BX] , 16                                                                                                                           ; 71 is the COLOR DEGREE FOR THE GRASS
                                 JE                 IAM_AT_TOP
                                 RET
 
@@ -1334,7 +1347,7 @@ DrawCar PROC FAR
                                 CALL               ChooseCar1Image
                                 JMP                ROWS_DRAW
     GetCar2Img:                 
-                                CALL               ChooseCar2Image                                                                                                                   ;Get Background offset in BX
+                                CALL               ChooseCar2Image                                                                                                                                 ;Get Background offset in BX
 
     ROWS_DRAW:                  
                                 PUSH               CX
@@ -1342,12 +1355,12 @@ DrawCar PROC FAR
 
                                 MOV                CX , CarToDrawSize
     COLS_DRAW:                  
-                                MOV                DH , BYTE PTR ES:[DI]                                                                                                             ;Moving the byte of the road to DH to be stored in buffer
-                                MOV                BYTE PTR DS:[BX] , DH                                                                                                             ;Moving DH -> the memory with offset BX
-                                MOV                DL , BYTE PTR [SI]                                                                                                                ;Car byte to be drawn this iteration
+                                MOV                DH , BYTE PTR ES:[DI]                                                                                                                           ;Moving the byte of the road to DH to be stored in buffer
+                                MOV                BYTE PTR DS:[BX] , DH                                                                                                                           ;Moving DH -> the memory with offset BX
+                                MOV                DL , BYTE PTR [SI]                                                                                                                              ;Car byte to be drawn this iteration
                                 CMP                DL, 0
                                 JE                 DONTDRAWBYTECAR
-                                MOV                BYTE PTR ES:[DI] , DL                                                                                                             ;Drawing the car bit
+                                MOV                BYTE PTR ES:[DI] , DL                                                                                                                           ;Drawing the car bit
     DONTDRAWBYTECAR:            
     ;Updates
                                 INC                SI
@@ -1371,15 +1384,15 @@ ClearCarArea PROC FAR
                                 MOV                cx , CarToDrawSize
                                 CALL               CalculateBoxVertex
 
-                                CALL               CheckCarToDraw                                                                                                                    ;Get Background offset in BX
+                                CALL               CheckCarToDraw                                                                                                                                  ;Get Background offset in BX
 
     ROWS_CLEAR:                 
                                 PUSH               CX
                                 PUSH               DI
                                 MOV                CX , CarToDrawSize
     COLS_CLEAR:                 
-                                MOV                DL, BYTE PTR DS:[BX]                                                                                                              ;Moving road byte in dl
-                                MOV                BYTE PTR ES:[DI] , DL                                                                                                             ;Moving the road byte to be printed
+                                MOV                DL, BYTE PTR DS:[BX]                                                                                                                            ;Moving road byte in dl
+                                MOV                BYTE PTR ES:[DI] , DL                                                                                                                           ;Moving the road byte to be printed
                                 INC                DI
                                 INC                BX
                                 LOOP               COLS_CLEAR
@@ -1394,7 +1407,7 @@ ClearCarArea ENDP
     ;description
 IncreaseCarSpeed PROC FAR
     ;Get current system time
-                                MOV                AH, 2CH                                                                                                                           ; INTERRUPT to get system time
+                                MOV                AH, 2CH                                                                                                                                         ; INTERRUPT to get system time
                                 INT                21H
     ;Check which car to apply speedup on
                                 CMP                CarToScan , 1
@@ -1414,7 +1427,7 @@ IncreaseCarSpeed ENDP
 
 DecreaseCarSpeed PROC FAR
     ;Get current system time
-                                MOV                AH, 2CH                                                                                                                           ; INTERRUPT to get system time
+                                MOV                AH, 2CH                                                                                                                                         ; INTERRUPT to get system time
                                 INT                21H
     ;Check which car to apply speedup on
                                 CMP                CarToScan , 1
@@ -1556,7 +1569,7 @@ CheckSpeedUpTimer PROC FAR
                                 MOV                Car2Speed , 2
                                 MOV                Car2SpeedUpCounter , 0
     CheckSpeedFinish:           
-                                RET                                                                                                                                                  ;
+                                RET                                                                                                                                                                ;
 CheckSpeedUpTimer ENDP
 
 ClearPowerup PROC FAR
@@ -1762,8 +1775,21 @@ InputButtonSwitchCase PROC  FAR
 
     CheckLetterF2:              
                                 CMP                AL , F2KeyCode
-                                JNE                CheckLetterEsc
+                                JNE                CheckLetterF1
                                 MOV                F2Flag , 1
+
+    ;Sending the keyFlag after changing
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                
+                                CALL               Delay
+
+                                JMP                DEFAULT
+
+    CheckLetterF1:              
+                                CMP                AL , F1KeyCode
+                                JNE                CheckLetterEsc
+                                MOV                F1Flag , 1
 
     ;Sending the keyFlag after changing
                                 MOV                SENTVALUE ,AL
@@ -1792,7 +1818,7 @@ InputButtonSwitchCase ENDP
 ReceivedButtonSwitchCase PROC  FAR
                              
     ;Check that Data Ready
-                                mov                dx , 3FDH                                                                                                                         ; Line Status Register
+                                mov                dx , 3FDH                                                                                                                                       ; Line Status Register
     DATAREADYCHK2:              in                 al , dx
                                 AND                al , 1
                                 JZ                 EndRecieveButtonSwitchCase
@@ -1897,8 +1923,15 @@ ReceivedButtonSwitchCase PROC  FAR
 
     CheckLetterF2Recieved:      
                                 CMP                AL , F2KeyCode
-                                JNE                CheckLetterEscRecieved
+                                JNE                CheckLetterF1Recieved
                                 MOV                F2Flag , 1
+
+                                JMP                EndRecieveButtonSwitchCase
+
+    CheckLetterF1Recieved:      
+                                CMP                AL , F1KeyCode
+                                JNE                CheckLetterEscRecieved
+                                MOV                F1Flag , 1
 
                                 JMP                EndRecieveButtonSwitchCase
 
@@ -2026,6 +2059,9 @@ UpdateArrowFlags PROC FAR
                                 MOV                BL , F2Flag
                                 MOV                LetterF2Flag , BL
 
+                                MOV                BL , F1Flag
+                                MOV                LetterF1Flag , BL
+
                                 MOV                BL , EscFlag
                                 MOV                LetterEscFlag , BL
 
@@ -2053,6 +2089,18 @@ UpdateWASDFlags PROC FAR
                                 MOV                BL , MFlag
                                 MOV                LetterMFlag , BL
 
+                                MOV                BL , F4Flag
+                                MOV                LetterF4Flag , BL
+
+                                MOV                BL , F2Flag
+                                MOV                LetterF2Flag , BL
+
+                                MOV                BL , F1Flag
+                                MOV                LetterF1Flag , BL
+
+                                MOV                BL , EscFlag
+                                MOV                LetterEscFlag , BL
+
                                 RET
 UpdateWASDFlags ENDP
 
@@ -2060,8 +2108,8 @@ UpdateWASDFlags ENDP
 
     ;procedure calls all arrow keys functions
 CheckArrowKeys PROC FAR
-                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
-                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag, LetterF4Flag, LetterF2Flag, LetterEscFlag
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterF1, LetterEsc
+                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag, LetterF4Flag, LetterF2Flag, LetterF1Flag, LetterEscFlag
                                 CALL               InputButtonSwitchCase
                                 CALL               UpdateArrowFlags
                                 RET
@@ -2069,8 +2117,8 @@ CheckArrowKeys ENDP
 
 CheckWASDKeys PROC FAR
     ; SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
-                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
-                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterEscFlag
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterF1, LetterEsc
+                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterF1Flag, LetterEscFlag
                                 CALL               InputButtonSwitchCase
                                 CALL               UpdateWASDFlags
                                 RET
@@ -2079,8 +2127,8 @@ CheckWASDKeys ENDP
 
     ;procedure calls all WASD keys functions
 RecieveWASDKeys PROC FAR
-                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
-                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterEscFlag
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterF1, LetterEsc
+                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterF1Flag, LetterEscFlag
                                 CALL               ReceivedButtonSwitchCase
                                 CALL               UpdateWASDFlags
                                 RET
@@ -2089,8 +2137,8 @@ RecieveWASDKeys ENDP
 
 RecieveArrowKeys PROC FAR
     ; SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
-                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
-                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag, LetterF4Flag, LetterF2Flag, LetterEscFlag
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterF1, LetterEsc
+                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag, LetterF4Flag, LetterF2Flag, LetterF1Flag, LetterEscFlag
                                 
                                 CALL               ReceivedButtonSwitchCase
                                 CALL               UpdateArrowFlags
@@ -2192,7 +2240,7 @@ ScanYmovement PROC FAR
 
     ;Assume no addition or subtraction has occured to the positions in "checkFlags"
 
-                                CMP                YMovement , 1                                                                                                                     ; The car is moving up either car1 or car2
+                                CMP                YMovement , 1                                                                                                                                   ; The car is moving up either car1 or car2
                                 JE                 UpMovement
 
                                 ADD                CarToDrawY , CAR_SIZE
@@ -2204,7 +2252,7 @@ ScanYmovement PROC FAR
                                 DEC                CarToDrawY
                                 CALL               CalculateBoxVertex
     StartScanning:              
-                                MOV                CX , CurrentSpeed                                                                                                                 ;# of rows to be checked
+                                MOV                CX , CurrentSpeed                                                                                                                               ;# of rows to be checked
 
     ;Outer Loop Starts
     NextRow:                    
@@ -2221,15 +2269,15 @@ ScanYmovement PROC FAR
                                 CMP                BYTE PTR ES:[DI] , 28
                                 JE                 ObstacleDetected
 
-                                CMP                BYTE PTR ES:[DI], 19                                                                                                              ; THIS IS TO CHECK FOR CHECKLINES
+                                CMP                BYTE PTR ES:[DI], 19                                                                                                                            ; THIS IS TO CHECK FOR CHECKLINES
                                 JE                 CHECKLINEDETECTED
                                 CMP                BYTE PTR ES:[DI], 36
                                 JE                 POWERUPDETECTED
-                                CMP                BYTE PTR ES:[DI] , 20                                                                                                             ; 20 is the GREY color degree of the road
+                                CMP                BYTE PTR ES:[DI] , 20                                                                                                                           ; 20 is the GREY color degree of the road
                                 JE                 NoObstacleDetected
-                                CMP                BYTE PTR ES:[DI] , 31                                                                                                             ; 31 is the WHITE color degree of the road
+                                CMP                BYTE PTR ES:[DI] , 31                                                                                                                           ; 31 is the WHITE color degree of the road
                                 JE                 NoObstacleDetected
-                                CMP                BYTE PTR ES:[DI] , 40                                                                                                             ; 40 is one of the color degrees for the end line
+                                CMP                BYTE PTR ES:[DI] , 40                                                                                                                           ; 40 is one of the color degrees for the end line
                                 JE                 NoObstacleDetected
 
                                 JMP                NormalObstacle
@@ -2274,9 +2322,9 @@ ScanYmovement PROC FAR
                                 MOV                BX,POWERTOPLEFTBYTE
                                 INC                BX
                                 ADD                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 121                                                                                                            ; 121 is the color degree of the increasing powerup
+                                CMP                BYTE PTR ES:[BX] , 121                                                                                                                          ; 121 is the color degree of the increasing powerup
                                 JE                 INCPOWERUP_DETECTED
-                                CMP                BYTE PTR ES:[BX] , 112                                                                                                            ; 112 is the color degree of the decreasing powerup
+                                CMP                BYTE PTR ES:[BX] , 112                                                                                                                          ; 112 is the color degree of the decreasing powerup
                                 JE                 DECPOWERUP_DETECTED
                                 CMP                BYTE PTR ES:[BX] , 17
                                 JE                 CREATEOBSTPOWERUP_DETECTED
@@ -2301,7 +2349,7 @@ ScanYmovement PROC FAR
                                 MOV                powerupType , AL
 
     DRAWING_COLLECTED_POWERUP:  
-                                CMP                CarToScan , 0                                                                                                                     ;Car1 is scanning
+                                CMP                CarToScan , 0                                                                                                                                   ;Car1 is scanning
                                 JE                 Car2Powerup2
     ;Powerup for first player is collected
 
@@ -2377,7 +2425,7 @@ ScanXmovement PROC FAR
                                 MOV                DI , 0
                                 MOV                horizontalFlag ,1
 
-                                CMP                XMovement , 1                                                                                                                     ; The car is moving right either car1 or car2
+                                CMP                XMovement , 1                                                                                                                                   ; The car is moving right either car1 or car2
                                 JNE                LeftMovement
     ;Moving right
                                 ADD                CarToDrawX , CAR_SIZE
@@ -2403,15 +2451,15 @@ ScanXmovement PROC FAR
                                 CMP                BYTE PTR ES:[DI] , 28
                                 JE                 ObstacleDetected2
     ;Non obstacle checks
-                                CMP                BYTE PTR ES:[DI], 19                                                                                                              ; THIS IS TO CHECK FOR CHECKLINES
+                                CMP                BYTE PTR ES:[DI], 19                                                                                                                            ; THIS IS TO CHECK FOR CHECKLINES
                                 JE                 CHECKLINEDETECTED2
                                 CMP                BYTE PTR ES:[DI], 36
                                 JE                 POWERUPDETECTED2
-                                CMP                BYTE PTR ES:[DI] , 20                                                                                                             ; 20 is the GREY color degree of the road
+                                CMP                BYTE PTR ES:[DI] , 20                                                                                                                           ; 20 is the GREY color degree of the road
                                 JE                 NoObstacleDetected2
-                                CMP                BYTE PTR ES:[DI] , 31                                                                                                             ; 31 is the WHITE color degree of the road
+                                CMP                BYTE PTR ES:[DI] , 31                                                                                                                           ; 31 is the WHITE color degree of the road
                                 JE                 NoObstacleDetected2
-                                CMP                BYTE PTR ES:[DI] , 40                                                                                                             ; 40 is one of the color degrees for the end line
+                                CMP                BYTE PTR ES:[DI] , 40                                                                                                                           ; 40 is one of the color degrees for the end line
                                 JE                 NoObstacleDetected2
                           
                                 JMP                NormalObstacle2
@@ -2455,9 +2503,9 @@ ScanXmovement PROC FAR
                                 MOV                BX,POWERTOPLEFTBYTE
                                 INC                BX
                                 ADD                BX , SCREEN_WIDTH
-                                CMP                BYTE PTR ES:[BX] , 121                                                                                                            ; 121 is the color degree of the increasing powerup
+                                CMP                BYTE PTR ES:[BX] , 121                                                                                                                          ; 121 is the color degree of the increasing powerup
                                 JE                 INCPOWERUP_DETECTED2
-                                CMP                BYTE PTR ES:[BX] , 112                                                                                                            ; 112 is the color degree of the decreasing powerup
+                                CMP                BYTE PTR ES:[BX] , 112                                                                                                                          ; 112 is the color degree of the decreasing powerup
                                 JE                 DECPOWERUP_DETECTED2
                                 CMP                BYTE PTR ES:[BX] , 17
                                 JE                 CREATEOBSTPOWERUP_DETECTED2
@@ -2482,7 +2530,7 @@ ScanXmovement PROC FAR
                                 MOV                powerupType , AL
 
     DRAWING_COLLECTED_POWERUP2: 
-                                CMP                CarToScan , 0                                                                                                                     ;Car1 is scanning
+                                CMP                CarToScan , 0                                                                                                                                   ;Car1 is scanning
                                 JE                 Car2Powerup2
     ;Powerup for first player is collected
 
@@ -2824,6 +2872,16 @@ MAINMENU PROC
                                 MOV                AH, 9
                                 MOV                DX, OFFSET INSTRUCTION2
                                 INT                21H
+
+    ;SECOND INSTRUCTION
+                                MOV                AH, 2H
+                                MOV                DL, 2
+                                MOV                DH, 19
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET INSTRUCTION3
+                                INT                21H
                                 RET
 MAINMENU ENDP
 
@@ -2982,10 +3040,10 @@ PrintStringWithColor ENDP
 
 GETSYSTEMTIME PROC FAR
                                 MOV                CX, 0
-                                MOV                DX, 59000                                                                                                                         ;63997
+                                MOV                DX, 59000                                                                                                                                       ;63997
                                 MOV                AH, 86H
                                 INT                15H
-                                MOV                AH, 2CH                                                                                                                           ; INTERRUPT to get system time
+                                MOV                AH, 2CH                                                                                                                                         ; INTERRUPT to get system time
                                 INT                21H
                                 RET
 GETSYSTEMTIME ENDP
@@ -2993,10 +3051,10 @@ GETSYSTEMTIME ENDP
 
 GETSYSTEMTIME2 PROC FAR
                                 MOV                CX, 0
-                                MOV                DX, 53000                                                                                                                         ;63997
+                                MOV                DX, 53000                                                                                                                                       ;63997
                                 MOV                AH, 86H
                                 INT                15H
-                                MOV                AH, 2CH                                                                                                                           ; INTERRUPT to get system time
+                                MOV                AH, 2CH                                                                                                                                         ; INTERRUPT to get system time
                                 INT                21H
                                 RET
 GETSYSTEMTIME2 ENDP
@@ -3005,17 +3063,17 @@ RANDOMIZEPERCENTAGE PROC
                                 CALL               GETSYSTEMTIME2
                                 MOV                AL, 100
                                 MOV                RANGEOFRAND, AL
-                                CALL               RANGINGRAND                                                                                                                       ;DL NOW HAS A NUMBER FROM 0 TO 99
+                                CALL               RANGINGRAND                                                                                                                                     ;DL NOW HAS A NUMBER FROM 0 TO 99
                                 RET
 RANDOMIZEPERCENTAGE ENDP
 
 
     ;PROC TO GET THE POSIBLE POINTS AFTER DRAWING UP
 POINTSAFTERUP PROC
-                                CALL               CALCXY                                                                                                                            ; AS WE NEED IT IN THE LEFT DIR
+                                CALL               CALCXY                                                                                                                                          ; AS WE NEED IT IN THE LEFT DIR
 
                                 MOV                UPDIR, DI
-                                CMP                UPDIR, VERROADIMGH*SCREENWIDTH + VERROADIMGW                                                                                      ;CHECKING FOR OVERFLOWING THE SCREEN
+                                CMP                UPDIR, VERROADIMGH*SCREENWIDTH + VERROADIMGW                                                                                                    ;CHECKING FOR OVERFLOWING THE SCREEN
                                 JA                 FIRSTUP
                                 MOV                UPDIR, 0
                                 JMP                NOTFIRSTUP
@@ -3046,7 +3104,7 @@ POINTSAFTERRIGHT PROC
                                 MOV                UPDIR, 0
                                 JMP                NOTSECONDUP
     SECONDUP:                   
-                                SUB                UPDIR, (VERROADIMGH-HORROADIMGH)*SCREENWIDTH                                                                                      ;VERROADIMGH-HORROADIMGH = 30
+                                SUB                UPDIR, (VERROADIMGH-HORROADIMGH)*SCREENWIDTH                                                                                                    ;VERROADIMGH-HORROADIMGH = 30
     NOTSECONDUP:                
 
                                 MOV                RIGHTDIR, DI
@@ -3233,7 +3291,7 @@ RETRIEVEROAD PROC
                                 MOV                AL, POWERW * POWERH
                                 MOV                BX, CURPOWERINDEX
                                 MOV                BH, 0
-                                MUL                BL                                                                                                                                ; NOW AX HAS THE INDEX OF STARTING BYTE
+                                MUL                BL                                                                                                                                              ; NOW AX HAS THE INDEX OF STARTING BYTE
 
                                 MOV                SI, OFFSET ROADUNDERPOWER
                                 ADD                SI, AX
@@ -3289,7 +3347,7 @@ SHOWHIDDENPOWER PROC
                                 DEC                AX
                                 MOV                BL, 2
                                 MOV                BH, 0
-                                MUL                BL                                                                                                                                ;NOW WE HAVE THE SHIFTING IN AX
+                                MUL                BL                                                                                                                                              ;NOW WE HAVE THE SHIFTING IN AX
                                 MOV                SI, OFFSET TOPLEFTPOWER
                                 ADD                SI, AX
                                 MOV                DI, WORD PTR DS:[SI]
@@ -3331,7 +3389,7 @@ SHOWHIDDENPOWER PROC
 SHOWHIDDENPOWER ENDP
 
 WHICHPOWERIMG PROC
-                                CHECKCANDRAWPOWER  POWERW, POWERH, TEMPX, TEMPY                                                                                                      ;IF IT WILL BE DRAWN ON THE OBST IT WILL NOT BE DRAWN AT ALL (SKIPPED)
+                                CHECKCANDRAWPOWER  POWERW, POWERH, TEMPX, TEMPY                                                                                                                    ;IF IT WILL BE DRAWN ON THE OBST IT WILL NOT BE DRAWN AT ALL (SKIPPED)
     
                                 CALL               RANDOMIZEPERCENTAGE
                                 
@@ -3368,7 +3426,7 @@ WHICHPOWERIMG PROC
                                 CALL               SENDANDRECIEVEOBST
                                 MOV                SI, OFFSET ISVISIBLEPOWER
                                 ADD                SI, POWERUPCOUNTER
-                                INC                POWERUPCOUNTER                                                                                                                    ; WE MOVE THAT LINE HERE AS WE NEEDED IT IN THE PREVIOUS LINE
+                                INC                POWERUPCOUNTER                                                                                                                                  ; WE MOVE THAT LINE HERE AS WE NEEDED IT IN THE PREVIOUS LINE
                                 CMP                DL, POWERVISIBPROBABILITY
                                 JBE                VISIBLE
                                 MOV                BYTE PTR DS:[SI], 0
@@ -3479,8 +3537,8 @@ DRAWENDLINE ENDP
 char_display proc  FAR
                                 mov                ah, 9
                                 mov                bh, 0
-                                mov                bl, 93H                                                                                                                           ;ANY COLOR.
-                                mov                cx, 1                                                                                                                             ;HOW MANY TIMES TO DISPLAY CHAR.
+                                mov                bl, 93H                                                                                                                                         ;ANY COLOR.
+                                mov                cx, 1                                                                                                                                           ;HOW MANY TIMES TO DISPLAY CHAR.
                                 int                10h
                                 ret
 char_display endp
@@ -3505,7 +3563,7 @@ DRAWCHECKLINE PROC
                                 SUB                TEMPX, VERROADIMGW
                                 DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
                                 MOV                BX, DI
-                                SUB                BX, HORCHECKLINEIMGW                                                                                                              ; CHECKED
+                                SUB                BX, HORCHECKLINEIMGW                                                                                                                            ; CHECKED
                                 CALL               STORECHECKLINEVERTIX
                                 JMP                FINISHDRAWCHECKLINE
     NOTLASTUPCHECK:             
@@ -3526,7 +3584,7 @@ DRAWCHECKLINE PROC
                                 ADD                TEMPY, VERROADIMGH - 1
                                 DRAW               CHECKLINEIMG, HORCHECKLINEIMGW, HORCHECKLINEIMGH, TEMPX, TEMPY, TMP4
                                 MOV                BX, DI
-                                SUB                BX, HORCHECKLINEIMGW                                                                                                              ;CHECKED
+                                SUB                BX, HORCHECKLINEIMGW                                                                                                                            ;CHECKED
                                 CALL               STORECHECKLINEVERTIX
                                 JMP                FINISHDRAWCHECKLINE
     NOTLASTDOWNCHECK:           
@@ -3544,11 +3602,11 @@ DRAWCHECKLINE ENDP
 
 PRINTTWODIGITNUMBER PROC FAR
                                 MOV                BL,100
-                                DIV                BL                                                                                                                                ;;al = ax / bl, ah = ax & bl
+                                DIV                BL                                                                                                                                              ;;al = ax / bl, ah = ax & bl
                                 MOV                DL,AL
-                                PUSH               AX                                                                                                                                ;To save remainder
-                                ADD                DL,30h                                                                                                                            ; Add 30h to print ASCII
-                                MOV                AH, 02h                                                                                                                           ; Print a character in dl
+                                PUSH               AX                                                                                                                                              ;To save remainder
+                                ADD                DL,30h                                                                                                                                          ; Add 30h to print ASCII
+                                MOV                AH, 02h                                                                                                                                         ; Print a character in dl
                                 INT                21h
 
                                 POP                AX
@@ -3571,11 +3629,11 @@ PRINTTWODIGITNUMBER ENDP
 
 PRINTTHREEDIGITNUMBER PROC FAR
                                 MOV                BL,100
-                                DIV                BL                                                                                                                                ;;al = ax / bl, ah = ax & bl
+                                DIV                BL                                                                                                                                              ;;al = ax / bl, ah = ax & bl
                                 MOV                DL,AL
-                                PUSH               AX                                                                                                                                ;To save remainder
-                                ADD                DL,30h                                                                                                                            ; Add 30h to print ASCII
-                                MOV                AH, 02h                                                                                                                           ; Print a character in dl
+                                PUSH               AX                                                                                                                                              ;To save remainder
+                                ADD                DL,30h                                                                                                                                          ; Add 30h to print ASCII
+                                MOV                AH, 02h                                                                                                                                         ; Print a character in dl
                                 INT                21h
                                 POP                AX
                                 MOV                BL,10
@@ -3607,7 +3665,7 @@ UPDATESCORE PROC FAR
 
     FOUNDCHECKVERTIX:           
                                 MOV                DX, INDEXOFPART
-                                SUB                DX, CX                                                                                                                            ;DX NOW HAS THE INDEX OF THE VERTIX
+                                SUB                DX, CX                                                                                                                                          ;DX NOW HAS THE INDEX OF THE VERTIX
                                 CMP                CX, 0
                                 JBE                FINISHUPDATESCORE
 
@@ -3662,7 +3720,7 @@ UPDATESCORE PROC FAR
                                 INT                10H
                                 POP                AX
 
-                                MOV                CAR2SCORE, AX                                                                                                                     ;WE FLIPPED THAT AS WE NEED THAT RIGHT NOW
+                                MOV                CAR2SCORE, AX                                                                                                                                   ;WE FLIPPED THAT AS WE NEED THAT RIGHT NOW
                                 CALL               PRINTTHREEDIGITNUMBER
    
 
@@ -3771,7 +3829,7 @@ ShowCurrentTime PROC FAR
     ;  INT                21H
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                             
-                                MOV                AH, 2CH                                                                                                                           ; INTERRUPT to get system time
+                                MOV                AH, 2CH                                                                                                                                         ; INTERRUPT to get system time
                                 INT                21H
 
                                 CMP                DH , PreviousSecond
@@ -3789,10 +3847,10 @@ ShowCurrentTime PROC FAR
                                 DIV                BL
                                    
                                 
-                                MOV                CountSecond , AH                                                                                                                  ; Current Seconds
-                                MOV                CountMinute , AL                                                                                                                  ; Current Minutes
+                                MOV                CountSecond , AH                                                                                                                                ; Current Seconds
+                                MOV                CountMinute , AL                                                                                                                                ; Current Minutes
 
-                                CMP                TotalSeconds , 120                                                                                                                ; 2 minutes are achieved
+                                CMP                TotalSeconds , 120                                                                                                                              ; 2 minutes are achieved
                                 JNE                CheckTimeFinish
 
                                 MOV                TimerFinished , 1
@@ -3800,7 +3858,7 @@ ShowCurrentTime PROC FAR
     CheckTimeFinish:            
                                 MOV                AH , 2
                                 MOV                DL , 75
-                                MOV                DH , 0                                                                                                                            ;ANY COLOR.
+                                MOV                DH , 0                                                                                                                                          ;ANY COLOR.
                                 MOV                BH,0
                                 INT                10H
                                 
@@ -3814,7 +3872,7 @@ ShowCurrentTime PROC FAR
 
                                 MOV                AH , 2
                                 MOV                DL , 76
-                                MOV                DH ,0                                                                                                                             ;ANY COLOR.
+                                MOV                DH ,0                                                                                                                                           ;ANY COLOR.
                                 MOV                BH,0
                                 INT                10H
                                 
@@ -3827,7 +3885,7 @@ ShowCurrentTime PROC FAR
 
                                 MOV                AH , 2
                                 MOV                DL , 77
-                                MOV                DH,0                                                                                                                              ;ANYCOLOR.
+                                MOV                DH,0                                                                                                                                            ;ANYCOLOR.
                                 MOV                BH,0
                                 INT                10H
 
@@ -3858,7 +3916,7 @@ ENDGAME PROC
                                 INT                10H
 
                                 MOV                AH, 9
-                                MOV                DX, OFFSET SECONDNAME                                                                                                             ;WE FLIPPED THAT DUE TO PROJECT SCHEDULE
+                                MOV                DX, OFFSET SECONDNAME                                                                                                                           ;WE FLIPPED THAT DUE TO PROJECT SCHEDULE
                                 INT                21H
 
                                 MOV                AH, 9
@@ -3902,7 +3960,7 @@ ENDGAME PROC
                                 MOV                DL, ' '
                                 INT                21H
     
-                                MOV                AX, CAR2SCORE                                                                                                                     ;WE FLIPPED THEM DUE TO LATE SUMBISSION
+                                MOV                AX, CAR2SCORE                                                                                                                                   ;WE FLIPPED THEM DUE TO LATE SUMBISSION
                                 CALL               PRINTTHREEDIGITNUMBER
 
     ; SECOND PLAYER SCORE
@@ -4002,13 +4060,13 @@ STATUSBARANDROAD PROC
                                 MOV                DL, SENTVALUE
     DIRRECIEVED:                
                                 AND                DL, 3
-                                CMP                DL, 0                                                                                                                             ;UP
+                                CMP                DL, 0                                                                                                                                           ;UP
                                 JE                 CHECKUP
-                                CMP                DL, 1                                                                                                                             ;RIGHT
+                                CMP                DL, 1                                                                                                                                           ;RIGHT
                                 JE                 CHECKRIGHT
-                                CMP                DL, 2                                                                                                                             ;DOWN
+                                CMP                DL, 2                                                                                                                                           ;DOWN
                                 JE                 CHECKDOWN
-                                JMP                CHECKLEFT                                                                                                                         ;left
+                                JMP                CHECKLEFT                                                                                                                                       ;left
 
     CHECKUP:                    
                                 CMP                UPDIR, 0
@@ -4124,9 +4182,9 @@ STATUSBARANDROAD PROC
                                 CALL               GETSYSTEMTIME
 
                                 CALL               SENDANDRECIEVEOBST
-                                AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD                                                                                           ; THIS THRESHOLD TO START FROM 10 TO 40 TO NOT MAKE TWO OBSTACLES IN THE CORNER TOGETHER
+                                AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD                                                                                                         ; THIS THRESHOLD TO START FROM 10 TO 40 TO NOT MAKE TWO OBSTACLES IN THE CORNER TOGETHER
                                 MOV                DH, 0
-                                ADD                TEMPY, THRESHOLD / 2                                                                                                              ;AS THRESHOLD IS 20 TO START FROM 10
+                                ADD                TEMPY, THRESHOLD / 2                                                                                                                            ;AS THRESHOLD IS 20 TO START FROM 10
                                 ADD                TEMPY, DX
                                 MOV                TMP4, 0
                                 CALL               OBSTRANDANDDRAW
@@ -4148,7 +4206,7 @@ STATUSBARANDROAD PROC
                                 MOV                AL, VERROADIMGH - POWERH - THRESHOLD
                                 MOV                RANGEOFRAND, AL
                                 CALL               RANGINGRAND
-                                ADD                TEMPY, THRESHOLD / 2                                                                                                              ;AS THRESHOLD IS 20 TO START FROM 10
+                                ADD                TEMPY, THRESHOLD / 2                                                                                                                            ;AS THRESHOLD IS 20 TO START FROM 10
                                 ADD                TEMPY, DX
                                 MOV                TMP4, 0
 
@@ -4174,7 +4232,7 @@ STATUSBARANDROAD PROC
                                 MOV                LASTDIR, 1
                                 CALL               DRAWCHECKLINE
 
-                                CMP                CX, 0                                                                                                                             ;HANDLING FIRST SEGMENT NO OBSTACLES
+                                CMP                CX, 0                                                                                                                                           ;HANDLING FIRST SEGMENT NO OBSTACLES
                                 JNE                NOTFIRSTSEGMENT
                                 JMP                FIRSTSEGMENT
     NOTFIRSTSEGMENT:            
@@ -4382,7 +4440,7 @@ STATUSBARANDROAD PROC
     LAST:                       
                                 CMP                PLAYERNUMBER, 1
                                 JE                 CONTLAST
-                                JMP                GOUP                                                                                                                              ; TO MAKE THE RECEIVER NEVER REACH CONTLAST HE ALWAYS RECEIVES IN RANDOMIZEPART
+                                JMP                GOUP                                                                                                                                            ; TO MAKE THE RECEIVER NEVER REACH CONTLAST HE ALWAYS RECEIVES IN RANDOMIZEPART
 
 
     CONTLAST:                   
@@ -4408,9 +4466,9 @@ STATUSBARANDROAD ENDP
     ;PORT INITIALIZATIONS
 PORTINITIALIZE PROC
     ;Set Divisor Latch Access Bit
-                                mov                dx,3fbh                                                                                                                           ; Line Control Register
-                                mov                al,10000000b                                                                                                                      ;Set Divisor Latch Access Bit
-                                out                dx,al                                                                                                                             ;Out it
+                                mov                dx,3fbh                                                                                                                                         ; Line Control Register
+                                mov                al,10000000b                                                                                                                                    ;Set Divisor Latch Access Bit
+                                out                dx,al                                                                                                                                           ;Out it
     ;Set LSB byte of the Baud Rate Divisor Latch register.
                                 mov                dx,3f8h
                                 mov                al,0ch
@@ -4435,14 +4493,14 @@ PORTINITIALIZE ENDP
 
 SEND PROC FAR
     ;Check that Transmitter Holding Register is Empty
-                                mov                dx , 3FDH                                                                                                                         ; Line Status Register
+                                mov                dx , 3FDH                                                                                                                                       ; Line Status Register
     SENDAGAIN:                  
-                                In                 al , dx                                                                                                                           ;Read Line Status
+                                In                 al , dx                                                                                                                                         ;Read Line Status
                                 AND                al , 00100000b
                                 JZ                 SENDAGAIN
 
     ;If empty put the VALUE in Transmit data register
-                                mov                dx , 3F8H                                                                                                                         ; Transmit data register
+                                mov                dx , 3F8H                                                                                                                                       ; Transmit data register
                                 mov                al,SENTVALUE
                                 out                dx , al
                                 RET
@@ -4450,7 +4508,7 @@ SEND ENDP
 
 RECIEVE PROC FAR
     ;Check that Data Ready
-                                mov                dx , 3FDH                                                                                                                         ; Line Status Register
+                                mov                dx , 3FDH                                                                                                                                       ; Line Status Register
     DATAREADYCHK:               in                 al , dx
                                 AND                al , 1
                                 JZ                 DATAREADYCHK
@@ -4536,7 +4594,7 @@ MAIN PROC FAR
                                 MOV                CANTRIGHT, 0
                                 MOV                CANTDOWN, 0
                                 MOV                CANTLEFT, 0
-                                MOV                POWERUPCOUNTER, 0                                                                                                                 ;ADDED THAT WHEN ADDED START PROGRAM
+                                MOV                POWERUPCOUNTER, 0                                                                                                                               ;ADDED THAT WHEN ADDED START PROGRAM
                                 MOV                CURPOWERINDEX, 0
                                 MOV                LetterF4Flag, 0
                                 MOV                LetterF2Flag, 0
@@ -4602,12 +4660,17 @@ MAIN PROC FAR
 
     ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
     TAKINGNEXTSTAGE:            
+                                CMP                LetterF1Flag, 1
+                                JE                 STARTCHATTING
                                 CMP                LetterF2Flag, 1
                                 JE                 STARTPROGRAM
                                 CMP                LetterEscFlag, 1
                                 JE                 HLTPROGRAM
 
                                 JMP                TAKINGNEXTSTAGE
+
+    STARTCHATTING:              
+    ;CALLING SERIALCONNECTION PROCEDURE
 
 
     STARTPROGRAM:               
@@ -4671,7 +4734,7 @@ MAIN PROC FAR
                                 MOV                CANTRIGHT, 0
                                 MOV                CANTDOWN, 0
                                 MOV                CANTLEFT, 0
-                                MOV                POWERUPCOUNTER, 0                                                                                                                 ;ADDED THAT WHEN ADDED START PROGRAM
+                                MOV                POWERUPCOUNTER, 0                                                                                                                               ;ADDED THAT WHEN ADDED START PROGRAM
                                 MOV                CURPOWERINDEX, 0
                                 MOV                CX, 11
                                 MOV                TEMPX, 0
@@ -4747,7 +4810,7 @@ MAIN PROC FAR
                                 JMP                exit
     mainLoopBegins:             
 
-                                MOV                AH, 2CH                                                                                                                           ; INTERRUPT to get system time
+                                MOV                AH, 2CH                                                                                                                                         ; INTERRUPT to get system time
                                 INT                21H
 
                                 CALL               CheckSpeedUpTimer
@@ -4756,7 +4819,7 @@ MAIN PROC FAR
                                 CMP                INDEXSTARTSHOWING, AX
                                 JAE                DONTSHOWPOWER
 
-                                MOV                AH, 2CH                                                                                                                           ; INTERRUPT to get system time
+                                MOV                AH, 2CH                                                                                                                                         ; INTERRUPT to get system time
                                 INT                21H
 
                                 CMP                DH, CURSECOND
@@ -4836,10 +4899,10 @@ MAIN PROC FAR
     GOTOMAINLOOP:               
 
 
-                                JMP                mainLoop                                                                                                                          ; keep looping
+                                JMP                mainLoop                                                                                                                                        ; keep looping
     exit:                       
                                 MOV                CX, 4CH
-                                MOV                DX, 4B40H                                                                                                                         ;63997
+                                MOV                DX, 4B40H                                                                                                                                       ;63997
                                 MOV                AH, 86H
                                 INT                15H
                                 JMP                FAR PTR STARTTHEWHOLEPROGRAM
