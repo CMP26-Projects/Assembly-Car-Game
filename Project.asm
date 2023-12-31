@@ -3702,7 +3702,7 @@ SENDANDRECIEVEOBST PROC
     ; CALL               RECIEVE
                                 PUSH               CX
                                 MOV                CX, 1
-                                MOV                DX, 59000
+                                MOV                DX, 35460
                                 MOV                AH, 86H
                                 INT                15H
                                 POP                CX
@@ -3755,7 +3755,7 @@ STATUSBARANDROAD PROC
 
                                 PUSH               CX
                                 MOV                CX, 1
-                                MOV                DX, 59000
+                                MOV                DX, 35460
                                 MOV                AH, 86H
                                 INT                15H
                                 POP                CX
