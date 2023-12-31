@@ -3004,12 +3004,12 @@ DrawStatBar PROC FAR
 
     ;printing  FirstName
                                 MOV                SI , OFFSET FirstName
-                                MOV                DL , 4
+                                MOV                DL , 0
                                 MOV                DH , 22
                                 CALL               PrintStringWithColor
     ;printing  SecondName
                                 MOV                SI , OFFSET SecondName
-                                MOV                DL , 25
+                                MOV                DL , 21
                                 MOV                DH , 22
                                 CALL               PrintStringWithColor
 
