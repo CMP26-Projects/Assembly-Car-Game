@@ -413,12 +413,12 @@ CHECKPOSSIBILITIES MACRO
 ENDM
 
 
-.MODEL SMALL
+.MODEL compact
 .STACK 64
 .DATA
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;COMMUNICATIONS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;PLAYERNUMBER
-    PLAYERNUMBER              DW  1
+    PLAYERNUMBER              DW  2
     SENTVALUE                 DB  ?
     RECIEVEDVALUE             DB  ?
     SENTSTRINGOFFSET          DW  ?
@@ -972,9 +972,9 @@ ENDM
     DURATIONTOSHOWPOWER       EQU 2
 
     ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
-    POWERPROBABILITY          DB  100
-    OBSTPROBABILITY           DB  100
-    POWERVISIBPROBABILITY     DB  100
+    POWERPROBABILITY          DB  0
+    OBSTPROBABILITY           DB  0
+    POWERVISIBPROBABILITY     DB  0
 
 
     ;CAR
@@ -1588,22 +1588,22 @@ ClearPowerup PROC FAR
 ClearPowerup ENDP
 
                                 
-    ;description
-RecieveWithoutLoop PROC FAR
-    ;Check that Data Ready
-                                mov                dx , 3FDH                                                                                                                         ; Line Status Register
-    DATAREADYCHK2:              in                 al , dx
-                                AND                al , 1
-                                JZ                 EndRecieve
+    ;     ;description
+    ; RecieveWithoutLoop PROC FAR
+    ;     ;Check that Data Ready
+    ;                                 mov                dx , 3FDH                                                                                                                         ; Line Status Register
+    ;     DATAREADYCHK2:              in                 al , dx
+    ;                                 AND                al , 1
+    ;                                 JZ                 DATAREADYCHK2
 
-    ;If Ready read the VALUE in Receive data register
-                                mov                dx , 03F8H
-                                in                 al , dx
-                                mov                RECIEVEDVALUE , al
+    ;     ;If Ready read the VALUE in Receive data register
+    ;                                 mov                dx , 03F8H
+    ;                                 in                 al , dx
+    ;                                 mov                RECIEVEDVALUE , al
 
-    EndRecieve:                 
-                                RET
-RecieveWithoutLoop ENDP
+    ;     EndRecieve:
+    ;                                 RET
+    ; RecieveWithoutLoop ENDP
 
 InputButtonSwitchCase PROC  FAR
                  
@@ -1612,7 +1612,6 @@ InputButtonSwitchCase PROC  FAR
     ;esc logic
                                 jmp                exit
                                 
-                                MOV                RECIEVEDVALUE , 0FFH
     bridge:                     
 
     ; up arrow
@@ -1624,18 +1623,14 @@ InputButtonSwitchCase PROC  FAR
                                 MOV                SENTVALUE ,al
                                 CALL               SEND
                                 
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP:                  
+                                LOOP               DELAYLOOP
+    ;Delay finished
 
                                 JMP                Default
     NotPressed1:                
-                                CALL               RecieveWithoutLoop
-                                CMP                RECIEVEDVALUE , 0FFH
-                                JNE                NORECIEVEDVAL
-                                MOV                AL , RECIEVEDVALUE
-                                CMP                UpKeyCode , AL
-                                JNE                NORECIEVEDVAL
-                                MOV                WFlag ,1
-    NORECIEVEDVAL:              
-                                
                                 MOV                BL , UpKeyCode
                                 ADD                BL, 80H
                                 CMP                AL ,  BL
@@ -1644,17 +1639,15 @@ InputButtonSwitchCase PROC  FAR
     ;Sending the keyFlag after changing
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP1:                 
+                                LOOP               DELAYLOOP1
+    ;Delay finished
 
                                 JMP                Default
     CarCheckLeft:               
-                                CALL               RecieveWithoutLoop
-                                CMP                RECIEVEDVALUE , 0FFH
-                                JNE                NORECIEVEDVAL2
-                                MOV                AL , RECIEVEDVALUE
-                                CMP                UpKeyCode , AL
-                                JNE                NORECIEVEDVAL2
-                                MOV                WFlag ,1
-    NORECIEVEDVAL2:             
     ; left arrow
                                 CMP                AL, LeftKeyCode
                                 JNE                NotPressed2
@@ -1664,7 +1657,12 @@ InputButtonSwitchCase PROC  FAR
                                 
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
-
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP2:                 
+                                LOOP               DELAYLOOP2
+    ;Delay finished
 
                                 JMP                Default
     NotPressed2:                
@@ -1677,6 +1675,12 @@ InputButtonSwitchCase PROC  FAR
                                 
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP3:                 
+                                LOOP               DELAYLOOP3
+    ;Delay finished
 
                                 JMP                Default
 
@@ -1689,9 +1693,16 @@ InputButtonSwitchCase PROC  FAR
                                 
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP4:                 
+                                LOOP               DELAYLOOP4
+    ;Delay finished
 
                                 JMP                Default
     NotPressed3:                
+
                                 MOV                BL , DownKeyCode
                                 ADD                BL, 80H
                                 CMP                AL , BL
@@ -1703,6 +1714,12 @@ InputButtonSwitchCase PROC  FAR
 
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP5:                 
+                                LOOP               DELAYLOOP5
+    ;Delay finished
 
                                 JMP                Default
     
@@ -1716,6 +1733,12 @@ InputButtonSwitchCase PROC  FAR
                               
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP6:                 
+                                LOOP               DELAYLOOP6
+    ;Delay finished
 
                                 JMP                Default
     NotPressed4:                
@@ -1729,8 +1752,19 @@ InputButtonSwitchCase PROC  FAR
                               
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
-
+    ;Delay
+                                PUSH               DX
+                                PUSH               CX
+                                PUSH               AX
+                                MOV                CX , 0
+                                MOV                DX , 10000D
+                                MOV                AH , 86H
+                                INT                15H
+                                POP                AX
+                                POP                CX
+                                POP                DX
                                 JMP                Default
+    ;Delay finished
 
     CheckLetterK:               
                                 CMP                AL , DeletePower1Key
@@ -1741,11 +1775,18 @@ InputButtonSwitchCase PROC  FAR
     ;Sending the keyFlag after changing
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP7:                 
+                                LOOP               DELAYLOOP7
+    ;Delay finished
 
                                 ClearPower
                                 JMP                Default
 
     NOTPRESSED5:                
+        
                                 MOV                BL , DeletePower1Key
                                 ADD                BL , 80H
                                 CMP                AL , BL
@@ -1756,6 +1797,12 @@ InputButtonSwitchCase PROC  FAR
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
                                 
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP8:                 
+                                LOOP               DELAYLOOP8
+    ;Delay finished
+
                                 JMP                Default
     
     CheckLetterF4:              
@@ -1766,6 +1813,12 @@ InputButtonSwitchCase PROC  FAR
     ;Sending the keyFlag after changing
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP9:                 
+                                LOOP               DELAYLOOP9
+    ;Delay finished
 
                                 JMP                DEFAULT
 
@@ -1777,6 +1830,12 @@ InputButtonSwitchCase PROC  FAR
     ;Sending the keyFlag after changing
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP10:                
+                                LOOP               DELAYLOOP10
+    ;Delay finished
 
                                 JMP                DEFAULT
 
@@ -1788,7 +1847,13 @@ InputButtonSwitchCase PROC  FAR
     ;Sending the keyFlag after changing
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
-    
+                                
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP11:                
+                                LOOP               DELAYLOOP11
+    ;Delay finished
+
     Default:                    
     
                                 RET
@@ -1796,6 +1861,17 @@ InputButtonSwitchCase ENDP
 
 ReceivedButtonSwitchCase PROC  FAR
                              
+    ;Check that Data Ready
+                                mov                dx , 3FDH                                                                                                                         ; Line Status Register
+    DATAREADYCHK2:              in                 al , dx
+                                AND                al , 1
+                                JZ                 EndRecieveButtonSwitchCase
+
+    ;If Ready read the VALUE in Receive data register
+                                mov                dx , 03F8H
+                                in                 al , dx
+                                mov                RECIEVEDVALUE, al
+
                                 cmp                al, 01h
                                 jne                bridgeInRecieveSwitchCase
     ;esc logic
@@ -2061,14 +2137,38 @@ CheckArrowKeys PROC FAR
                                 RET
 CheckArrowKeys ENDP
 
-    ;procedure calls all WASD keys functions
 CheckWASDKeys PROC FAR
+    ; SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterEscFlag
+                                CALL               InputButtonSwitchCase
+                                CALL               UpdateWASDFlags
+                                RET
+CheckWASDKeys ENDP
+
+
+    ;procedure calls all WASD keys functions
+RecieveWASDKeys PROC FAR
                                 SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
                                 SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterEscFlag
                                 CALL               ReceivedButtonSwitchCase
                                 CALL               UpdateWASDFlags
                                 RET
-CheckWASDKeys ENDP
+RecieveWASDKeys ENDP
+
+
+RecieveArrowKeys PROC FAR
+    ; SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag, LetterF4Flag, LetterF2Flag, LetterEscFlag
+                                
+                                CALL               ReceivedButtonSwitchCase
+                                CALL               UpdateArrowFlags
+                                RET
+RecieveArrowKeys ENDP
+
+
+
 
 Update1 PROC FAR
                                 CLEAR              CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
@@ -2588,16 +2688,22 @@ checkingPositionChange2 PROC FAR
 checkingPositionChange2 ENDP
 
 INT09H PROC FAR
-                                IN                 AL, 60H
-                            
-                                CALL               CheckArrowKeys
-                                
-    ;Not taking car2 input from the keyboard anymore
-    ; CALL               CheckWASDKeys
 
-                                    
+                                IN                 AL, 60H
+
+                                CMP                PLAYERNUMBER , 1
+                                JNE                Player2
+                                CALL               CheckArrowKeys
+                                JMP                InterruptKilling
+
+    Player2:                    
+                                CALL               CheckWASDKeys
+    ;Not taking car2 input from the keyboard anymore
+  
+    InterruptKilling:           
                                 MOV                AL , 20H
                                 OUT                20H, AL
+
                                 IRET
 INT09H ENDP
 
@@ -3747,7 +3853,7 @@ ShowCurrentTime PROC FAR
                                 MOV                CountSecond , AH                                                                                                                  ; Current Seconds
                                 MOV                CountMinute , AL                                                                                                                  ; Current Minutes
 
-                                CMP                TotalSeconds , 120                                                                                                                ; 2 minutes are achieved
+                                CMP                TotalSeconds , 240                                                                                                                ; 2 minutes are achieved
                                 JNE                CheckTimeFinish
 
                                 MOV                TimerFinished , 1
@@ -4307,13 +4413,14 @@ PORTINITIALIZE ENDP
 
 
 
-SEND PROC
+SEND PROC FAR
     ;Check that Transmitter Holding Register is Empty
                                 mov                dx , 3FDH                                                                                                                         ; Line Status Register
     SENDAGAIN:                  
                                 In                 al , dx                                                                                                                           ;Read Line Status
                                 AND                al , 00100000b
                                 JZ                 SENDAGAIN
+
 
     ;If empty put the VALUE in Transmit data register
                                 mov                dx , 3F8H                                                                                                                         ; Transmit data register
@@ -4322,7 +4429,7 @@ SEND PROC
                                 RET
 SEND ENDP
 
-RECIEVE PROC
+RECIEVE PROC FAR
     ;Check that Data Ready
                                 mov                dx , 3FDH                                                                                                                         ; Line Status Register
     DATAREADYCHK:               in                 al , dx
@@ -4464,7 +4571,6 @@ MAIN PROC FAR
                                 LOOP               INITIALIZE2
 
 
-
     ; CALL               MAINMENU
                                 CMP                PLAYERNUMBER, 1
                                 JE                 TAKINGNEXTSTAGE
@@ -4480,12 +4586,14 @@ MAIN PROC FAR
                                 JE                 STARTPROGRAM
                                 CMP                LetterEscFlag, 1
                                 JE                 HLTPROGRAM
+
                                 JMP                TAKINGNEXTSTAGE
 
 
     STARTPROGRAM:               
                                 CMP                PLAYERNUMBER, 1
                                 JNE                STARTPROGRAMNOTSENDER
+                                
                                 MOV                SENTVALUE, 1
                                 CALL               SEND
 
@@ -4664,41 +4772,30 @@ MAIN PROC FAR
                                 MOV                PrevPosYsecond ,DX
 
 
-    ; ;--------------    Overriding INT 9H   ---------------
-    ; ;Disable interrrupts
-    ;                             CLI
-                       
-    ; ;Saving DS it will be the base of the addressing mode inside the interrupt
-    ;                             PUSH               DS
-    ;                             MOV                AX , CS
-    ;                             MOV                DS , AX
-
-    ; ;changing interrup vector
-    ;                             MOV                AX , 2509H
-    ;                             LEA                DX , INT09H
-    ;                             INT                21H
-                
-    ; ;re-enabling interrupts
-    ;                             POP                DS
-    ;                             STI
-            
-
                                 CMP                LetterF4Flag, 1
                                 JNE                CONTINUEMAINLOOP
                                 MOV                EXITSTATUS, 1
                                 CALL               ENDGAME
                                 JMP                exit
     CONTINUEMAINLOOP:           
+    ;Checking on the recieving of characters
+                                CMP                PLAYERNUMBER , 1
+                                JNE                Player2Updating
+                                CALL               RecieveWASDKeys
+                                JMP                CheckFlagsAfterChange
+    Player2Updating:            
+                                CALL               RecieveArrowKeys
+
+    CheckFlagsAfterChange:      
                                 CALL               CheckArrowFlags
                                 CALL               checkingPositionChange1
 
                                 CALL               CheckWASDFlags
                                 CALL               checkingPositionChange2
 
-
     ;Delay
                                 MOV                CX , 0
-                                MOV                DX , 64000D
+                                MOV                DX , 40000D
                                 MOV                AH , 86H
                                 INT                15H
                                 CMP                CAR1SCORE, 100
@@ -4718,7 +4815,6 @@ MAIN PROC FAR
 
     GOTOMAINLOOP:               
 
-
                                 JMP                mainLoop                                                                                                                          ; keep looping
     exit:                       
                                 MOV                CX, 4CH
@@ -4736,20 +4832,3 @@ MAIN ENDP
 
 
 END MAIN
-
-
-
-
-
-; MOV DI, 0
-
-; ;BACKGROUND WITH IMAGE
-; BACKGROUND:
-;     MOV CX, SCREENSIZE
-;     MOV Bx, offset img
-; BACKGROUNDLOOP:
-;     MOV DL, BYTE PTR [Bx]
-;     MOV ES:[DI], DL
-;     INC DI
-;     INC BX
-; LOOP BACKGROUNDLOOP
