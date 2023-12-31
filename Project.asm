@@ -415,12 +415,12 @@ CHECKPOSSIBILITIES MACRO
 ENDM
 
 
-.MODEL SMALL
+.MODEL compact
 .STACK 64
 .DATA
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;COMMUNICATIONS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;PLAYERNUMBER
-    PLAYERNUMBER              DW  2
+    PLAYERNUMBER              DW  1
     SENTVALUE                 DB  ?
     RECIEVEDVALUE             DB  ?
     SENTSTRINGOFFSET          DW  ?
@@ -974,9 +974,9 @@ ENDM
     DURATIONTOSHOWPOWER       EQU 2
 
     ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
-    POWERPROBABILITY          DB  100
-    OBSTPROBABILITY           DB  100
-    POWERVISIBPROBABILITY     DB  100
+    POWERPROBABILITY          DB  0
+    OBSTPROBABILITY           DB  0
+    POWERVISIBPROBABILITY     DB  0
 
 
     ;CAR
@@ -1589,6 +1589,18 @@ ClearPowerup PROC FAR
                                 RET
 ClearPowerup ENDP
 
+   
+    ;description
+Delay PROC FAR
+
+    ;Delay
+                                MOV                CX , 40000D
+    DELAYLOOP:                  
+                                XOR                DL , DL
+                                LOOP               DELAYLOOP
+    ;Delay finished
+                                RET
+Delay ENDP
 
 InputButtonSwitchCase PROC  FAR
                  
@@ -1602,6 +1614,11 @@ InputButtonSwitchCase PROC  FAR
                                 cmp                al, UpKeyCode
                                 JNE                NotPressed1
                                 MOV                UpFlag , 1
+    
+    ;Sending the keyFlag after changing
+                                MOV                SENTVALUE ,al
+                                CALL               SEND
+                                CALL               Delay
                                 JMP                Default
     NotPressed1:                
                                 MOV                BL , UpKeyCode
@@ -1609,12 +1626,24 @@ InputButtonSwitchCase PROC  FAR
                                 CMP                AL ,  BL
                                 JNE                CarCheckLeft
                                 MOV                UpFlag , 0
+    ;Sending the keyFlag after changing
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                CALL               Delay
+      
                                 JMP                Default
     CarCheckLeft:               
     ; left arrow
                                 CMP                AL, LeftKeyCode
                                 JNE                NotPressed2
                                 MOV                LeftFlag , 1
+                                
+    ;Sending the keyFlag after changing
+                                
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                
+                                CALL               Delay
                                 JMP                Default
     NotPressed2:                
                                 MOV                BL , LeftKeyCode
@@ -1622,6 +1651,13 @@ InputButtonSwitchCase PROC  FAR
                                 CMP                AL , BL
                                 JNE                CarCheckDown
                                 MOV                LeftFlag , 0
+    ;Sending the keyFlag after changing
+                                
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                
+                                CALL               Delay
+
                                 JMP                Default
 
     CarCheckDown:               
@@ -1629,13 +1665,29 @@ InputButtonSwitchCase PROC  FAR
                                 cmp                AL, DownKeyCode
                                 JNE                NotPressed3
                                 MOV                DownFlag , 1
+    ;Sending the keyFlag after changing
+                                
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                
+                                CALL               Delay
+
+
                                 JMP                Default
     NotPressed3:                
+
                                 MOV                BL , DownKeyCode
                                 ADD                BL, 80H
                                 CMP                AL , BL
                                 JNE                CarCheckRight
                                 MOV                DownFlag , 0
+
+    ;Sending the keyFlag after changing
+                                
+
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                CALL               Delay
                                 JMP                Default
     
     CarCheckRight:              
@@ -1643,6 +1695,13 @@ InputButtonSwitchCase PROC  FAR
                                 CMP                AL , RightKeyCode
                                 JNE                NotPressed4
                                 MOV                RightFlag , 1
+
+    ;Sending the keyFlag after changing
+                              
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                CALL               Delay
+                                
                                 JMP                Default
     NotPressed4:                
                                 MOV                BL , RightKeyCode
@@ -1650,6 +1709,13 @@ InputButtonSwitchCase PROC  FAR
                                 CMP                AL , BL
                                 JNE                CheckLetterK
                                 MOV                RightFlag , 0
+
+    ;Sending the keyFlag after changing
+                              
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                CALL               Delay
+
                                 JMP                Default
 
     CheckLetterK:               
@@ -1657,55 +1723,196 @@ InputButtonSwitchCase PROC  FAR
                                 JNE                NotPressed5
                                 MOV                KFlag , 1
                                 MOV                powerupParent , 1
+
+    ;Sending the keyFlag after changing
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                CALL               Delay
                                 ClearPower
                                 JMP                Default
 
     NOTPRESSED5:                
+        
                                 MOV                BL , DeletePower1Key
                                 ADD                BL , 80H
                                 CMP                AL , BL
-                                JNE                CheckLetterM
+                                JNE                CheckLetterF4
                                 MOV                KFlag , 0
+
+    ;Sending the keyFlag after changing
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                
+                                CALL               Delay
+
                                 JMP                Default
     
-    CheckLetterM:               
-                                CMP                AL , DeletePower2Key
-                                JNE                NotPressed6
-                                MOV                MFlag , 1
-                                MOV                powerupParent , 2
-                                ClearPower
-                                JMP                Default
-
-    NOTPRESSED6:                
-
-                                MOV                BL , DeletePower2Key
-                                ADD                BL , 80H
-                                CMP                AL , BL
-                                JNE                CheckLetterF4
-                                MOV                MFlag , 0
-                                JMP                Default
     CheckLetterF4:              
                                 CMP                AL , F4KeyCode
                                 JNE                CheckLetterF2
                                 MOV                F4Flag , 1
+
+    ;Sending the keyFlag after changing
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                
+                                CALL               Delay
+
                                 JMP                DEFAULT
 
     CheckLetterF2:              
                                 CMP                AL , F2KeyCode
                                 JNE                CheckLetterEsc
                                 MOV                F2Flag , 1
+
+    ;Sending the keyFlag after changing
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                
+                                CALL               Delay
+
                                 JMP                DEFAULT
 
     CheckLetterEsc:             
                                 CMP                AL , EscKeyCode
                                 JNE                DEFAULT
                                 MOV                EscFlag , 1
-    
+                                
+    ;Sending the keyFlag after changing
+                                MOV                SENTVALUE ,AL
+                                CALL               SEND
+                                
+                                CALL               Delay
+
     Default:                    
     
                                 RET
 InputButtonSwitchCase ENDP
+
+ReceivedButtonSwitchCase PROC  FAR
+                             
+    ;Check that Data Ready
+                                mov                dx , 3FDH                                                                                                                         ; Line Status Register
+    DATAREADYCHK2:              in                 al , dx
+                                AND                al , 1
+                                JZ                 EndRecieveButtonSwitchCase
+
+    ;If Ready read the VALUE in Receive data register
+                                mov                dx , 03F8H
+                                in                 al , dx
+                                mov                RECIEVEDVALUE, al
+
+                                cmp                al, 01h
+                                jne                bridgeInRecieveSwitchCase
+    ;esc logic
+                                jmp                exit
+    bridgeInRecieveSwitchCase:  
+
+    ; up arrow
+                                cmp                al, UpKeyCode
+                                JNE                NotPressedRecieved
+                                MOV                UpFlag , 1
+                                
+                                JMP                EndRecieveButtonSwitchCase
+    NotPressedRecieved:         
+                                MOV                BL , UpKeyCode
+                                ADD                BL, 80H
+                                CMP                AL ,  BL
+                                JNE                CarCheckLeftRecieved
+                                MOV                UpFlag , 0
+                                JMP                EndRecieveButtonSwitchCase
+    CarCheckLeftRecieved:       
+    ; left arrow
+                                CMP                AL, LeftKeyCode
+                                JNE                NotPressed2Recieved
+                                MOV                LeftFlag , 1
+
+                                JMP                EndRecieveButtonSwitchCase
+    NotPressed2Recieved:        
+                                MOV                BL , LeftKeyCode
+                                ADD                BL, 80H
+                                CMP                AL , BL
+                                JNE                CarCheckDownReceived
+                                MOV                LeftFlag , 0
+
+                                JMP                EndRecieveButtonSwitchCase
+
+    CarCheckDownReceived:       
+    ; down arrow
+                                cmp                AL, DownKeyCode
+                                JNE                NotPressed3Recieved
+                                MOV                DownFlag , 1
+ 
+                                JMP                EndRecieveButtonSwitchCase
+    NotPressed3Recieved:        
+                                MOV                BL , DownKeyCode
+                                ADD                BL, 80H
+                                CMP                AL , BL
+                                JNE                CarCheckRightRecieved
+                                MOV                DownFlag , 0
+
+                                JMP                EndRecieveButtonSwitchCase
     
+    CarCheckRightRecieved:      
+    ; right arrow
+                                CMP                AL , RightKeyCode
+                                JNE                NotPressed4Recieved
+                                MOV                RightFlag , 1
+
+                                JMP                EndRecieveButtonSwitchCase
+    NotPressed4Recieved:        
+                                MOV                BL , RightKeyCode
+                                ADD                BL, 80H
+                                CMP                AL , BL
+                                JNE                CheckLetterKReceived
+                                MOV                RightFlag , 0
+
+                                JMP                EndRecieveButtonSwitchCase
+
+    CheckLetterKReceived:       
+                                CMP                AL , DeletePower1Key
+                                JNE                NotPressed5Received
+                                MOV                KFlag , 1
+                                MOV                powerupParent , 1
+
+                                ClearPower
+                                JMP                EndRecieveButtonSwitchCase
+
+    NOTPRESSED5Received:        
+                                MOV                BL , DeletePower1Key
+                                ADD                BL , 80H
+                                CMP                AL , BL
+                                JNE                CheckLetterF4Recieved
+                                MOV                KFlag , 0
+                                
+                                JMP                EndRecieveButtonSwitchCase
+    
+    CheckLetterF4Recieved:      
+                                CMP                AL , F4KeyCode
+                                JNE                CheckLetterF2Recieved
+                                MOV                F4Flag , 1
+
+
+                                JMP                EndRecieveButtonSwitchCase
+
+    CheckLetterF2Recieved:      
+                                CMP                AL , F2KeyCode
+                                JNE                CheckLetterEscRecieved
+                                MOV                F2Flag , 1
+
+                                JMP                EndRecieveButtonSwitchCase
+
+    CheckLetterEscRecieved:     
+                                CMP                AL , EscKeyCode
+                                JNE                EndRecieveButtonSwitchCase
+                                MOV                EscFlag , 1
+    
+    EndRecieveButtonSwitchCase: 
+    
+                                RET
+ReceivedButtonSwitchCase ENDP
+
+
 CheckArrowFlags PROC FAR
 
     ;------- checking Flags -------
@@ -1860,14 +2067,38 @@ CheckArrowKeys PROC FAR
                                 RET
 CheckArrowKeys ENDP
 
-    ;procedure calls all WASD keys functions
 CheckWASDKeys PROC FAR
-                                SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM,LetterF4, LetterF2, LetterEsc
+    ; SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
                                 SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterEscFlag
                                 CALL               InputButtonSwitchCase
                                 CALL               UpdateWASDFlags
                                 RET
 CheckWASDKeys ENDP
+
+
+    ;procedure calls all WASD keys functions
+RecieveWASDKeys PROC FAR
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SetFlags           WFlag, SFlag, AFlag, DFlag , LetterKFlag, LetterMFlag, LetterF4Flag,LetterF2Flag, LetterEscFlag
+                                CALL               ReceivedButtonSwitchCase
+                                CALL               UpdateWASDFlags
+                                RET
+RecieveWASDKeys ENDP
+
+
+RecieveArrowKeys PROC FAR
+    ; SETKEYS            WKey, SKey, AKey, DKey , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SETKEYS            ArrowUp, ArrowDown, ArrowLeft, ArrowRight , LetterK , LetterM, LetterF4, LetterF2, LetterEsc
+                                SetFlags           ArrowUpFlag, ArrowDownFlag, ArrowLeftFlag, ArrowRightFlag, LetterKFlag, LetterMFlag, LetterF4Flag, LetterF2Flag, LetterEscFlag
+                                
+                                CALL               ReceivedButtonSwitchCase
+                                CALL               UpdateArrowFlags
+                                RET
+RecieveArrowKeys ENDP
+
+
+
 
 Update1 PROC FAR
                                 CLEAR              CarImg1, CAR_SIZE, PrevPosXfirst, PrevPosYfirst
@@ -2387,14 +2618,22 @@ checkingPositionChange2 PROC FAR
 checkingPositionChange2 ENDP
 
 INT09H PROC FAR
-                                IN                 AL, 60H
-                            
-                                CALL               CheckArrowKeys
-                                CALL               CheckWASDKeys
 
-                                    
+                                IN                 AL, 60H
+
+                                CMP                PLAYERNUMBER , 1
+                                JNE                Player2
+                                CALL               CheckArrowKeys
+                                JMP                InterruptKilling
+
+    Player2:                    
+                                CALL               CheckWASDKeys
+    ;Not taking car2 input from the keyboard anymore
+  
+    InterruptKilling:           
                                 MOV                AL , 20H
                                 OUT                20H, AL
+
                                 IRET
 INT09H ENDP
 
@@ -4194,7 +4433,7 @@ PORTINITIALIZE ENDP
 
 
 
-SEND PROC
+SEND PROC FAR
     ;Check that Transmitter Holding Register is Empty
                                 mov                dx , 3FDH                                                                                                                         ; Line Status Register
     SENDAGAIN:                  
@@ -4209,7 +4448,7 @@ SEND PROC
                                 RET
 SEND ENDP
 
-RECIEVE PROC
+RECIEVE PROC FAR
     ;Check that Data Ready
                                 mov                dx , 3FDH                                                                                                                         ; Line Status Register
     DATAREADYCHK:               in                 al , dx
@@ -4367,12 +4606,14 @@ MAIN PROC FAR
                                 JE                 STARTPROGRAM
                                 CMP                LetterEscFlag, 1
                                 JE                 HLTPROGRAM
+
                                 JMP                TAKINGNEXTSTAGE
 
 
     STARTPROGRAM:               
                                 CMP                PLAYERNUMBER, 1
                                 JNE                STARTPROGRAMNOTSENDER
+                                
                                 MOV                SENTVALUE, 1
                                 CALL               SEND
 
@@ -4551,41 +4792,30 @@ MAIN PROC FAR
                                 MOV                PrevPosYsecond ,DX
 
 
-    ; ;--------------    Overriding INT 9H   ---------------
-    ; ;Disable interrrupts
-    ;                             CLI
-                       
-    ; ;Saving DS it will be the base of the addressing mode inside the interrupt
-    ;                             PUSH               DS
-    ;                             MOV                AX , CS
-    ;                             MOV                DS , AX
-
-    ; ;changing interrup vector
-    ;                             MOV                AX , 2509H
-    ;                             LEA                DX , INT09H
-    ;                             INT                21H
-                
-    ; ;re-enabling interrupts
-    ;                             POP                DS
-    ;                             STI
-            
-
                                 CMP                LetterF4Flag, 1
                                 JNE                CONTINUEMAINLOOP
                                 MOV                EXITSTATUS, 1
                                 CALL               ENDGAME
                                 JMP                exit
     CONTINUEMAINLOOP:           
+    ;Checking on the recieving of characters
+                                CMP                PLAYERNUMBER , 1
+                                JNE                Player2Updating
+                                CALL               RecieveWASDKeys
+                                JMP                CheckFlagsAfterChange
+    Player2Updating:            
+                                CALL               RecieveArrowKeys
+
+    CheckFlagsAfterChange:      
                                 CALL               CheckArrowFlags
                                 CALL               checkingPositionChange1
 
                                 CALL               CheckWASDFlags
                                 CALL               checkingPositionChange2
 
-
     ;Delay
                                 MOV                CX , 0
-                                MOV                DX , 64000D
+                                MOV                DX , 40000D
                                 MOV                AH , 86H
                                 INT                15H
                                 CMP                CAR1SCORE, 100
@@ -4623,20 +4853,3 @@ MAIN ENDP
 
 
 END MAIN
-
-
-
-
-
-; MOV DI, 0
-
-; ;BACKGROUND WITH IMAGE
-; BACKGROUND:
-;     MOV CX, SCREENSIZE
-;     MOV Bx, offset img
-; BACKGROUNDLOOP:
-;     MOV DL, BYTE PTR [Bx]
-;     MOV ES:[DI], DL
-;     INC DI
-;     INC BX
-; LOOP BACKGROUNDLOOP
