@@ -416,6 +416,11 @@ ENDM
 .MODEL SMALL
 .STACK 64
 .DATA
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;COMMUNICATIONS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;PLAYERNUMBER
+    PLAYERNUMBER              DW  1
+    SENTVALUE                 DB  ?
+    RECIEVEDVALUE             DB  ?
 
 
     ;INTERFACE
@@ -3760,9 +3765,20 @@ STATUSBARANDROAD PROC
     RANDOMIZEPART:               
                                  CHECKPOSSIBILITIES
     START:                       
+                                                
                                  PUSH               CX
                                  CALL               GETSYSTEMTIME
                                  POP                CX
+                                 ; FOR RECIEVER
+                                 CMP                PLAYERNUMBER, 2
+                                 JNE                DIRRECIEVED
+                                 CALL               RECIEVE
+                                 CMP                RECIEVEDVALUE, 4 
+                                 JE                 STARTPROGRAM
+                                 CMP                RECIEVEDVALUE, 5 
+                                 JE                 NOTSTARTPROGRAM
+                                 MOV                DL, RECIEVEDVALUE
+    DIRRECIEVED:
                                  AND                DL, 3
                                  CMP                DL, 0                                                                                   ;UP
                                  JE                 CHECKUP
@@ -4092,19 +4108,36 @@ STATUSBARANDROAD PROC
                                  MOV                CANTDOWN, 0
                                  MOV                CANTLEFT, 0
 
+
+                                 ;;SEEING IF I WAS THE SENDER
+                                 CMP                PLAYERNUMBER, 1 ; 1 FOR SENDER
+                                 JNE                NOTSENDER
+                                 MOV                AX, LASTDIR
+                                 MOV                SENTVALUE, AL 
+                                 CALL               SEND ; SEND DIRECTION TO PLAYER 2
+   
                                  DEC                CX
                                  JNZ                GOUP
                                  JMP                LAST
+    NOTSENDER:
     GOUP:                        
                                  JMP                FAR PTR RANDOMIZEPART
 
 
+    ;ONLY SENDER
     LAST:                        
                                  CMP                CX, NUMBEROFPARTS - MINNUMOFPARTS
                                  JBE                NOTSTARTPROGRAM
                                  CALL               GETSYSTEMTIME2
+                                 MOV                SENTVALUE, 4
+                                 CALL               SEND
                                  JMP                STARTROAD
     NOTSTARTPROGRAM:             
+                                 CMP                PLAYERNUMBER, 1
+                                 JNE                ENDLINE
+                                 MOV                SENTVALUE, 5
+                                 CALL               SEND
+    ENDLINE:
                                  CALL               DRAWENDLINE
 
 
@@ -4112,6 +4145,62 @@ STATUSBARANDROAD PROC
 STATUSBARANDROAD ENDP
 
 
+;PORT INITIALIZATIONS
+PORTINITIALIZE PROC
+    ;Set Divisor Latch Access Bit
+    mov dx,3fbh ; Line Control Register
+    mov al,10000000b ;Set Divisor Latch Access Bit
+    out dx,al ;Out it
+    ;Set LSB byte of the Baud Rate Divisor Latch register.
+    mov dx,3f8h
+    mov al,0ch
+    out dx,al
+    ;Set MSB byte of the Baud Rate Divisor Latch register.
+    mov dx,3f9h
+    mov al,00h
+    out dx,al
+    ;Set port configuration
+    mov dx,3fbh
+    mov al,00011011b
+    ; 0:Access to Receiver buffer, Transmitter buffer
+    ; 0:Set Break disabled
+    ; 011:Even Parity
+    ; 0:One Stop Bit
+    ; 11:8bits
+    out dx,al
+    RET
+PORTINITIALIZE ENDP
+
+
+
+SEND PROC
+    ;Check that Transmitter Holding Register is Empty
+    mov dx , 3FDH ; Line Status Register
+    SENDAGAIN: 
+    In al , dx ;Read Line Status
+    AND al , 00100000b
+    JZ SENDAGAIN
+
+    ;If empty put the VALUE in Transmit data register
+    mov dx , 3F8H ; Transmit data register
+    mov al,SENTVALUE
+    out dx , al
+    RET
+SEND ENDP
+
+RECIEVE PROC
+    ;Check that Data Ready
+    mov dx , 3FDH ; Line Status Register
+    DATAREADYCHK: in al , dx
+    AND al , 1
+    JZ DATAREADYCHK
+
+    ;If Ready read the VALUE in Receive data register
+    mov dx , 03F8H
+    in al , dx
+    mov RECIEVEDVALUE, al
+    RET
+RECIEVE ENDP
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;; MAIN ;;;;;;;;;;;;;;;;
@@ -4128,8 +4217,11 @@ MAIN PROC FAR
                                 MOV                AX, 0A000H
                                 MOV                ES, AX
 
+                                ;PORT INITIALIZATOINS
+                                CALL PORTINITIALIZE
+
                                 ;;TAKING NAMES STAGE
-                                CALL               INTERFACESTAGE
+                                ; CALL               INTERFACESTAGE
                                     ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
                                 CLI
@@ -4208,8 +4300,14 @@ LOOP INITIALIZE2
 
 
 
-
-                                CALL               MAINMENU
+                                ; CALL               MAINMENU
+                                CMP                PLAYERNUMBER, 1
+                                JE                 TAKINGNEXTSTAGE
+    RECIEVESTARTINGSIGNAL:      
+                                CALL               RECIEVE
+                                CMP                RECIEVEDVALUE, 1
+                                JNE                RECIEVESTARTINGSIGNAL
+                                JMP                STARTPROGRAM
 
     ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
     TAKINGNEXTSTAGE:            
@@ -4220,7 +4318,14 @@ LOOP INITIALIZE2
                                 JMP                TAKINGNEXTSTAGE
 
 
-    STARTPROGRAM:               
+    STARTPROGRAM:        
+                                CMP                PLAYERNUMBER, 1
+                                JNE                STARTPROGRAMNOTSENDER
+                                MOV                SENTVALUE, 1
+                                CALL               SEND
+
+    STARTPROGRAMNOTSENDER:
+
     ;Multiplayers' Names
                                 ; MOV                LetterF4Flag, 0
                                 ; MOV                AH,2
