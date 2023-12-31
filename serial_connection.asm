@@ -24,6 +24,33 @@ ScrollYSend MACRO
                 mov sendCursorX , 5
 ENDM
 
+DrawSeparationLine MACRO height
+                        local DrawSepLine
+    ;Setting the cursor to draw the separaion line
+                       mov              ah,2
+                       mov              dl , SepLineCursorX
+                       mov              dh ,  height
+                       int              10h
+    ;Drawing the separaion lines
+                       MOV              CX , 80
+    DrawSepLine:       
+                       PUSH             CX
+                       mov              al , 2DH
+                       mov              cx , 1
+                       mov              ah, 9
+                       mov              bl , 06h
+                       int              10h
+
+                       INC              SepLineCursorX
+
+                       mov              ah,2
+                       mov              dl , SepLineCursorX
+                       mov              dh ,  height
+                       int              10h
+                       POP              CX
+                       loop             DrawSepLine
+ENDM
+
 .model compact
 .stack 64
 .data
@@ -186,39 +213,14 @@ SendChar PROC
 SendChar ENDP
 
     ;description
-DrawSeparationLine MACRO height
-                        local DrawSepLine
-    ;Setting the cursor to draw the separaion line
-                       mov              ah,2
-                       mov              dl , SepLineCursorX
-                       mov              dh ,  height
-                       int              10h
-    ;Drawing the separaion lines
-                       MOV              CX , 80
-    DrawSepLine:       
-                       PUSH             CX
-                       mov              al , 2DH
-                       mov              cx , 1
-                       mov              ah, 9
-                       mov              bl , 06h
-                       int              10h
 
-                       INC              SepLineCursorX
-
-                       mov              ah,2
-                       mov              dl , SepLineCursorX
-                       mov              dh ,  height
-                       int              10h
-                       POP              CX
-                       loop             DrawSepLine
-ENDM
 
 SERIALCOMMUNICATION PROC FAR
 
-                       MOV                AX , @DATA
-                       MOV                DS , AX
+                    ;    MOV                AX , @DATA
+                    ;    MOV                DS , AX
 
-                       CALL               configuration
+                    ;    CALL               configuration
     ;Clear Screen
                        MOV                AX , 3
                        INT                10H
@@ -232,7 +234,7 @@ SERIALCOMMUNICATION PROC FAR
 
     ;writing player names
 
-                    mov                ah,2
+                       mov                ah,2
                        mov                dl , 0
                        mov                dh ,  0
                        int                10h
