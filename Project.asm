@@ -418,7 +418,7 @@ ENDM
 .DATA
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;COMMUNICATIONS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;PLAYERNUMBER
-    PLAYERNUMBER              DW  2
+    PLAYERNUMBER              DW  1
     SENTVALUE                 DB  ?
     RECIEVEDVALUE             DB  ?
     SENTSTRINGOFFSET          DW  ?
@@ -1587,23 +1587,22 @@ ClearPowerup PROC FAR
                                 RET
 ClearPowerup ENDP
 
-                                
-    ;     ;description
-    ; RecieveWithoutLoop PROC FAR
-    ;     ;Check that Data Ready
-    ;                                 mov                dx , 3FDH                                                                                                                         ; Line Status Register
-    ;     DATAREADYCHK2:              in                 al , dx
-    ;                                 AND                al , 1
-    ;                                 JZ                 DATAREADYCHK2
+   
+    ;description
+Delay PROC FAR
 
-    ;     ;If Ready read the VALUE in Receive data register
-    ;                                 mov                dx , 03F8H
-    ;                                 in                 al , dx
-    ;                                 mov                RECIEVEDVALUE , al
-
-    ;     EndRecieve:
-    ;                                 RET
-    ; RecieveWithoutLoop ENDP
+    ;Delay
+                                MOV                CX , 50000D
+    DELAYLOOP:                  
+                                PUSH               CX
+                                MOV                CX , 2
+    InnerDelayLoop:             
+                                LOOP               InnerDelayLoop
+                                POP                CX
+                                LOOP               DELAYLOOP
+    ;Delay finished
+                                RET
+Delay ENDP
 
 InputButtonSwitchCase PROC  FAR
                  
@@ -1622,13 +1621,7 @@ InputButtonSwitchCase PROC  FAR
     ;Sending the keyFlag after changing
                                 MOV                SENTVALUE ,al
                                 CALL               SEND
-                                
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP:                  
-                                LOOP               DELAYLOOP
-    ;Delay finished
-
+                                CALL               Delay
                                 JMP                Default
     NotPressed1:                
                                 MOV                BL , UpKeyCode
@@ -1639,13 +1632,8 @@ InputButtonSwitchCase PROC  FAR
     ;Sending the keyFlag after changing
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
-                                
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP1:                 
-                                LOOP               DELAYLOOP1
-    ;Delay finished
-
+                                CALL               Delay
+      
                                 JMP                Default
     CarCheckLeft:               
     ; left arrow
@@ -1658,12 +1646,7 @@ InputButtonSwitchCase PROC  FAR
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
                                 
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP2:                 
-                                LOOP               DELAYLOOP2
-    ;Delay finished
-
+                                CALL               Delay
                                 JMP                Default
     NotPressed2:                
                                 MOV                BL , LeftKeyCode
@@ -1676,11 +1659,7 @@ InputButtonSwitchCase PROC  FAR
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
                                 
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP3:                 
-                                LOOP               DELAYLOOP3
-    ;Delay finished
+                                CALL               Delay
 
                                 JMP                Default
 
@@ -1694,11 +1673,8 @@ InputButtonSwitchCase PROC  FAR
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
                                 
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP4:                 
-                                LOOP               DELAYLOOP4
-    ;Delay finished
+                                CALL               Delay
+
 
                                 JMP                Default
     NotPressed3:                
@@ -1714,13 +1690,7 @@ InputButtonSwitchCase PROC  FAR
 
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
-                                
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP5:                 
-                                LOOP               DELAYLOOP5
-    ;Delay finished
-
+                                CALL               Delay
                                 JMP                Default
     
     CarCheckRight:              
@@ -1733,13 +1703,8 @@ InputButtonSwitchCase PROC  FAR
                               
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
+                                CALL               Delay
                                 
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP6:                 
-                                LOOP               DELAYLOOP6
-    ;Delay finished
-
                                 JMP                Default
     NotPressed4:                
                                 MOV                BL , RightKeyCode
@@ -1752,19 +1717,9 @@ InputButtonSwitchCase PROC  FAR
                               
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
-    ;Delay
-                                PUSH               DX
-                                PUSH               CX
-                                PUSH               AX
-                                MOV                CX , 0
-                                MOV                DX , 10000D
-                                MOV                AH , 86H
-                                INT                15H
-                                POP                AX
-                                POP                CX
-                                POP                DX
+                                CALL               Delay
+
                                 JMP                Default
-    ;Delay finished
 
     CheckLetterK:               
                                 CMP                AL , DeletePower1Key
@@ -1775,13 +1730,7 @@ InputButtonSwitchCase PROC  FAR
     ;Sending the keyFlag after changing
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
-                                
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP7:                 
-                                LOOP               DELAYLOOP7
-    ;Delay finished
-
+                                CALL               Delay
                                 ClearPower
                                 JMP                Default
 
@@ -1797,11 +1746,7 @@ InputButtonSwitchCase PROC  FAR
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
                                 
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP8:                 
-                                LOOP               DELAYLOOP8
-    ;Delay finished
+                                CALL               Delay
 
                                 JMP                Default
     
@@ -1814,11 +1759,7 @@ InputButtonSwitchCase PROC  FAR
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
                                 
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP9:                 
-                                LOOP               DELAYLOOP9
-    ;Delay finished
+                                CALL               Delay
 
                                 JMP                DEFAULT
 
@@ -1831,11 +1772,7 @@ InputButtonSwitchCase PROC  FAR
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
                                 
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP10:                
-                                LOOP               DELAYLOOP10
-    ;Delay finished
+                                CALL               Delay
 
                                 JMP                DEFAULT
 
@@ -1848,11 +1785,7 @@ InputButtonSwitchCase PROC  FAR
                                 MOV                SENTVALUE ,AL
                                 CALL               SEND
                                 
-    ;Delay
-                                MOV                CX , 40000D
-    DELAYLOOP11:                
-                                LOOP               DELAYLOOP11
-    ;Delay finished
+                                CALL               Delay
 
     Default:                    
     
