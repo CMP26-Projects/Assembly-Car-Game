@@ -2527,32 +2527,33 @@ INTERFACESTAGE PROC
                                  INT                10H
                                  
                                  ;SENDING NAMES STAGE
+
+                                 ;FIRST PLAYER ENTERS THEN SENDS THEN RECIEVES
                                  CMP                PLAYERNUMBER, 1
-                                 JNE                ENTERSECONDPLAYERNAME
+                                 JNE                SECONDPLAYERSTAGE
                                  MOV                SI, OFFSET FIRSTNAME
                                  CALL               ENTERPLAYERNAME
                                  MOV                SI, OFFSET FIRSTNAME
                                  MOV                SENTSTRINGOFFSET, SI
                                  CALL               SENDSTRING
-                                 JMP                RECIEVENAMES
-    ENTERSECONDPLAYERNAME:
-                                 MOV                SI, OFFSET SECONDNAME
-                                 CALL               ENTERPLAYERNAME
-                                 MOV                SI, OFFSET SECONDNAME
-                                 MOV                SENTSTRINGOFFSET, SI
-                                 CALL               SENDSTRING
-                                 
-    RECIEVENAMES:                      
-                                 CMP                PLAYERNUMBER, 1
-                                 JNE                SECONDPLAYERRECIEVING
+
                                  MOV                SI, OFFSET SECONDNAME
                                  MOV                RECIEVEDSTRINGOFFSET, SI
                                  CALL               RECIEVESTRING
                                  JMP                FINISHINTERFACESTAGE
-    SECONDPLAYERRECIEVING:   
+
+
+                                 ;SECOND PLAYER RECIEVES THEN ENTERS THEN SENDS
+    SECONDPLAYERSTAGE:   
                                  MOV                SI, OFFSET FIRSTNAME
                                  MOV                RECIEVEDSTRINGOFFSET, SI
-                                 CALL               RECIEVESTRING  
+                                 CALL               RECIEVESTRING 
+
+                                 MOV                SI, OFFSET SECONDNAME
+                                 CALL               ENTERPLAYERNAME
+                                 MOV                SI, OFFSET SECONDNAME
+                                 MOV                SENTSTRINGOFFSET, SI
+                                 CALL               SENDSTRING
 
     FINISHINTERFACESTAGE:
                                 RET
@@ -4153,7 +4154,7 @@ RECIEVESTRING PROC
     CALL RECIEVE
     MOV AL, RECIEVEDVALUE
     MOV BYTE PTR [SI], AL
-    CMP SENTVALUE, '$'
+    CMP RECIEVEDVALUE, '$'
     JE FINISHRECIEVESTRING
     INC SI
     JMP RECIEVEANOTHERCHAR
@@ -4181,7 +4182,7 @@ MAIN PROC FAR
                                 CALL PORTINITIALIZE
 
                                 ;;TAKING NAMES STAGE
-                                ; CALL               INTERFACESTAGE
+                                CALL               INTERFACESTAGE
                                     ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
                                 CLI
@@ -4260,7 +4261,7 @@ LOOP INITIALIZE2
 
 
 
-                                ; CALL               MAINMENU
+                                CALL               MAINMENU
                                 CMP                PLAYERNUMBER, 1
                                 JE                 TAKINGNEXTSTAGE
     RECIEVESTARTINGSIGNAL:      
