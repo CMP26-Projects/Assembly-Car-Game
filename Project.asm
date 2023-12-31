@@ -420,7 +420,7 @@ ENDM
 .DATA
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;COMMUNICATIONS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;PLAYERNUMBER
-    PLAYERNUMBER              DW  1
+    PLAYERNUMBER              DW  2
     SENTVALUE                 DB  ?
     RECIEVEDVALUE             DB  ?
     SENTSTRINGOFFSET          DW  ?
@@ -3701,8 +3701,8 @@ SENDANDRECIEVEOBST PROC
     ;EDITED TO MAKE THE SENDER WAIT FOR THE RECEIVER
     ; CALL               RECIEVE
                                 PUSH               CX
-                                MOV                CX, 1
-                                MOV                DX, 35460
+                                MOV                CX, 0
+                                MOV                DX, 41C2H
                                 MOV                AH, 86H
                                 INT                15H
                                 POP                CX
@@ -3754,8 +3754,8 @@ STATUSBARANDROAD PROC
                                 CALL               SEND
 
                                 PUSH               CX
-                                MOV                CX, 1
-                                MOV                DX, 35460
+                                MOV                CX, 0
+                                MOV                DX, 41C2H
                                 MOV                AH, 86H
                                 INT                15H
                                 POP                CX
