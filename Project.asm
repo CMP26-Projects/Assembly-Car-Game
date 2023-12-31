@@ -859,11 +859,11 @@ ENDM
     ; Data for the powerups
     powerupMessage            DB  'Powerup :', '$'
 
-    powerup1Posx              EQU 70
-    powerup1Posy              EQU 190
+    powerup1Posx              EQU 125
+    powerup1Posy              EQU 177
 
-    powerup2Posx              EQU 230
-    powerup2Posy              EQU 190
+    powerup2Posx              EQU 285
+    powerup2Posy              EQU 177
 
     powerupToDraw             DW  ?
     powerupToDrawPosX         DW  ?
@@ -972,9 +972,9 @@ ENDM
     DURATIONTOSHOWPOWER       EQU 2
 
     ;PROBABILITY OF DRAWING A POWERUP OR AN OBSTACLE %
-    POWERPROBABILITY          DB  0
-    OBSTPROBABILITY           DB  0
-    POWERVISIBPROBABILITY     DB  0
+    POWERPROBABILITY          DB  60
+    OBSTPROBABILITY           DB  60
+    POWERVISIBPROBABILITY     DB  60
 
 
     ;CAR
@@ -1035,7 +1035,7 @@ ENDM
     STARTROADX                EQU 2
     STARTROADY                EQU 2
     NUMBEROFPARTS             EQU 100
-    MINNUMOFPARTS             EQU 20
+    MINNUMOFPARTS             EQU 10
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
     IMGTODRAW                 DW  ?
