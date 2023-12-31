@@ -420,7 +420,7 @@ ENDM
 .DATA
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;COMMUNICATIONS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;PLAYERNUMBER
-    PLAYERNUMBER              DW  2
+    PLAYERNUMBER              DW  1
     SENTVALUE                 DB  ?
     RECIEVEDVALUE             DB  ?
     SENTSTRINGOFFSET          DW  ?
@@ -3690,10 +3690,24 @@ SENDANDRECIEVEOBST PROC
                                 JNE                RECIEVEOBST
                                 MOV                SENTVALUE, DL
                                 CALL               SEND
+
+    ;EDITED TO MAKE THE SENDER WAIT FOR THE RECEIVER
+    ; CALL               RECIEVE
+                                PUSH               CX
+                                MOV                CX, 0
+                                MOV                DX, 64000
+                                MOV                AH, 86H
+                                INT                15H
+                                POP                CX
+
                                 MOV                DL, SENTVALUE
                                 JMP                FINISHSENDANDRECIEVEOBST
     RECIEVEOBST:                
                                 CALL               RECIEVE
+
+    ;EDITED TO TELL THE SENDER THAT I FINISHED
+                                CALL               SEND
+                                
                                 MOV                DL, RECIEVEDVALUE
 
     FINISHSENDANDRECIEVEOBST:   
@@ -3731,6 +3745,14 @@ STATUSBARANDROAD PROC
     SENDDIRECION:               
                                 MOV                SENTVALUE, DL
                                 CALL               SEND
+
+                                PUSH               CX
+                                MOV                CX, 0
+                                MOV                DX, 64000
+                                MOV                AH, 86H
+                                INT                15H
+                                POP                CX
+
                                 MOV                DL, SENTVALUE
     DIRRECIEVED:                
                                 AND                DL, 3
@@ -3847,13 +3869,15 @@ STATUSBARANDROAD PROC
                                 PUSH               TEMPX
                                 PUSH               TEMPY
                                 CALL               GETSYSTEMTIME
-    ; CALL               SENDANDRECIEVEOBST
+
+                                CALL               SENDANDRECIEVEOBST
                                 AND                DL, VERROADIMGW - OBSTACLEW
                                 MOV                DH, 0
                                 SUB                TEMPX, OBSTACLEW
                                 SUB                TEMPX, DX
                                 CALL               GETSYSTEMTIME
-    ; CALL               SENDANDRECIEVEOBST
+
+                                CALL               SENDANDRECIEVEOBST
                                 AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD                                                                                           ; THIS THRESHOLD TO START FROM 10 TO 40 TO NOT MAKE TWO OBSTACLES IN THE CORNER TOGETHER
                                 MOV                DH, 0
                                 ADD                TEMPY, THRESHOLD / 2                                                                                                              ;AS THRESHOLD IS 20 TO START FROM 10
