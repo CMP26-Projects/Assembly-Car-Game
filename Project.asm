@@ -1595,7 +1595,7 @@ Delay PROC FAR
                                 MOV                CX , 50000D
     DELAYLOOP:                  
                                 PUSH               CX
-                                MOV                CX , 2
+                                MOV                CX , 2D
     InnerDelayLoop:             
                                 LOOP               InnerDelayLoop
                                 POP                CX
