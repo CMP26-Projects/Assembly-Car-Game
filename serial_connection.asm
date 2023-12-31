@@ -213,7 +213,7 @@ DrawSeparationLine MACRO height
                        loop             DrawSepLine
 ENDM
 
-MAIN PROC FAR
+SERIALCOMMUNICATION PROC FAR
 
                        MOV                AX , @DATA
                        MOV                DS , AX
@@ -274,16 +274,16 @@ MAIN PROC FAR
                        mov                dh ,  sendCursorY
                        int                10h
 
-    MainLoop:          
+    CHATMAINLOOP:          
                        MOV                DX , 3FDH
                        IN                 AL , DX
                        AND                AL , 1
-                       JZ                 Send
+                       JZ                 CHATSend
                        CALL               RecieveChar
                        cmp                recievedChar , 27
                        JE                 kill
             
-    Send:              
+    CHATSend:              
                        MOV                DX , 3FDH
                        IN                 AL , DX
                        AND                AL , 00100000B
@@ -292,9 +292,8 @@ MAIN PROC FAR
                        cmp                sendedChar , 27
                        JE                 kill
     cont:              
-                       JMP                MainLoop
+                       JMP                CHATMAINLOOP
 
     kill:              
-                       HLT
-MAIN ENDP
-END MAIN
+                       RET
+SERIALCOMMUNICATION ENDP
