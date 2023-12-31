@@ -3095,6 +3095,8 @@ WHICHPOWERIMG PROC
                                 CHECKCANDRAWPOWER  POWERW, POWERH, TEMPX, TEMPY                                                                                                      ;IF IT WILL BE DRAWN ON THE OBST IT WILL NOT BE DRAWN AT ALL (SKIPPED)
     
                                 CALL               RANDOMIZEPERCENTAGE
+                                
+                                CALL               SENDANDRECIEVEOBST
                                 CMP                DL, POWERPROBABILITY
                                 JA                 FINISHPOWER
 
@@ -3123,6 +3125,8 @@ WHICHPOWERIMG PROC
     
     ;RANDOMIZING WHETHER TO DRAW OR MAKE IT HIDDEN UNTIL WE SHOW IT DURING THE GAME
                                 CALL               RANDOMIZEPERCENTAGE
+
+                                CALL               SENDANDRECIEVEOBST
                                 MOV                SI, OFFSET ISVISIBLEPOWER
                                 ADD                SI, POWERUPCOUNTER
                                 INC                POWERUPCOUNTER                                                                                                                    ; WE MOVE THAT LINE HERE AS WE NEEDED IT IN THE PREVIOUS LINE
@@ -3134,6 +3138,8 @@ WHICHPOWERIMG PROC
     VISIBLE:                    
                                 MOV                BYTE PTR DS:[SI], 1
                                 CALL               GETSYSTEMTIME
+
+                                CALL               SENDANDRECIEVEOBST
     ;AND DL, 3
                                 MOV                AL, 4
                                 MOV                RANGEOFRAND, AL
@@ -3170,7 +3176,8 @@ WHICHPOWERIMG ENDP
 
 OBSTRANDANDDRAW PROC
                                 CALL               RANDOMIZEPERCENTAGE
-    ;CALL               SENDANDRECIEVEOBST
+    
+                                CALL               SENDANDRECIEVEOBST
                                 CMP                DL, OBSTPROBABILITY
                                 JA                 FINISHOBST
                                 DRAW               OBSTACLE, OBSTACLEW, OBSTACLEH, TEMPX, TEMPY, TMP4
@@ -3694,8 +3701,8 @@ SENDANDRECIEVEOBST PROC
     ;EDITED TO MAKE THE SENDER WAIT FOR THE RECEIVER
     ; CALL               RECIEVE
                                 PUSH               CX
-                                MOV                CX, 0
-                                MOV                DX, 64000
+                                MOV                CX, 1
+                                MOV                DX, 59000
                                 MOV                AH, 86H
                                 INT                15H
                                 POP                CX
@@ -3747,8 +3754,8 @@ STATUSBARANDROAD PROC
                                 CALL               SEND
 
                                 PUSH               CX
-                                MOV                CX, 0
-                                MOV                DX, 64000
+                                MOV                CX, 1
+                                MOV                DX, 59000
                                 MOV                AH, 86H
                                 INT                15H
                                 POP                CX
@@ -3889,12 +3896,16 @@ STATUSBARANDROAD PROC
                                 POP                TEMPY
                                 POP                TEMPX
                                 CALL               GETSYSTEMTIME
+
+                                CALL               SENDANDRECIEVEOBST
                                 MOV                AL, VERROADIMGW - POWERW
                                 MOV                RANGEOFRAND, AL
                                 CALL               RANGINGRAND
                                 SUB                TEMPX, POWERW
                                 SUB                TEMPX, DX
                                 CALL               GETSYSTEMTIME
+
+                                CALL               SENDANDRECIEVEOBST
                                 MOV                AL, VERROADIMGH - POWERH - THRESHOLD
                                 MOV                RANGEOFRAND, AL
                                 CALL               RANGINGRAND
@@ -3934,13 +3945,15 @@ STATUSBARANDROAD PROC
                                 PUSH               TEMPX
                                 PUSH               TEMPY
                                 CALL               GETSYSTEMTIME
-    ;CALL               SENDANDRECIEVEOBST
+
+                                CALL               SENDANDRECIEVEOBST
                                 AND                DL, HORROADIMGW - OBSTACLEW - THRESHOLD
                                 MOV                DH, 0
                                 ADD                TEMPX, THRESHOLD / 2
                                 ADD                TEMPX, DX
                                 CALL               GETSYSTEMTIME
-    ;CALL               SENDANDRECIEVEOBST
+    
+                                CALL               SENDANDRECIEVEOBST
                                 AND                DL, HORROADIMGH - OBSTACLEH
                                 MOV                DH, 0
                                 ADD                TEMPY, DX
@@ -3952,12 +3965,16 @@ STATUSBARANDROAD PROC
                                 POP                TEMPY
                                 POP                TEMPX
                                 CALL               GETSYSTEMTIME
+
+                                CALL               SENDANDRECIEVEOBST
                                 MOV                AL, HORROADIMGW - POWERW - THRESHOLD
                                 MOV                RANGEOFRAND, AL
                                 CALL               RANGINGRAND
                                 ADD                TEMPX, THRESHOLD / 2
                                 ADD                TEMPX, DX
                                 CALL               GETSYSTEMTIME
+
+                                CALL               SENDANDRECIEVEOBST
                                 MOV                AL, HORROADIMGH - POWERH
                                 MOV                RANGEOFRAND, AL
                                 CALL               RANGINGRAND
@@ -3993,13 +4010,15 @@ STATUSBARANDROAD PROC
                                 PUSH               TEMPX
                                 PUSH               TEMPY
                                 CALL               GETSYSTEMTIME
-    ;CALL               SENDANDRECIEVEOBST
+    
+                                CALL               SENDANDRECIEVEOBST
                                 AND                DL, VERROADIMGW - OBSTACLEW
                                 MOV                DH, 0
                                 SUB                TEMPX, OBSTACLEW
                                 SUB                TEMPX, DX
                                 CALL               GETSYSTEMTIME
-    ;CALL               SENDANDRECIEVEOBST
+    
+                                CALL               SENDANDRECIEVEOBST
                                 AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD
                                 MOV                DH, 0
                                 ADD                TEMPY, THRESHOLD / 2
@@ -4011,12 +4030,16 @@ STATUSBARANDROAD PROC
                                 POP                TEMPY
                                 POP                TEMPX
                                 CALL               GETSYSTEMTIME
+
+                                CALL               SENDANDRECIEVEOBST
                                 MOV                AL, VERROADIMGW - POWERW
                                 MOV                RANGEOFRAND, AL
                                 CALL               RANGINGRAND
                                 SUB                TEMPX, POWERW
                                 SUB                TEMPX, DX
                                 CALL               GETSYSTEMTIME
+
+                                CALL               SENDANDRECIEVEOBST
                                 MOV                AL, VERROADIMGH - POWERH - THRESHOLD
                                 MOV                RANGEOFRAND, AL
                                 CALL               RANGINGRAND
@@ -4051,13 +4074,15 @@ STATUSBARANDROAD PROC
                                 PUSH               TEMPX
                                 PUSH               TEMPY
                                 CALL               GETSYSTEMTIME
-    ;CALL               SENDANDRECIEVEOBST
+    
+                                CALL               SENDANDRECIEVEOBST
                                 AND                DL, HORROADIMGW - OBSTACLEW - THRESHOLD
                                 MOV                DH, 0
                                 SUB                TEMPX, OBSTACLEW  + THRESHOLD / 2
                                 SUB                TEMPX, DX
                                 CALL               GETSYSTEMTIME
-    ;CALL               SENDANDRECIEVEOBST
+    
+                                CALL               SENDANDRECIEVEOBST
                                 AND                DL, HORROADIMGH - OBSTACLEH
                                 MOV                DH, 0
                                 ADD                TEMPY, DX
@@ -4069,12 +4094,16 @@ STATUSBARANDROAD PROC
                                 POP                TEMPY
                                 POP                TEMPX
                                 CALL               GETSYSTEMTIME
+
+                                CALL               SENDANDRECIEVEOBST
                                 MOV                AL, HORROADIMGW - POWERW - THRESHOLD
                                 MOV                RANGEOFRAND, AL
                                 CALL               RANGINGRAND
                                 SUB                TEMPX, POWERW  + THRESHOLD / 2
                                 SUB                TEMPX, DX
                                 CALL               GETSYSTEMTIME
+
+                                CALL               SENDANDRECIEVEOBST
                                 MOV                AL, HORROADIMGH - POWERH
                                 MOV                RANGEOFRAND, AL
                                 CALL               RANGINGRAND
