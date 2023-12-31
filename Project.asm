@@ -1592,13 +1592,9 @@ ClearPowerup ENDP
 Delay PROC FAR
 
     ;Delay
-                                MOV                CX , 50000D
+                                MOV                CX , 40000D
     DELAYLOOP:                  
-                                PUSH               CX
-                                MOV                CX , 2D
-    InnerDelayLoop:             
-                                LOOP               InnerDelayLoop
-                                POP                CX
+                                XOR                DL , DL
                                 LOOP               DELAYLOOP
     ;Delay finished
                                 RET
