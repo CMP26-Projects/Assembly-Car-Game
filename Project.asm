@@ -4181,7 +4181,7 @@ MAIN PROC FAR
                                 CALL PORTINITIALIZE
 
                                 ;;TAKING NAMES STAGE
-                                CALL               INTERFACESTAGE
+                                ; CALL               INTERFACESTAGE
                                     ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
                                 CLI
