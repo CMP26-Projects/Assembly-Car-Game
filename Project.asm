@@ -2944,12 +2944,12 @@ DrawStatBar PROC FAR
 
     ;printing  FirstName
                                 MOV                SI , OFFSET FirstName
-                                MOV                DL , 4
+                                MOV                DL , 0
                                 MOV                DH , 22
                                 CALL               PrintStringWithColor
     ;printing  SecondName
                                 MOV                SI , OFFSET SecondName
-                                MOV                DL , 25
+                                MOV                DL , 21
                                 MOV                DH , 22
                                 CALL               PrintStringWithColor
 
@@ -4422,7 +4422,7 @@ MAIN PROC FAR
                                 CALL               PORTINITIALIZE
 
     ;;TAKING NAMES STAGE
-    ; CALL               INTERFACESTAGE
+                                CALL               INTERFACESTAGE
     ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
                                 CLI
@@ -4500,7 +4500,7 @@ MAIN PROC FAR
                                 LOOP               INITIALIZE2
 
 
-    ; CALL               MAINMENU
+                                CALL               MAINMENU
                                 CMP                PLAYERNUMBER, 1
                                 JE                 TAKINGNEXTSTAGE
     RECIEVESTARTINGSIGNAL:      
