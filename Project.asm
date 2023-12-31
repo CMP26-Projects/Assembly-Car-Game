@@ -409,6 +409,8 @@ CHECKPOSSIBILITIES MACRO
                        JE  START
                        CMP CANTLEFT, 0
                        JE  START
+                       CMP PLAYERNUMBER, 1
+                       JNE START
                        JMP LAST
 ENDM
 
@@ -1035,7 +1037,7 @@ ENDM
     STARTROADX                EQU 2
     STARTROADY                EQU 2
     NUMBEROFPARTS             EQU 100
-    MINNUMOFPARTS             EQU 20
+    MINNUMOFPARTS             EQU 100
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
     IMGTODRAW                 DW  ?
@@ -3714,16 +3716,22 @@ STATUSBARANDROAD PROC
                                 PUSH               CX
                                 CALL               GETSYSTEMTIME
                                 POP                CX
+                                AND                DL, 3
     ; FOR RECIEVER
                                 CMP                PLAYERNUMBER, 2
-                                JNE                DIRRECIEVED
+                                JNE                SENDDIRECION
                                 CALL               RECIEVE
                                 CMP                RECIEVEDVALUE, 4
-                                JE                 STARTPROGRAM
+                                JE                 STARTROAD
                                 CMP                RECIEVEDVALUE, 5
                                 JE                 NOTSTARTPROGRAM
-                                
                                 MOV                DL, RECIEVEDVALUE
+                                JMP                DIRRECIEVED
+
+    SENDDIRECION:               
+                                MOV                SENTVALUE, DL
+                                CALL               SEND
+                                MOV                DL, SENTVALUE
     DIRRECIEVED:                
                                 AND                DL, 3
                                 CMP                DL, 0                                                                                                                             ;UP
@@ -3839,13 +3847,13 @@ STATUSBARANDROAD PROC
                                 PUSH               TEMPX
                                 PUSH               TEMPY
                                 CALL               GETSYSTEMTIME
-                                CALL               SENDANDRECIEVEOBST
+    ; CALL               SENDANDRECIEVEOBST
                                 AND                DL, VERROADIMGW - OBSTACLEW
                                 MOV                DH, 0
                                 SUB                TEMPX, OBSTACLEW
                                 SUB                TEMPX, DX
                                 CALL               GETSYSTEMTIME
-                                CALL               SENDANDRECIEVEOBST
+    ; CALL               SENDANDRECIEVEOBST
                                 AND                DL, VERROADIMGH - OBSTACLEH - THRESHOLD                                                                                           ; THIS THRESHOLD TO START FROM 10 TO 40 TO NOT MAKE TWO OBSTACLES IN THE CORNER TOGETHER
                                 MOV                DH, 0
                                 ADD                TEMPY, THRESHOLD / 2                                                                                                              ;AS THRESHOLD IS 20 TO START FROM 10
@@ -4063,23 +4071,29 @@ STATUSBARANDROAD PROC
                                 MOV                CANTLEFT, 0
 
 
-    ;;SEEING IF I WAS THE SENDER
-                                CMP                PLAYERNUMBER, 1                                                                                                                   ; 1 FOR SENDER
-                                JNE                NOTSENDER
-                                MOV                AX, LASTDIR
-                                MOV                SENTVALUE, AL
-                                CALL               SEND                                                                                                                              ; SEND DIRECTION TO PLAYER 2
+    ; ;;SEEING IF I WAS THE SENDER
+    ;                             CMP                PLAYERNUMBER, 1                                                                                                                   ; 1 FOR SENDER
+    ;                             JNE                NOTSENDER
+    ;                             MOV                AX, LASTDIR
+    ;                             MOV                SENTVALUE, AL
+    ;                             CALL               SEND                                                                                                                              ; SEND DIRECTION TO PLAYER 2
    
                                 DEC                CX
                                 JNZ                GOUP
                                 JMP                LAST
-    NOTSENDER:                  
+    ; NOTSENDER:
     GOUP:                       
                                 JMP                FAR PTR RANDOMIZEPART
 
 
     ;ONLY SENDER
     LAST:                       
+                                CMP                PLAYERNUMBER, 1
+                                JE                 CONTLAST
+                                JMP                GOUP                                                                                                                              ; TO MAKE THE RECEIVER NEVER REACH CONTLAST HE ALWAYS RECEIVES IN RANDOMIZEPART
+
+
+    CONTLAST:                   
                                 CMP                CX, NUMBEROFPARTS - MINNUMOFPARTS
                                 JBE                NOTSTARTPROGRAM
                                 CALL               GETSYSTEMTIME2
