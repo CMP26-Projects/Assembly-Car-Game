@@ -2,6 +2,32 @@
 ;;;;;;;;;;;;; MACROS ;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+ScrollYRecieving MACRO
+                     mov ah,6                  ; function 6
+                     mov al,1                  ; scroll by 1 line
+                     mov bh,0                  ; normal video attribute
+                     mov ch,13                 ; upper left Y
+                     mov cl,0                  ; upper left X
+                     mov dh,21                 ; lower right Y
+                     mov dl,79                 ; lower right X
+                     int 10h
+                  
+                     mov recieveCursorX , 5
+ENDM
+
+ScrollYSend MACRO
+                mov ah,6               ; function 6
+                mov al,1               ; scroll by 1 line
+                mov bh,0               ; normal video attribute
+                mov ch,1               ; upper left Y
+                mov cl,0               ; upper left X
+                mov dh,10              ; lower right Y
+                mov dl,79              ; lower right X
+                int 10h
+                  
+                mov sendCursorX , 5
+ENDM
+
 ScrollYRecievingStatus MACRO
                            mov ah,6                            ; function 6
                            mov al,1                            ; scroll by 1 line
@@ -1231,53 +1257,53 @@ ENDM
 
 RecieveChar PROC FAR
     ;Get char
-                                mov                dx , 03F8H
-                                in                 al , dx
-                                mov                recievedChar, al
+                                mov                    dx , 03F8H
+                                in                     al , dx
+                                mov                    recievedChar, al
             
-                                CMP                recievedChar , 27
-                                JE                 endRecieving
+                                CMP                    recievedChar , 27
+                                JE                     endRecieving
 
-                                CMP                recievedChar , 13
-                                JE                 enter2
+                                CMP                    recievedChar , 13
+                                JE                     enter2
 
-                                mov                ah,2
-                                mov                dl , recieveCursorX
-                                mov                dh ,  recieveCursorY
-                                int                10h
+                                mov                    ah,2
+                                mov                    dl , recieveCursorX
+                                mov                    dh ,  recieveCursorY
+                                int                    10h
  
     ;printing
-                                mov                cx , 1
-                                mov                ah, 9
-                                mov                bl , 0Fh
-                                int                10h
+                                mov                    cx , 1
+                                mov                    ah, 9
+                                mov                    bl , 0Fh
+                                int                    10h
 
-                                ADD                recieveCursorX , 1
+                                ADD                    recieveCursorX , 1
  
-                                CMP                recieveCursorX  , 79
-                                jne                endRecieving
-                                CMP                recieveCursorY  ,21
-                                jne                enter2
+                                CMP                    recieveCursorX  , 79
+                                jne                    endRecieving
+                                CMP                    recieveCursorY  ,21
+                                jne                    enter2
                                 ScrollYRecieving
 
 
-                                jmp                endRecieving
+                                jmp                    endRecieving
 
     enter2:                     
-                                CMP                recieveCursorY  ,21
-                                jne                normalEnter
+                                CMP                    recieveCursorY  ,21
+                                jne                    normalEnter
                                 ScrollYRecieving
-                                jmp                endRecieving
+                                jmp                    endRecieving
     normalEnter:                
-                                mov                recieveCursorX , 5
-                                add                recieveCursorY , 1
+                                mov                    recieveCursorX , 5
+                                add                    recieveCursorY , 1
                         
     ;Setting cursor
     endRecieving:               
-                                mov                ah,2
-                                mov                dl , recieveCursorX
-                                mov                dh ,  recieveCursorY
-                                int                10h
+                                mov                    ah,2
+                                mov                    dl , recieveCursorX
+                                mov                    dh ,  recieveCursorY
+                                int                    10h
                                 RET
 RecieveChar ENDP
 
@@ -1285,64 +1311,64 @@ RecieveChar ENDP
     ;description
 SendChar PROC FAR
             
-                                MOV                AL , 0
-                                MOV                AH , 1
-                                INT                16H
-                                JZ                 EndSending
+                                MOV                    AL , 0
+                                MOV                    AH , 1
+                                INT                    16H
+                                JZ                     EndSending
     ;Get character
-                                MOV                AH , 0
-                                INT                16H
-                                MOV                SendedChar , AL
+                                MOV                    AH , 0
+                                INT                    16H
+                                MOV                    SendedChar , AL
 
-                                MOV                SENDEDSCAN, AH
-                                CMP                SendedSCAN , 3DH
-                                JE                 EndSending
+                                MOV                    SENDEDSCAN, AH
+                                CMP                    SendedSCAN , 3DH
+                                JE                     EndSending
 
-                                CMP                SendedChar , 13
-                                JE                 enter
+                                CMP                    SendedChar , 13
+                                JE                     enter
 
     ;Setting cursor with sending position
-                                mov                ah,2
-                                mov                dl , sendCursorX
-                                mov                dh ,  sendCursorY
-                                int                10h
+                                mov                    ah,2
+                                mov                    dl , sendCursorX
+                                mov                    dh ,  sendCursorY
+                                int                    10h
 
-                                mov                cx , 1
-                                mov                ah, 9
-                                mov                bl , 0Fh
-                                int                10h
+                                mov                    cx , 1
+                                mov                    ah, 9
+                                mov                    bl , 0Fh
+                                int                    10h
 
-                                ADD                sendCursorX , 1
+                                ADD                    sendCursorX , 1
 
-                                CMP                sendCursorX  , 79
-                                jne                startSending
-                                CMP                sendCursorY  ,10
-                                jne                enter
+                                CMP                    sendCursorX  , 79
+                                jne                    startSending
+                                CMP                    sendCursorY  ,10
+                                jne                    enter
                                 ScrollYSend
                   
-                                mov                sendCursorX , 5
-                                jmp                startSending
+                                mov                    sendCursorX , 5
+                                jmp                    startSending
 
     enter:                      
-                                CMP                sendCursorY  ,10
-                                jne                normalEnter2
+                                CMP                    sendCursorY  ,10
+                                jne                    normalEnter2
                                 ScrollYSend
-                                jmp                startSending
+                                jmp                    startSending
 
     normalEnter2:               
-                                mov                sendCursorX , 5
-                                add                sendCursorY , 1
+                                mov                    sendCursorX , 5
+                                add                    sendCursorY , 1
 
     startSending:               
-                                mov                ah,2
-                                mov                dl , sendCursorX
-                                mov                dh ,  sendCursorY
-                                int                10h
+                                mov                    ah,2
+                                mov                    dl , sendCursorX
+                                mov                    dh ,  sendCursorY
+                                int                    10h
             
 
-                                MOV                DX , 03F8H
-                                MOV                AL , SendedChar
-                                OUT                DX , AL
+                                MOV                    DX , 03F8H
+                                MOV                    AL , SendedChar
+                                OUT                    DX , AL
 
     EndSending:                 
                                 RET
@@ -1358,92 +1384,92 @@ SERIALCOMMUNICATION PROC FAR
 
     ;    CALL               configuration
     ;Clear Screen
-                                MOV                AX , 3
-                                INT                10H
+                                MOV                    AX , 3
+                                INT                    10H
     ;text mode
-                                MOV                AX , 0B800H
-                                MOV                ES , AX
+                                MOV                    AX , 0B800H
+                                MOV                    ES , AX
 
-                                DrawSeparationLine 11
-                                DrawSeparationLine 22
+                                DrawSeparationLine     11
+                                DrawSeparationLine     22
    
 
     ;writing player names
 
-                                mov                ah,2
-                                mov                dl , 0
-                                mov                dh ,  0
-                                int                10h
+                                mov                    ah,2
+                                mov                    dl , 0
+                                mov                    dh ,  0
+                                int                    10h
 
-                                MOV                AH , 9
-                                LEA                DX, FIRSTNAME
-                                INT                21H
+                                MOV                    AH , 9
+                                LEA                    DX, FIRSTNAME
+                                INT                    21H
 
-                                mov                ah,2
-                                mov                dl , 0
-                                mov                dh ,  12
-                                int                10h
+                                mov                    ah,2
+                                mov                    dl , 0
+                                mov                    dh ,  12
+                                int                    10h
 
-                                MOV                AH , 9
-                                LEA                DX , SECONDNAME
-                                INT                21H
+                                MOV                    AH , 9
+                                LEA                    DX , SECONDNAME
+                                INT                    21H
                         
     ;Writing the message down in the screen
-                                mov                ah,2
-                                mov                dl , 5
-                                mov                dh ,  24
-                                int                10h
+                                mov                    ah,2
+                                mov                    dl , 5
+                                mov                    dh ,  24
+                                int                    10h
 
-                                mov                AH,9
-                                LEA                DX , InstructionMessage1
-                                INT                21H
+                                mov                    AH,9
+                                LEA                    DX , InstructionMessage1
+                                INT                    21H
                         
-                                MOV                AH , 9
-                                CMP                PLAYERNUMBER, 1
-                                JNE                SHOWSECONDNAME
-                                LEA                DX , FIRSTNAME
-                                JMP                DOINT
+                                MOV                    AH , 9
+                                CMP                    PLAYERNUMBER, 1
+                                JNE                    SHOWSECONDNAME
+                                LEA                    DX , FIRSTNAME
+                                JMP                    DOINT
     SHOWSECONDNAME:             
-                                LEA                DX , SECONDNAME
+                                LEA                    DX , SECONDNAME
     DOINT:                      
-                                INT                21H
+                                INT                    21H
 
-                                LEA                DX , InstructionMessage2
-                                INT                21H
+                                LEA                    DX , InstructionMessage2
+                                INT                    21H
 
 
     ;Setting cursor with sending position
-                                mov                ah,2
-                                mov                dl , sendCursorX
-                                mov                dh ,  sendCursorY
-                                int                10h
+                                mov                    ah,2
+                                mov                    dl , sendCursorX
+                                mov                    dh ,  sendCursorY
+                                int                    10h
 
     CHATMAINLOOP:               
-                                MOV                DX , 3FDH
-                                IN                 AL , DX
-                                AND                AL , 1
-                                JZ                 CHATSend
-                                CALL               RecieveChar
-                                cmp                recievedChar , 19
-                                JE                 kill
+                                MOV                    DX , 3FDH
+                                IN                     AL , DX
+                                AND                    AL , 1
+                                JZ                     CHATSend
+                                CALL                   RecieveChar
+                                cmp                    recievedChar , 19
+                                JE                     kill
             
     CHATSend:                   
-                                MOV                DX , 3FDH
-                                IN                 AL , DX
-                                AND                AL , 00100000B
-                                JZ                 cont
-                                CALL               SendChar
-                                cmp                SENDEDSCAN , 3DH
-                                JE                 kill
+                                MOV                    DX , 3FDH
+                                IN                     AL , DX
+                                AND                    AL , 00100000B
+                                JZ                     cont
+                                CALL                   SendChar
+                                cmp                    SENDEDSCAN , 3DH
+                                JE                     kill
     cont:                       
-                                JMP                CHATMAINLOOP
+                                JMP                    CHATMAINLOOP
 
     kill:                       
     ;Setting cursor with sending position
-                                mov                ah,2
-                                mov                dl , sendCursorX
-                                mov                dh ,  sendCursorY
-                                int                10h
+                                mov                    ah,2
+                                mov                    dl , sendCursorX
+                                mov                    dh ,  sendCursorY
+                                int                    10h
                                 RET
 SERIALCOMMUNICATION ENDP
 
@@ -2078,7 +2104,7 @@ InputButtonSwitchCase PROC  FAR
     
     CheckLetterF4:              
                                 CMP                    AL , F4KeyCode
-                                JNE                    CheckLetterF2
+                                JNE                    NOTPRESSED6
                                 MOV                    F4Flag , 1
 
     ;Sending the keyFlag after changing
@@ -2089,9 +2115,26 @@ InputButtonSwitchCase PROC  FAR
 
                                 JMP                    DEFAULT
 
+
+    NOTPRESSED6:                
+                                MOV                    BL , F4KeyCode
+                                ADD                    BL , 80H
+                                CMP                    AL , BL
+                                JNE                    CheckLetterF2
+                                MOV                    F4Flag , 0
+
+    ;Sending the keyFlag after changing
+                                MOV                    SENTVALUE ,AL
+                                CALL                   SEND
+                                
+                                CALL                   Delay
+
+                                JMP                    Default
+    
+                                
     CheckLetterF2:              
                                 CMP                    AL , F2KeyCode
-                                JNE                    CheckLetterF1
+                                JNE                    NOTPRESSED7
                                 MOV                    F2Flag , 1
 
     ;Sending the keyFlag after changing
@@ -2102,9 +2145,25 @@ InputButtonSwitchCase PROC  FAR
 
                                 JMP                    DEFAULT
 
+    NOTPRESSED7:                
+                                MOV                    BL , F2KeyCode
+                                ADD                    BL , 80H
+                                CMP                    AL , BL
+                                JNE                    CheckLetterF1
+                                MOV                    F2Flag , 0
+
+    ;Sending the keyFlag after changing
+                                MOV                    SENTVALUE ,AL
+                                CALL                   SEND
+                                
+                                CALL                   Delay
+
+                                JMP                    Default
+             
+
     CheckLetterF1:              
                                 CMP                    AL , F1KeyCode
-                                JNE                    CheckLetterEsc
+                                JNE                    NOTPRESSED8
                                 MOV                    F1Flag , 1
 
     ;Sending the keyFlag after changing
@@ -2115,9 +2174,24 @@ InputButtonSwitchCase PROC  FAR
 
                                 JMP                    DEFAULT
 
+    NOTPRESSED8:                
+                                MOV                    BL , F1KeyCode
+                                ADD                    BL , 80H
+                                CMP                    AL , BL
+                                JNE                    CheckLetterEsc
+                                MOV                    F1Flag , 0
+
+    ;Sending the keyFlag after changing
+                                MOV                    SENTVALUE ,AL
+                                CALL                   SEND
+                                
+                                CALL                   Delay
+
+                                JMP                    Default
+
     CheckLetterEsc:             
                                 CMP                    AL , EscKeyCode
-                                JNE                    CheckOtherKeysInput
+                                JNE                    NOTPRESSED9
                                 MOV                    EscFlag , 1
                                 
     ;Sending the keyFlag after changing
@@ -2125,6 +2199,21 @@ InputButtonSwitchCase PROC  FAR
                                 CALL                   SEND
                                 
                                 CALL                   Delay
+
+    NOTPRESSED9:                
+                                MOV                    BL , EscKeyCode
+                                ADD                    BL , 80H
+                                CMP                    AL , BL
+                                JNE                    CheckOtherKeysInput
+                                MOV                    EscFlag , 0
+
+    ;Sending the keyFlag after changing
+                                MOV                    SENTVALUE ,AL
+                                CALL                   SEND
+                                
+                                CALL                   Delay
+
+                                JMP                    Default
 
     CheckOtherKeysInput:        
 
@@ -2260,30 +2349,67 @@ ReceivedButtonSwitchCase PROC  FAR
     
     CheckLetterF4Recieved:      
                                 CMP                    AL , F4KeyCode
-                                JNE                    CheckLetterF2Recieved
+                                JNE                    NOTPRESSED6Received
                                 MOV                    F4Flag , 1
 
 
                                 JMP                    EndRecieveButtonSwitchCase
 
+    NOTPRESSED6Received:        
+                                MOV                    BL , F4KeyCode
+                                ADD                    BL , 80H
+                                CMP                    AL , BL
+                                JNE                    CheckLetterF2Recieved
+                                MOV                    F4Flag , 0
+                                
+                                JMP                    EndRecieveButtonSwitchCase
+
     CheckLetterF2Recieved:      
                                 CMP                    AL , F2KeyCode
-                                JNE                    CheckLetterF1Recieved
+                                JNE                    NOTPRESSED7Received
                                 MOV                    F2Flag , 1
 
                                 JMP                    EndRecieveButtonSwitchCase
 
+    NOTPRESSED7Received:        
+                                MOV                    BL , F2KeyCode
+                                ADD                    BL , 80H
+                                CMP                    AL , BL
+                                JNE                    CheckLetterF1Recieved
+                                MOV                    F2Flag , 0
+                                
+                                JMP                    EndRecieveButtonSwitchCase
+
     CheckLetterF1Recieved:      
                                 CMP                    AL , F1KeyCode
-                                JNE                    CheckLetterEscRecieved
+                                JNE                    NOTPRESSED8Received
                                 MOV                    F1Flag , 1
 
                                 JMP                    EndRecieveButtonSwitchCase
 
+                                
+    NOTPRESSED8Received:        
+                                MOV                    BL , F1KeyCode
+                                ADD                    BL , 80H
+                                CMP                    AL , BL
+                                JNE                    CheckLetterEscRecieved
+                                MOV                    F1Flag , 0
+                                
+                                JMP                    EndRecieveButtonSwitchCase
+
     CheckLetterEscRecieved:     
                                 CMP                    AL , EscKeyCode
-                                JNE                    CheckRecieveOtherKeysInput
+                                JNE                    NOTPRESSED9Received
                                 MOV                    EscFlag , 1
+                                JMP                    EndRecieveButtonSwitchCase
+
+    NOTPRESSED9Received:        
+                                MOV                    BL , EscKeyCode
+                                ADD                    BL , 80H
+                                CMP                    AL , BL
+                                JNE                    CheckRecieveOtherKeysInput
+                                MOV                    EscFlag , 0
+                                
                                 JMP                    EndRecieveButtonSwitchCase
 
     CheckRecieveOtherKeysInput: 
@@ -4946,13 +5072,13 @@ MAIN PROC FAR
     
     
     STARTTHEWHOLEPROGRAM:       
-                                MOV                AH,0
-                                MOV                AL,13H
-                                INT                10H
-                                CALL               INTERFACEBACKGROUND
-                                CALL               MAINMENU
-                                MOV                TYPEOFREQ, 0
-                                MOV                SENDEDSCAN, 0
+                                MOV                    AH,0
+                                MOV                    AL,13H
+                                INT                    10H
+                                CALL                   INTERFACEBACKGROUND
+                                CALL                   MAINMENU
+                                MOV                    TYPEOFREQ, 0
+                                MOV                    SENDEDSCAN, 0
     ; RECIEVESTARTINGSIGNAL:
     ;                             CALL               RECIEVE
     ;                             CMP                RECIEVEDVALUE, 1
@@ -4961,92 +5087,92 @@ MAIN PROC FAR
 
     ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
 
-                                mov                dx , 3FDH                                                                                                                                       ; Line Status Register
-                                in                 al , dx
-                                AND                al , 1
-                                JZ                 TAKINGNEXTSTAGE
-                                CALL               RECIEVE
+                                mov                    dx , 3FDH                                                                                                                                       ; Line Status Register
+                                in                     al , dx
+                                AND                    al , 1
+                                JZ                     TAKINGNEXTSTAGE
+                                CALL                   RECIEVE
     TAKINGNEXTSTAGE:            
-                                mov                dx , 3FDH                                                                                                                                       ; Line Status Register
-                                in                 al , dx
-                                AND                al , 1
-                                JZ                 NOREQ
-                                CALL               RECIEVE
-                                CMP                RECIEVEDVALUE, 1
-                                JNE                GAMEREQ
+                                mov                    dx , 3FDH                                                                                                                                       ; Line Status Register
+                                in                     al , dx
+                                AND                    al , 1
+                                JZ                     NOREQ
+                                CALL                   RECIEVE
+                                CMP                    RECIEVEDVALUE, 1
+                                JNE                    GAMEREQ
 
-                                MOV                AH, 2H
-                                MOV                DL, 0
-                                MOV                DH, 24
-                                MOV                BH, 0
-                                INT                10H
-                                MOV                AH, 9
-                                MOV                DX, OFFSET CHATREQTOYOU
-                                INT                21H
-                                MOV                TYPEOFREQ, 1
-                                JMP                NOREQ
+                                MOV                    AH, 2H
+                                MOV                    DL, 0
+                                MOV                    DH, 24
+                                MOV                    BH, 0
+                                INT                    10H
+                                MOV                    AH, 9
+                                MOV                    DX, OFFSET CHATREQTOYOU
+                                INT                    21H
+                                MOV                    TYPEOFREQ, 1
+                                JMP                    NOREQ
     GAMEREQ:                    
-                                MOV                AH, 2H
-                                MOV                DL, 0
-                                MOV                DH, 24
-                                MOV                BH, 0
-                                INT                10H
-                                MOV                AH, 9
-                                MOV                DX, OFFSET GAMEREQTOYOU
-                                INT                21H
-                                MOV                TYPEOFREQ, 2
+                                MOV                    AH, 2H
+                                MOV                    DL, 0
+                                MOV                    DH, 24
+                                MOV                    BH, 0
+                                INT                    10H
+                                MOV                    AH, 9
+                                MOV                    DX, OFFSET GAMEREQTOYOU
+                                INT                    21H
+                                MOV                    TYPEOFREQ, 2
 
     NOREQ:                      
-                                MOV                AH, 1
-                                INT                16H
-                                JZ                 TAKINGNEXTSTAGE
-                                MOV                AH, 0
-                                INT                16H
-                                CMP                AH, 3BH
-                                JE                 STARTCHATTING
-                                CMP                AH, 3CH
-                                JE                 STARTGAMING
-                                CMP                AH, 1
-                                JE                 HLTPROGRAM
-                                JMP                TAKINGNEXTSTAGE
+                                MOV                    AH, 1
+                                INT                    16H
+                                JZ                     TAKINGNEXTSTAGE
+                                MOV                    AH, 0
+                                INT                    16H
+                                CMP                    AH, 3BH
+                                JE                     STARTCHATTING
+                                CMP                    AH, 3CH
+                                JE                     STARTGAMING
+                                CMP                    AH, 1
+                                JE                     HLTPROGRAM
+                                JMP                    TAKINGNEXTSTAGE
 
     STARTCHATTING:              
     ;Check that Data Ready
-                                CMP                TYPEOFREQ, 0
-                                JE                 SENDCHATREQUEST
-                                CMP                TYPEOFREQ, 2
-                                JE                 TAKINGNEXTSTAGE
+                                CMP                    TYPEOFREQ, 0
+                                JE                     SENDCHATREQUEST
+                                CMP                    TYPEOFREQ, 2
+                                JE                     TAKINGNEXTSTAGE
                                
     ;ACCEPTING CHAT REQUEST
-                                MOV                SENTVALUE, 1
-                                CALL               SEND
-                                MOV                CX, 0
-                                MOV                DX, 1000
-                                MOV                AH, 86H
-                                INT                15H
-                                CALL               SERIALCOMMUNICATION
-                                JMP                STARTTHEWHOLEPROGRAM
+                                MOV                    SENTVALUE, 1
+                                CALL                   SEND
+                                MOV                    CX, 0
+                                MOV                    DX, 1000
+                                MOV                    AH, 86H
+                                INT                    15H
+                                CALL                   SERIALCOMMUNICATION
+                                JMP                    STARTTHEWHOLEPROGRAM
 
     SENDCHATREQUEST:            
-                                MOV                AH, 2H
-                                MOV                DL, 0
-                                MOV                DH, 24
-                                MOV                BH, 0
-                                INT                10H
-                                MOV                AH, 9
-                                MOV                DX, OFFSET CHATREQFROMYOU
-                                INT                21H
+                                MOV                    AH, 2H
+                                MOV                    DL, 0
+                                MOV                    DH, 24
+                                MOV                    BH, 0
+                                INT                    10H
+                                MOV                    AH, 9
+                                MOV                    DX, OFFSET CHATREQFROMYOU
+                                INT                    21H
 
-                                MOV                SENTVALUE, 1
-                                CALL               SEND
+                                MOV                    SENTVALUE, 1
+                                CALL                   SEND
 
     CHECKCHATREQACC:            
-                                CALL               RECIEVE
-                                CMP                RECIEVEDVALUE, 1
-                                JNE                CHECKCHATREQACC
+                                CALL                   RECIEVE
+                                CMP                    RECIEVEDVALUE, 1
+                                JNE                    CHECKCHATREQACC
 
-                                CALL               SERIALCOMMUNICATION
-                                JMP                STARTTHEWHOLEPROGRAM
+                                CALL                   SERIALCOMMUNICATION
+                                JMP                    STARTTHEWHOLEPROGRAM
 
 
 
@@ -5055,37 +5181,36 @@ MAIN PROC FAR
 
     STARTGAMING:                
     ;Check that Data Ready
-                                CMP                TYPEOFREQ, 0
-                                JE                 SENDGAMEREQUEST
-                                CMP                TYPEOFREQ, 1
-                                JE                 TAKINGNEXTSTAGE
+                                CMP                    TYPEOFREQ, 0
+                                JE                     SENDGAMEREQUEST
+                                CMP                    TYPEOFREQ, 1
+                                JE                     TAKINGNEXTSTAGE
                                
     ;ACCEPTING GAME REQUEST
-                                MOV                SENTVALUE, 1
-                                CALL               SEND
-                                MOV                CX, 0
-                                MOV                DX, 1000
-                                MOV                AH, 86H
-                                INT                15H
-                                JMP                STARTTHEGAMEAFTERINTERFACE
+                                MOV                    SENTVALUE, 1
+                                CALL                   SEND
+                                MOV                    CX, 0
+                                MOV                    DX, 1000
+                                MOV                    AH, 86H
+                                INT                    15H
+                                JMP                    STARTTHEGAMEAFTERINTERFACE
 
     SENDGAMEREQUEST:            
-                                MOV                AH, 2H
-                                MOV                DL, 0
-                                MOV                DH, 24
-                                MOV                BH, 0
-                                INT                10H
-                                MOV                AH, 9
-                                MOV                DX, OFFSET GAMEREQFROMYOU
-                                INT                21H
+                                MOV                    AH, 2H
+                                MOV                    DL, 0
+                                MOV                    DH, 24
+                                MOV                    BH, 0
+                                INT                    10H
+                                MOV                    AH, 9
+                                MOV                    DX, OFFSET GAMEREQFROMYOU
+                                INT                    21H
 
-                                MOV                SENTVALUE, 2
-                                CALL               SEND
-
+                                MOV                    SENTVALUE, 2
+                                CALL                   SEND
     CHECKGAMEREQACC:            
-                                CALL               RECIEVE
-                                CMP                RECIEVEDVALUE, 1
-                                JNE                CHECKGAMEREQACC
+                                CALL                   RECIEVE
+                                CMP                    RECIEVEDVALUE, 1
+                                JNE                    CHECKGAMEREQACC
 
 
 
