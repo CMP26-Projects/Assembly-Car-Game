@@ -490,19 +490,21 @@ ENDM
     recievedChar              DB  ?
     SendedChar                DB  ?
 
+    SENDEDSCAN                DB  0
+
     InstructionMessage1       DB  'To end chatting with ', '$'
     InstructionMessage2       DB  'press F3 ', '$'
 
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;COMMUNICATIONS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;PLAYERNUMBER
-    PLAYERNUMBER              DW  2
+    PLAYERNUMBER              DW  1
     SENTVALUE                 DB  ?
     RECIEVEDVALUE             DB  ?
     SENTSTRINGOFFSET          DW  ?
     RECIEVEDSTRINGOFFSET      DW  ?
 
-    ;INTERFACE
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;INTERFACE;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;LOGO
     LOGOIMGW                  EQU 168
     LOGOIMGH                  EQU 35
@@ -771,10 +773,16 @@ ENDM
     FIRSTNAME                 DB  16 DUP('$')
     SECONDNAME                DB  16 DUP('$')
 
+    TYPEOFREQ                 DB  0
 
     ;NOTES
     NOTE1                     DB  'THE NAMES MUST NOT EXCEED 15 CHARACTERS', '$'
     NOTE2                     DB  "DON'T START WITH NUMBERS, SPECIAL CHARS", '$'
+
+    GAMEREQTOYOU              DB  'THE OTHER PLAYER HAS SENT GAME REQUEST TO YOU', '$'
+    GAMEREQFROMYOU            DB  "YOU HAVE SENT A GAME REQUEST", '$'
+    CHATREQTOYOU              DB  'THE OTHER PLAYER HAS SENT CHAT REQUEST TO YOU', '$'
+    CHATREQFROMYOU            DB  "YOU HAVE SENT A CHAT REQUEST", '$'
 
     ;INSTRUCTIONS
     INSTRUCTION1              DB  'TO START CHATTING PRESS F1...', '$'
@@ -1271,8 +1279,9 @@ SendChar PROC FAR
                                 MOV                AH , 0
                                 INT                16H
                                 MOV                SendedChar , AL
-        
-                                CMP                SendedChar , 27
+
+                                MOV                SENDEDSCAN, AH
+                                CMP                SendedSCAN , 3DH
                                 JE                 EndSending
 
                                 CMP                SendedChar , 13
@@ -1376,7 +1385,13 @@ SERIALCOMMUNICATION PROC FAR
                                 INT                21H
                         
                                 MOV                AH , 9
+                                CMP                PLAYERNUMBER, 1
+                                JNE                SHOWSECONDNAME
+                                LEA                DX , FIRSTNAME
+                                JMP                DOINT
+    SHOWSECONDNAME:             
                                 LEA                DX , SECONDNAME
+    DOINT:                      
                                 INT                21H
 
                                 LEA                DX , InstructionMessage2
@@ -1395,7 +1410,7 @@ SERIALCOMMUNICATION PROC FAR
                                 AND                AL , 1
                                 JZ                 CHATSend
                                 CALL               RecieveChar
-                                cmp                recievedChar , 27
+                                cmp                recievedChar , 19
                                 JE                 kill
             
     CHATSend:                   
@@ -1404,12 +1419,17 @@ SERIALCOMMUNICATION PROC FAR
                                 AND                AL , 00100000B
                                 JZ                 cont
                                 CALL               SendChar
-                                cmp                sendedChar , 27
+                                cmp                SENDEDSCAN , 3DH
                                 JE                 kill
     cont:                       
                                 JMP                CHATMAINLOOP
 
     kill:                       
+    ;Setting cursor with sending position
+                                mov                ah,2
+                                mov                dl , sendCursorX
+                                mov                dh ,  sendCursorY
+                                int                10h
                                 RET
 SERIALCOMMUNICATION ENDP
 
@@ -2974,7 +2994,7 @@ INT09H ENDP
 
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;;;;;;;;;;;;;;;;;;;;;INTERFACE PROCEDURES;;;;;;;;;
+    ;;;;;;;;;;;;;;;;;;;;;;PROCEDURES;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -4853,6 +4873,177 @@ MAIN PROC FAR
 
     ;;TAKING NAMES STAGE
                                 CALL               INTERFACESTAGE
+    
+    
+    STARTTHEWHOLEPROGRAM:       
+                                MOV                AH,0
+                                MOV                AL,13H
+                                INT                10H
+                                CALL               INTERFACEBACKGROUND
+                                CALL               MAINMENU
+                                MOV                TYPEOFREQ, 0
+                                MOV                SENDEDSCAN, 0
+    ; RECIEVESTARTINGSIGNAL:
+    ;                             CALL               RECIEVE
+    ;                             CMP                RECIEVEDVALUE, 1
+    ;                             JNE                RECIEVESTARTINGSIGNAL
+    ;                             JMP                STARTPROGRAM
+
+    ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
+
+                                mov                dx , 3FDH                                                                                                                                       ; Line Status Register
+                                in                 al , dx
+                                AND                al , 1
+                                JZ                 TAKINGNEXTSTAGE
+                                CALL               RECIEVE
+    TAKINGNEXTSTAGE:            
+                                mov                dx , 3FDH                                                                                                                                       ; Line Status Register
+                                in                 al , dx
+                                AND                al , 1
+                                JZ                 NOREQ
+                                CALL               RECIEVE
+                                CMP                RECIEVEDVALUE, 1
+                                JNE                GAMEREQ
+
+                                MOV                AH, 2H
+                                MOV                DL, 0
+                                MOV                DH, 24
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET CHATREQTOYOU
+                                INT                21H
+                                MOV                TYPEOFREQ, 1
+                                JMP                NOREQ
+    GAMEREQ:                    
+                                MOV                AH, 2H
+                                MOV                DL, 0
+                                MOV                DH, 24
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET GAMEREQTOYOU
+                                INT                21H
+                                MOV                TYPEOFREQ, 2
+
+    NOREQ:                      
+                                MOV                AH, 1
+                                INT                16H
+                                JZ                 TAKINGNEXTSTAGE
+                                MOV                AH, 0
+                                INT                16H
+                                CMP                AH, 3BH
+                                JE                 STARTCHATTING
+                                CMP                AH, 3CH
+                                JE                 STARTGAMING
+                                CMP                AH, 1
+                                JE                 HLTPROGRAM
+                                JMP                TAKINGNEXTSTAGE
+
+    STARTCHATTING:              
+    ;Check that Data Ready
+                                CMP                TYPEOFREQ, 0
+                                JE                 SENDCHATREQUEST
+                                CMP                TYPEOFREQ, 2
+                                JE                 TAKINGNEXTSTAGE
+                               
+    ;ACCEPTING CHAT REQUEST
+                                MOV                SENTVALUE, 1
+                                CALL               SEND
+                                MOV                CX, 0
+                                MOV                DX, 1000
+                                MOV                AH, 86H
+                                INT                15H
+                                CALL               SERIALCOMMUNICATION
+                                JMP                STARTTHEWHOLEPROGRAM
+
+    SENDCHATREQUEST:            
+                                MOV                AH, 2H
+                                MOV                DL, 0
+                                MOV                DH, 24
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET CHATREQFROMYOU
+                                INT                21H
+
+                                MOV                SENTVALUE, 1
+                                CALL               SEND
+
+    CHECKCHATREQACC:            
+                                CALL               RECIEVE
+                                CMP                RECIEVEDVALUE, 1
+                                JNE                CHECKCHATREQACC
+
+                                CALL               SERIALCOMMUNICATION
+                                JMP                STARTTHEWHOLEPROGRAM
+
+
+
+
+
+
+    STARTGAMING:                
+    ;Check that Data Ready
+                                CMP                TYPEOFREQ, 0
+                                JE                 SENDGAMEREQUEST
+                                CMP                TYPEOFREQ, 1
+                                JE                 TAKINGNEXTSTAGE
+                               
+    ;ACCEPTING GAME REQUEST
+                                MOV                SENTVALUE, 1
+                                CALL               SEND
+                                MOV                CX, 0
+                                MOV                DX, 1000
+                                MOV                AH, 86H
+                                INT                15H
+                                JMP                STARTTHEGAMEAFTERINTERFACE
+
+    SENDGAMEREQUEST:            
+                                MOV                AH, 2H
+                                MOV                DL, 0
+                                MOV                DH, 24
+                                MOV                BH, 0
+                                INT                10H
+                                MOV                AH, 9
+                                MOV                DX, OFFSET GAMEREQFROMYOU
+                                INT                21H
+
+                                MOV                SENTVALUE, 2
+                                CALL               SEND
+
+    CHECKGAMEREQACC:            
+                                CALL               RECIEVE
+                                CMP                RECIEVEDVALUE, 1
+                                JNE                CHECKGAMEREQACC
+
+
+
+    STARTTHEGAMEAFTERINTERFACE: 
+
+
+    ; STARTCHATTING:
+    ; ;CALLING SERIALCONNECTION PROCEDURE
+    ;                             CALL               SERIALCOMMUNICATION
+
+              
+    ; CMP                PLAYERNUMBER, 1
+    ; JNE                STARTPROGRAMNOTSENDER
+                                
+    ; MOV                SENTVALUE, 1
+    ; CALL               SEND
+
+
+
+
+    
+
+    ; STARTCHATTING:
+    ; ;CALLING SERIALCONNECTION PROCEDURE
+    ;                             CALL               SERIALCOMMUNICATION
+
+
+
     ;--------------    Overriding INT 9H   ---------------
     ;Disable interrrupts
                                 CLI
@@ -4870,7 +5061,7 @@ MAIN PROC FAR
     ;re-enabling interrupts
                                 POP                DS
                                 STI
-    ; STARTTHEWHOLEPROGRAM:
+           
     ;INITIALIZATIONS
                                 MOV                CANTUP, 0
                                 MOV                CANTRIGHT, 0
@@ -4931,42 +5122,42 @@ MAIN PROC FAR
 
 
 
-                                CALL               MAINMENU
-    F1LOOP:                     
-                                CMP                LetterF1Flag, 1
-                                JE                 STARTCHATTING
-                                JMP                F1LOOP
+    ;                             CALL               MAINMENU
+    ; F1LOOP:
+    ;                             CMP                LetterF1Flag, 1
+    ;                             JE                 STARTCHATTING
+    ;                             JMP                F1LOOP
     ; CMP                PLAYERNUMBER, 1
     ; JE                 TAKINGNEXTSTAGE
 
-    RECIEVESTARTINGSIGNAL:      
-                                CALL               RECIEVE
-                                CMP                RECIEVEDVALUE, 1
-                                JNE                RECIEVESTARTINGSIGNAL
-                                JMP                STARTPROGRAM
+    ; RECIEVESTARTINGSIGNAL:
+    ;                             CALL               RECIEVE
+    ;                             CMP                RECIEVEDVALUE, 1
+    ;                             JNE                RECIEVESTARTINGSIGNAL
+    ;                             JMP                STARTPROGRAM
 
-    ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
-    TAKINGNEXTSTAGE:            
-                                CMP                LetterF1Flag, 1
-                                JE                 STARTCHATTING
-                                CMP                LetterF2Flag, 1
-                                JE                 STARTPROGRAM
-                                CMP                LetterEscFlag, 1
-                                JE                 HLTPROGRAM
+    ; ;TAKE THE NEXT STAGE FROM THE USER WHETHER TO PLAY OR EXIT
+    ; TAKINGNEXTSTAGE:
+    ;                             CMP                LetterF1Flag, 1
+    ;                             JE                 STARTCHATTING
+    ;                             CMP                LetterF2Flag, 1
+    ;                             JE                 STARTPROGRAM
+    ;                             CMP                LetterEscFlag, 1
+    ;                             JE                 HLTPROGRAM
 
-                                JMP                TAKINGNEXTSTAGE
+    ;                             JMP                TAKINGNEXTSTAGE
 
-    STARTCHATTING:              
-    ;CALLING SERIALCONNECTION PROCEDURE
-                                CALL               SERIALCOMMUNICATION
+    ; STARTCHATTING:
+    ; ;CALLING SERIALCONNECTION PROCEDURE
+    ;                             CALL               SERIALCOMMUNICATION
 
 
-    STARTPROGRAM:               
-                                CMP                PLAYERNUMBER, 1
-                                JNE                STARTPROGRAMNOTSENDER
+    ; STARTPROGRAM:
+    ;                             CMP                PLAYERNUMBER, 1
+    ;                             JNE                STARTPROGRAMNOTSENDER
                                 
-                                MOV                SENTVALUE, 1
-                                CALL               SEND
+    ;                             MOV                SENTVALUE, 1
+    ;                             CALL               SEND
 
     STARTPROGRAMNOTSENDER:      
 
