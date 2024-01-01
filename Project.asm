@@ -1260,7 +1260,10 @@ RecieveChar PROC FAR
                                 mov                    dx , 03F8H
                                 in                     al , dx
                                 mov                    recievedChar, al
-            
+
+                                CMP                    recievedChar , 3DH
+                                JE                     endRecieving
+
                                 CMP                    recievedChar , 27
                                 JE                     endRecieving
 
@@ -1322,7 +1325,7 @@ SendChar PROC FAR
 
                                 MOV                    SENDEDSCAN, AH
                                 CMP                    SendedSCAN , 3DH
-                                JE                     EndSending
+                                JE                     startSending
 
                                 CMP                    SendedChar , 13
                                 JE                     enter
@@ -1450,7 +1453,7 @@ SERIALCOMMUNICATION PROC FAR
                                 AND                    AL , 1
                                 JZ                     CHATSend
                                 CALL                   RecieveChar
-                                cmp                    recievedChar , 19
+                                cmp                    recievedChar , 3DH
                                 JE                     kill
             
     CHATSend:                   
@@ -2475,12 +2478,19 @@ CheckArrowFlags PROC FAR
 
     CmpRight:                   
                                 CMP                    ArrowRightFlag, 1
-                                JNE                    CmpFinish
+                                JNE                    CmpF4
                          
                                 ScanX                  PosXfirst, PosYfirst , 1 ,1, Car1Speed
                                 CALL                   ScanXmovement
                                 CALL                   UpdateCarPos
                                 DEC                    PosXfirst
+
+    CmpF4:                      
+                                CMP                    LetterF4Flag, 1
+                                JNE                    CmpFinish
+                                
+                                MOV                    EXITSTATUS, 1
+                                CALL                   ENDGAME
     CmpFinish:                  
                                 RET
 CheckArrowFlags ENDP
@@ -3179,6 +3189,12 @@ INT09H PROC FAR
     InterruptKilling:           
                                 MOV                    AL , 20H
                                 OUT                    20H, AL
+
+    ;Delay
+                                MOV                    CX , 0
+                                MOV                    DX , 64000D
+                                MOV                    AH , 86H
+                                INT                    15H
 
                                 IRET
 INT09H ENDP
@@ -5529,11 +5545,11 @@ MAIN PROC FAR
                                 MOV                    PrevPosYsecond ,DX
 
 
-                                CMP                    LetterF4Flag, 1
-                                JNE                    CONTINUEMAINLOOP
-                                MOV                    EXITSTATUS, 1
-                                CALL                   ENDGAME
-                                JMP                    exit
+    ; CMP                    LetterF4Flag, 1
+    ; JNE                    CONTINUEMAINLOOP
+    ; MOV                    EXITSTATUS, 1
+    ; CALL                   ENDGAME
+    ; JMP                    exit
     CONTINUEMAINLOOP:           
     ;Checking on the recieving of characters
                                 CMP                    PLAYERNUMBER , 1
@@ -5572,6 +5588,8 @@ MAIN PROC FAR
 
     GOTOMAINLOOP:               
 
+                                CMP                    EXITSTATUS , 1
+                                JE                     exit
 
                                 JMP                    mainLoop                                                                                                                                        ; keep looping
     exit:                       
@@ -5587,6 +5605,7 @@ MAIN PROC FAR
                                 INT                    21H
                                 HLT
 MAIN ENDP
+
 
 
 END MAIN
