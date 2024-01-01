@@ -8,7 +8,7 @@ ScrollYRecieving MACRO
                      mov bh,0                  ; normal video attribute
                      mov ch,13                 ; upper left Y
                      mov cl,0                  ; upper left X
-                     mov dh,21                 ; lower right Y
+                     mov dh,22                 ; lower right Y
                      mov dl,79                 ; lower right X
                      int 10h
                   
@@ -521,12 +521,12 @@ ENDM
     SENDEDSCAN                DB  0
 
     InstructionMessage1       DB  'To end chatting with ', '$'
-    InstructionMessage2       DB  'press F3 ', '$'
+    InstructionMessage2       DB  ' press F3 ', '$'
 
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;COMMUNICATIONS;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;PLAYERNUMBER
-    PLAYERNUMBER              DW  1
+    PLAYERNUMBER              DW  2
     SENTVALUE                 DB  ?
     RECIEVEDVALUE             DB  ?
     SENTSTRINGOFFSET          DW  ?
@@ -1368,9 +1368,17 @@ SendChar PROC FAR
                                 mov                    dh ,  sendCursorY
                                 int                    10h
             
-
+                                
                                 MOV                    DX , 03F8H
+                                
+                                CMP                    SENDEDSCAN , 3DH
+                                JNE                    SendAsci
+                                
+                                MOV                    AL , SENDEDSCAN
+                                JMP                    OUTTHEOUT
+    SendAsci:                   
                                 MOV                    AL , SendedChar
+    OUTTHEOUT:                  
                                 OUT                    DX , AL
 
     EndSending:                 
@@ -1470,8 +1478,8 @@ SERIALCOMMUNICATION PROC FAR
     kill:                       
     ;Setting cursor with sending position
                                 mov                    ah,2
-                                mov                    dl , sendCursorX
-                                mov                    dh ,  sendCursorY
+                                mov                    dl , 5
+                                mov                    dh ,  1
                                 int                    10h
                                 RET
 SERIALCOMMUNICATION ENDP
@@ -5095,6 +5103,11 @@ MAIN PROC FAR
                                 CALL                   MAINMENU
                                 MOV                    TYPEOFREQ, 0
                                 MOV                    SENDEDSCAN, 0
+                                mov                    sendCursorX    , 5
+                                mov                    sendCursorY    , 1
+                                mov                    recieveCursorX , 5
+                                mov                    recieveCursorY , 13
+                                mov                    SepLineCursorX , 0
     ; RECIEVESTARTINGSIGNAL:
     ;                             CALL               RECIEVE
     ;                             CMP                RECIEVEDVALUE, 1
