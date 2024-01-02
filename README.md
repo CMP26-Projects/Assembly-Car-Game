@@ -1,5 +1,5 @@
-﻿# Kalemny W Hasalney
-
+﻿# Hasalney W Kalemny
+ 
 ![Logo](/Images/LOGO.png)
 
 ## About the Game
