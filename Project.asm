@@ -1165,8 +1165,8 @@ ENDM
     ;STARTdd
     STARTROADX                EQU 2
     STARTROADY                EQU 2
-    NUMBEROFPARTS             EQU 10
-    MINNUMOFPARTS             EQU 5
+    NUMBEROFPARTS             EQU 20
+    MINNUMOFPARTS             EQU 7
 
     ;VARIABLES FOR DRAWIMAGE PROCEDURE
     IMGTODRAW                 DW  ?
