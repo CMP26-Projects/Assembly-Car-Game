@@ -45,12 +45,13 @@ This game is a 2-player racing game implemented using assembly x86 providing two
 ## Features
 
 - Interface for getting players' names
+- Inline Chatting
 - Randomized racing track: each time the game runs it gets different track
 - Multidirectional cars is used: cars direction changes on stiring
 - Random obstacles
 - 4 types of power ups
 - 2-minute Game timer
-- Collisions between Cars are handled
+- Collisions between Cars
 
 ## Bugs in the game
 
